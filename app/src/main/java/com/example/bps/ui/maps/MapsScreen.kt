@@ -41,26 +41,6 @@ fun MapsScreen() {
             .verticalScroll(rememberScrollState())
             .padding(bottom = 32.dp)
     ) {
-        // Header
-        Row(
-            modifier = Modifier
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search",
-                tint = Color(0xFF2196F3),
-                modifier = Modifier.size(32.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Search",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-
         Spacer(modifier = Modifier.height(16.dp))
         
         // Search Bar - Already using the SearchBar component correctly

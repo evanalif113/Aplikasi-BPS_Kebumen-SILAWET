@@ -9,7 +9,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.sicantik"
+        applicationId = "com.example.silawet"
         minSdk = 30
         targetSdk = 36
         versionCode = 1

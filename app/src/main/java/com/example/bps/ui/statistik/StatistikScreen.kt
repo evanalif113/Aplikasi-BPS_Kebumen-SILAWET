@@ -30,29 +30,6 @@ fun StatistikScreen() {
             .verticalScroll(rememberScrollState())
             .padding(bottom = 32.dp)
     ) {
-        // Title
-        Row(
-            modifier = Modifier
-                .padding(
-                    top = 16.dp,
-                    start = 16.dp,
-                    end = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_grafik_24dp),
-                contentDescription = "Statistik",
-                tint = Color.Unspecified,
-                modifier = Modifier.size(32.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Statistik",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-
         Spacer(modifier = Modifier.height(16.dp))
         // Search bar (reuse component)
         SearchBar()

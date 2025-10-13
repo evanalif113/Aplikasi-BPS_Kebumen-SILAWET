@@ -1,5 +1,6 @@
 package com.example.bps.ui.beranda
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,7 +84,7 @@ fun MainMenuSection() {
         ) {
             MainMenuItem(iconRes = R.drawable.ic_maps_24dp, title = "Peta", colorCard = Blue400)
             MainMenuItem(iconRes = R.drawable.ic_grafik_24dp, title = "Statistik", colorCard = Orange300)
-            MainMenuItem(iconRes = R.drawable.ic_search_24dp, title = "Infografi", colorCard = Red300)
+            MainMenuItem(iconRes = R.drawable.ic_open_book_24dp, title = "Infografik", colorCard = Red300)
             MainMenuItem(iconRes = R.drawable.ic_menu_24dp, title = "Lainnya", colorCard = Green300)
         }
     }
@@ -139,64 +140,44 @@ fun InfoSensusSection() {
 
         Spacer(modifier = Modifier.height(16.dp))
         SensusBanner(
-            imageRes = R.drawable.ic_open_book_24dp,
-            contentDescription = "Sensus Penduduk 2020",
-            backgroundColor = Sky300
+            imageRes = R.drawable.banner_sp2020,
+            backgroundColor = Color(0xFFA0E7F8),
+            contentDescription = "Sensus Penduduk 2020"
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         SensusBanner(
-            imageRes = R.drawable.ic_open_book_24dp,
-            contentDescription = "Sensus Pertanian 2023",
-            backgroundColor = Green300
+            imageRes = R.drawable.banner_st2023,
+            backgroundColor = Color(0xFFC7EEA5),
+            contentDescription = "Sensus Pertanian 2023"
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         SensusBanner(
-            imageRes = R.drawable.ic_open_book_24dp,
-            contentDescription = "Sensus Ekonomi 2026",
-            backgroundColor = Orange300
+            imageRes = R.drawable.banner_se2026_2,
+            backgroundColor = Color(0xFFFDE09A),
+            contentDescription = "Sensus Ekonomi 2026"
         )
     }
 }
 
 // 6. Composable untuk setiap banner Sensus
 @Composable
-fun SensusBanner(imageRes: Int, contentDescription: String, backgroundColor: Color = Color.White) {
+fun SensusBanner(imageRes: Int, backgroundColor: Color, contentDescription: String) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Icon/Logo sensus
-                Icon(
-                    painter = painterResource(id = imageRes),
-                    contentDescription = contentDescription,
-                    tint = if (backgroundColor == Color(0xFF2196F3)) Color.White else Color(0xFF2196F3),
-                    modifier = Modifier.padding(end = 16.dp)
-                )
-                
-                // Text content
-                Text(
-                    text = contentDescription,
-                    color = if (backgroundColor == Color(0xFF2196F3)) Color.White else Color.Black,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-        }
+        Image(
+            painter = painterResource(id = imageRes),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp), // Menambahkan padding agar background terlihat
+            contentDescription = contentDescription
+        )
     }
 }
 

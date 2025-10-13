@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bps.R
 import com.example.bps.ui.beranda.BerandaScreen
@@ -46,13 +47,24 @@ fun MenuScreen() {
     var showNotif by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val title = when (currentRoute) {
+        "beranda" -> "Beranda"
+        "statistik" -> "Statistik"
+        "maps" -> "Maps"
+        "infografik" -> "Infografik"
+        "lainnya" -> "Lainnya"
+        else -> "SILAWET"
+    }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(id = R.string.app_name))
+                    Text(text = title)
                 },
                 actions = {
                     IconButton(onClick = { showNotif = !showNotif }) {
@@ -85,7 +97,7 @@ fun MenuScreen() {
                                         fontSize = 16.sp
                                     )
                                 },
-                                onClick = { /* Handle about click */ }
+                                onClick = { /* Handle about to click */ }
                             )
                         }
                     }
@@ -97,9 +109,9 @@ fun MenuScreen() {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Orange500,
+                    containerColor = White,
                     titleContentColor = Black,
-                    actionIconContentColor = Black
+                    actionIconContentColor = Gray800
                 )
             )
         },
@@ -142,7 +154,7 @@ fun MenuScreen() {
             composable("statistik") { StatistikScreen() }
             composable("maps") { MapsScreen() }
             composable("infografik") { InfografikScreen() }
-            composable("lainnnya") { LainScreen() }
+            composable("lainnya") { LainScreen() }
         }
     }
 }

@@ -24,11 +24,6 @@ fun LainScreen() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Text(
-            text = "Infografik",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
-        )
         Spacer(modifier = Modifier.height(16.dp))
         Carousel()
         Spacer(modifier = Modifier.height(24.dp))
