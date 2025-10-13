@@ -42,7 +42,7 @@ import com.example.bps.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class) // Opt Developer
 @Composable
-fun MenuScreen() {
+fun MainScreen() {
     val navController = rememberNavController()
     var showNotif by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
@@ -161,6 +161,6 @@ fun MenuScreen() {
 
 @Preview
 @Composable
-fun MenuScreenPreview() {
-    MenuScreen()
+fun MainScreenPreview() {
+    MainScreen()
 }
