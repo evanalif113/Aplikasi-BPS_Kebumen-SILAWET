@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,16 +28,14 @@ import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImage
 import com.example.bps.theme.Gray200
 
-// Data class untuk menampung informasi berita
-data class NewsVariable(
+data class InfografikVariable(
     val date: String,
     val title: String,
     val imageUrl: String
 )
 
-// Composable untuk menampilkan satu kartu berita
 @Composable
-fun NewsCard(NewsVal: NewsVariable) {
+fun InfografikCard(infografikVal: InfografikVariable) {
     Card(
         modifier = Modifier.width(150.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -51,8 +50,8 @@ fun NewsCard(NewsVal: NewsVariable) {
                     .background(Gray200)
             ) {
                 AsyncImage(
-                    model = NewsVal.imageUrl,
-                    contentDescription = NewsVal.title,
+                    model = infografikVal.imageUrl,
+                    contentDescription = infografikVal.title,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp),
@@ -63,13 +62,13 @@ fun NewsCard(NewsVal: NewsVariable) {
             // Konten teks di bawah gambar
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    text = NewsVal.date,
+                    text = infografikVal.date,
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = NewsVal.title,
+                    text = infografikVal.title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 3,
@@ -81,27 +80,26 @@ fun NewsCard(NewsVal: NewsVariable) {
     }
 }
 
-// Composable untuk seluruh bagian "Berita dan Pers"
 @Composable
-fun NewsSection() {
-    // Data dummy untuk ditampilkan (tipikal struktur mirror InfografikSection)
+fun InfografikSection() {
+    // Data dummy untuk ditampilkan
     val newsList = listOf(
-        NewsVariable(
+        InfografikVariable(
             "8 Oktober 2025",
             "RESMI RILIS! Booklet SAKERNAS Agustus 2024 Telah Terbit!",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s"
         ),
-        NewsVariable(
+        InfografikVariable(
             "7 Oktober 2025",
             "Alamat Misterius, Data Sensus Serius",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s"
         ),
-        NewsVariable(
+        InfografikVariable(
             "2 Oktober 2025",
             "Selamat Hari Batik Nasional 2025",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s"
         ),
-        NewsVariable(
+        InfografikVariable(
             "2 Oktober 2025",
             "Pengolahan Peta Wilkerstat",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s"
@@ -109,21 +107,27 @@ fun NewsSection() {
     )
 
     Column(modifier = Modifier.padding(vertical = 16.dp)) {
+        // Beri padding horizontal sama dengan contentPadding LazyRow sehingga sejajar
+        Text(
+            text = "Infografis",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+        )
+        Spacer(modifier = Modifier.height(12.dp))
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(newsList) { newsItem ->
-                NewsCard(NewsVal = newsItem)
+                InfografikCard(infografikVal = newsItem)
             }
         }
     }
 }
 
-@Preview(showBackground = true, apiLevel = 34, showSystemUi = false,
-    device = "id:pixel_9a"
-)
+@Preview(showBackground = true)
 @Composable
-fun NewsSectionPreview() {
-    NewsSection()
+fun InfografikSectionPreview() {
+    InfografikSection()
 }

@@ -109,7 +109,7 @@ fun MainScreen() {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White,
+                    containerColor = Orange300,
                     titleContentColor = Black,
                     actionIconContentColor = Gray800
                 )
@@ -159,7 +159,9 @@ fun MainScreen() {
     }
 }
 
-@Preview
+@Preview(showSystemUi = true, showBackground = true, apiLevel = 35,
+    device = "spec:width=1080px,height=2424px,navigation=buttons"
+)
 @Composable
 fun MainScreenPreview() {
     MainScreen()

@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bps.components.Carousel
+import com.example.bps.components.InfografikSection
 import com.example.bps.components.SearchBar
 
 @Composable
@@ -24,10 +25,10 @@ fun InfografikScreen() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Carousel()
         Spacer(modifier = Modifier.height(24.dp))
         SearchBar()
+        Spacer(modifier = Modifier.height(24.dp))
+        InfografikSection()
     }
 }
 

@@ -70,7 +70,7 @@ private fun StatCategoryCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(72.dp)
+            .height(80.dp)
             .padding(horizontal = 16.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),

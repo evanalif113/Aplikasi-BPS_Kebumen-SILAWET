@@ -109,7 +109,7 @@ fun CardInsightPreview() {
  * Composable untuk satu item kartu di dalam carousel.
  */
 @Composable
-fun CarouselItem(
+private fun CarouselItem(
     color: Color,
     iconRes: Int,
     title: String
