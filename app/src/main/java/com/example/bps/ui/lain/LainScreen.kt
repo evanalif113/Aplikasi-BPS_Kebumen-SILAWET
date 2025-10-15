@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bps.components.Carousel
+import com.example.bps.components.CarouselInsight
 import com.example.bps.components.SearchBar
 
 @Composable
@@ -25,7 +25,7 @@ fun LainScreen() {
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Carousel()
+        CarouselInsight()
         Spacer(modifier = Modifier.height(24.dp))
         // Menambahkan SearchBar di sini
         SearchBar()

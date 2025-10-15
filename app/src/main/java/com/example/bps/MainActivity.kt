@@ -1,5 +1,6 @@
 package com.example.bps
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -36,7 +37,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bps.R
 import com.example.bps.ui.beranda.BerandaScreen
 import com.example.bps.ui.statistik.StatistikScreen
 import com.example.bps.ui.maps.MapsScreen
@@ -125,7 +125,7 @@ fun MainScreen() {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Orange300,
+                    containerColor = Lime300,
                     titleContentColor = Black,
                     actionIconContentColor = Gray800
                 ),
@@ -175,7 +175,10 @@ fun MainScreen() {
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
+@Preview(showSystemUi = true, showBackground = true,
+    uiMode = Configuration.UI_MODE_TYPE_NORMAL,
+    device = "spec:parent=pixel_5,navigation=buttons"
+)
 @Composable
 fun MainActivityPreview() {
     BpsTheme {

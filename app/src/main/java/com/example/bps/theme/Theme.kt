@@ -77,8 +77,8 @@ fun BpsTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        darkTheme -> com.example.bps.theme.DarkColorScheme
-        else -> com.example.bps.theme.LightColorScheme
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
     }
 
     MaterialTheme(

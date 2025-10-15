@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bps.components.MenuItemSection
 import com.example.bps.components.SearchBar
-import com.example.bps.components.CardInsight
+import com.example.bps.components.CarouselInsight
 import com.example.bps.components.InfografikSection
 import com.example.bps.components.InfoSensusSection
 
@@ -24,9 +24,8 @@ fun BerandaScreen() {
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
         // CardInsight sekarang memiliki padding horizontal sendiri
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            CardInsight()
-        }
+        CarouselInsight()
+
         Spacer(modifier = Modifier.height(24.dp))
 
         // SearchBar di bagian atas

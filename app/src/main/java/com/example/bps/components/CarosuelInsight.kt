@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -17,65 +18,26 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bps.R
 import com.example.bps.theme.*
+import kotlinx.coroutines.delay
 
 /**
- * Composable yang menampilkan daftar kartu secara horizontal (Carousel).
+ * Composable yang menampilkan daftar item secara horizontal (Carousel)
+ * dengan animasi auto-scroll yang berhenti di tengah dan berulang (unlimited scroll).
  */
 @Composable
-fun Carousel() {
-    // 2. Menyiapkan daftar data untuk setiap kartu
-    val carouselData = listOf(
-        Triple(Blue200, R.drawable.ic_grafik_24dp, "Statistik Pertanian"),
-        Triple(Green200, R.drawable.ic_perangkat_24dp, "Produk Domestik"),
-        Triple(Orange200, R.drawable.ic_server_24dp, "Inflasi Bulanan"),
-        Triple(Red200, R.drawable.ic_house_24dp, "Indeks Kemahalan"),
-        Triple(Purple200, R.drawable.ic_info_24dp, "Info Lainnya")
-    )
-
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // 3. Menampilkan setiap item dari daftar data menggunakan CarouselItem
-        items(carouselData.size) { index ->
-            val (color, iconRes, title) = carouselData[index]
-            CarouselItem(
-                color = color,
-                iconRes = iconRes,
-                title = title
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CarouselPreview() {
-    Carousel()
-}
-
-/**
- * Composable untuk satu item kartu di dalam carousel.
- * Komponen ini sekarang dinamis dan bisa digunakan kembali.
- *
- * @param color Warna latar belakang kartu.
- * @param iconRes ID resource drawable untuk ikon.
- * @param title Teks judul untuk kartu.
- */
-/**
- * Composable yang menampilkan daftar kartu secara horizontal (Carousel).
- */
-@Composable
-fun CardInsight() {
+fun CarouselInsight() {
+    // Data untuk setiap item carousel dengan warna yang lebih kontras
     val carouselData = listOf(
         Triple(Blue400, R.drawable.ic_grafik_24dp, "Statistik Pertanian"),
         Triple(Green400, R.drawable.ic_perangkat_24dp, "Produk Domestik"),
@@ -84,12 +46,35 @@ fun CardInsight() {
         Triple(Purple400, R.drawable.ic_info_24dp, "Info Lainnya")
     )
 
+    val lazyListState = rememberLazyListState()
+    val itemWidth = 268.dp
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val contentPadding = (screenWidth - itemWidth) / 2
+    val dataSize = carouselData.size
+
+    // Efek untuk auto-scroll setiap 5 detik dengan logika unlimited scroll
+    LaunchedEffect(Unit) {
+        // Mulai dari tengah list "tak terbatas" agar bisa scroll ke kiri dan kanan
+        val startIndex = Int.MAX_VALUE / 2
+        lazyListState.scrollToItem(startIndex - (startIndex % dataSize))
+
+        while (true) {
+            delay(5000) // Jeda 5 detik
+            val nextIndex = lazyListState.firstVisibleItemIndex + 1
+            lazyListState.animateScrollToItem(index = nextIndex)
+        }
+    }
+
     LazyRow(
-        contentPadding = PaddingValues(horizontal = 16.dp),
+        state = lazyListState,
+        contentPadding = PaddingValues(horizontal = contentPadding),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(carouselData.size) { index ->
-            val (color, iconRes, title) = carouselData[index]
+        // Gunakan Int.MAX_VALUE untuk membuat list seolah-olah tak terbatas
+        items(Int.MAX_VALUE) { index ->
+            // Gunakan modulo untuk memetakan indeks tak terbatas ke indeks data asli
+            val itemIndex = index % dataSize
+            val (color, iconRes, title) = carouselData[itemIndex]
             CarouselItem(
                 color = color,
                 iconRes = iconRes,
@@ -101,15 +86,15 @@ fun CardInsight() {
 
 @Preview(showBackground = true)
 @Composable
-fun CardInsightPreview() {
-    CardInsight()
+fun CarouselInsightPreview() {
+    CarouselInsight()
 }
 
 /**
- * Composable untuk satu item kartu di dalam carousel.
+ * Composable untuk satu item kartu di dalam carousel dengan tampilan yang diperbaiki.
  */
 @Composable
-private fun CarouselItem(
+fun CarouselItem(
     color: Color,
     iconRes: Int,
     title: String
@@ -134,13 +119,14 @@ private fun CarouselItem(
                 painter = painterResource(id = iconRes),
                 contentDescription = title,
                 modifier = Modifier.size(48.dp),
-                tint = Black
+                tint = White // Warna ikon menjadi putih
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = White // Warna teks menjadi putih
             )
         }
     }
@@ -150,7 +136,7 @@ private fun CarouselItem(
 @Composable
 fun CarouselItemPreview() {
     CarouselItem(
-        color = Blue200,
+        color = Blue400,
         iconRes = R.drawable.ic_grafik_24dp,
         title = "Statistik Pertanian"
     )
