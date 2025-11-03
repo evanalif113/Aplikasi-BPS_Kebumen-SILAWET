@@ -125,7 +125,7 @@ fun MainScreen() {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Lime300,
+                    containerColor = Orange300,
                     titleContentColor = Black,
                     actionIconContentColor = Gray800
                 ),

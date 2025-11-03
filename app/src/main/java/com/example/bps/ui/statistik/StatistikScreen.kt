@@ -4,11 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,7 +33,6 @@ fun StatistikScreen() {
         // Search bar (reuse component)
         SearchBar()
         Spacer(modifier = Modifier.height(24.dp))
-
         // Category Cards
         StatCategoryCard(
             backgroundColor = Color(0xFF008AD4), // Orange
@@ -52,7 +50,7 @@ fun StatistikScreen() {
         Spacer(modifier = Modifier.height(12.dp))
         StatCategoryCard(
             backgroundColor = Color(0xFF54A506), // Blue
-            iconRes = R.drawable.ic_info_24dp, // replace with correct icon resource
+            iconRes = R.drawable.ic_sprout_24dp, // replace with correct icon resource
             title = "Statistik Lingkungan Hidup dan Multi Domain",
             showArrow = true
         )
@@ -99,7 +97,7 @@ private fun StatCategoryCard(
             )
             if (showArrow) {
                 Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "Lihat detail",
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
