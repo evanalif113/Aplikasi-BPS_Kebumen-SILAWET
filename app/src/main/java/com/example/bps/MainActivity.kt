@@ -42,148 +42,187 @@ import androidx.navigation.navArgument
 import com.example.bps.theme.*
 import com.example.bps.ui.beranda.BerandaScreen
 import com.example.bps.ui.datasetdetail.DatasetDetailScreen
+import com.example.bps.ui.statistik.DatasetListScreen
 import com.example.bps.ui.infografik.InfografikScreen
 import com.example.bps.ui.lain.LainScreen
 import com.example.bps.ui.maps.MapsScreen
 import com.example.bps.ui.statistik.StatistikScreen
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent { BpsTheme { MainScreen() } }
-    }
+        override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+                enableEdgeToEdge()
+                setContent { BpsTheme { MainScreen() } }
+        }
 }
 
 @OptIn(ExperimentalMaterial3Api::class) // Opt Developer
 @Composable
 fun MainScreen() {
-    val navController = rememberNavController()
-    var showNotif by remember { mutableStateOf(false) }
-    var showSettings by remember { mutableStateOf(false) }
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+        val navController = rememberNavController()
+        var showNotif by remember { mutableStateOf(false) }
+        var showSettings by remember { mutableStateOf(false) }
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
 
-    val title =
-            when (currentRoute) {
-                "beranda" -> "Beranda"
-                "statistik" -> "Statistik"
-                "maps" -> "Maps"
-                "infografik" -> "Infografik"
-                "lainnya" -> "Lainnya"
-                "detail_screen/{datasetId}" -> "Detail Dataset"
-                else -> "SILAWET"
-            }
+        val title =
+                when {
+                        currentRoute == "beranda" -> "Beranda"
+                        currentRoute == "statistik" -> "Statistik"
+                        currentRoute == "maps" -> "Maps"
+                        currentRoute == "infografik" -> "Infografik"
+                        currentRoute == "lainnya" -> "Lainnya"
+                        currentRoute?.startsWith("dataset_list/") == true -> "Daftar Statistik" // Judul untuk Layar 2
+                        currentRoute?.startsWith("detail_screen/") == true -> "Detail Dataset" // Judul untuk Layar 3
 
-    Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                TopAppBar(
-                        title = { Text(text = title) },
-                        actions = {
-                            IconButton(onClick = { showNotif = !showNotif }) {
-                                Icon(
-                                        painter = painterResource(id = R.drawable.ic_bell_24dp),
-                                        contentDescription = "Notifications"
-                                )
-                                DropdownMenu(
-                                        expanded = showNotif,
-                                        onDismissRequest = { showNotif = false },
-                                        modifier = Modifier.fillMaxWidth().padding(10.dp)
-                                ) {
-                                    DropdownMenuItem(
-                                            text = {
-                                                Text(
-                                                        stringResource(R.string.pengaturan),
-                                                        color = Gray800,
-                                                        fontSize = 16.sp
-                                                )
-                                            },
-                                            onClick = { /* Handle settings click */}
-                                    )
-                                    DropdownMenuItem(
-                                            text = {
-                                                Text(
-                                                        stringResource(R.string.pengaturan),
-                                                        color = Gray800,
-                                                        fontSize = 16.sp
-                                                )
-                                            },
-                                            onClick = { /* Handle about to click */}
-                                    )
-                                }
-                            }
-                            IconButton(onClick = { showSettings = !showSettings }) {
-                                Icon(
-                                        painter = painterResource(id = R.drawable.ic_settings_24dp),
-                                        contentDescription = "Settings"
-                                )
-                            }
-                        },
-                        colors =
-                                TopAppBarDefaults.topAppBarColors(
-                                        containerColor = Orange300,
-                                        titleContentColor = Black,
-                                        actionIconContentColor = Gray800
-                                ),
-                        scrollBehavior = scrollBehavior
-                )
-            },
-            bottomBar = {
-                BottomAppBar(containerColor = Sky500) {
-                    val icons =
-                            listOf(
-                                    "Beranda" to R.drawable.ic_house_24dp,
-                                    "Statistik" to R.drawable.ic_grafik_24dp,
-                                    "Maps" to R.drawable.ic_geotag_24dp,
-                                    "Infografik" to R.drawable.ic_open_book_24dp,
-                                    "Lainnya" to R.drawable.ic_menu_24dp
-                            )
-                    icons.forEach { (title, iconRes) ->
-                        NavigationBarItem(
-                                icon = {
-                                    Icon(painterResource(id = iconRes), contentDescription = title)
-                                },
-                                label = { Text(title) },
-                                selected =
-                                        navController.currentDestination?.route ==
-                                                title.lowercase(),
-                                onClick = { navController.navigate(title.lowercase()) },
-                                colors =
-                                        NavigationBarItemDefaults.colors(
-                                                selectedIconColor = White,
-                                                selectedTextColor = White,
-                                                unselectedIconColor = Gray800,
-                                                unselectedTextColor = Gray800,
-                                                indicatorColor = Color.Transparent
-                                        )
-                        )
-                    }
+                        else -> "SILAWET"
                 }
-            }
-    ) { innerPadding ->
-        NavHost(
-                navController = navController,
-                startDestination = "beranda",
-                modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("beranda") { BerandaScreen() }
-            composable("statistik") { StatistikScreen() }
-            composable("maps") { MapsScreen() }
-            composable("infografik") { InfografikScreen() }
-            composable("lainnya") { LainScreen() }
 
-            // Tambahan: route detail dengan argumen datasetId
-            composable(
-                    route = "detail_screen/{datasetId}",
-                    arguments = listOf(navArgument("datasetId") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val datasetId = backStackEntry.arguments?.getString("datasetId") ?: ""
-                DatasetDetailScreen(datasetId = datasetId, navController = navController)
-            }
+        Scaffold(
+                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                topBar = {
+                        TopAppBar(
+                                title = { Text(text = title) },
+                                actions = {
+                                        IconButton(onClick = { showNotif = !showNotif }) {
+                                                Icon(
+                                                        painter =
+                                                                painterResource(
+                                                                        id = R.drawable.ic_bell_24dp
+                                                                ),
+                                                        contentDescription = "Notifications"
+                                                )
+                                                DropdownMenu(
+                                                        expanded = showNotif,
+                                                        onDismissRequest = { showNotif = false },
+                                                        modifier =
+                                                                Modifier.fillMaxWidth()
+                                                                        .padding(10.dp)
+                                                ) {
+                                                        DropdownMenuItem(
+                                                                text = {
+                                                                        Text(
+                                                                                stringResource(
+                                                                                        R.string
+                                                                                                .pengaturan
+                                                                                ),
+                                                                                color = Gray800,
+                                                                                fontSize = 16.sp
+                                                                        )
+                                                                },
+                                                                onClick = { /* Handle settings click */
+                                                                }
+                                                        )
+                                                        DropdownMenuItem(
+                                                                text = {
+                                                                        Text(
+                                                                                stringResource(
+                                                                                        R.string
+                                                                                                .pengaturan
+                                                                                ),
+                                                                                color = Gray800,
+                                                                                fontSize = 16.sp
+                                                                        )
+                                                                },
+                                                                onClick = { /* Handle about to click */
+                                                                }
+                                                        )
+                                                }
+                                        }
+                                        IconButton(onClick = { showSettings = !showSettings }) {
+                                                Icon(
+                                                        painter =
+                                                                painterResource(
+                                                                        id =
+                                                                                R.drawable
+                                                                                        .ic_settings_24dp
+                                                                ),
+                                                        contentDescription = "Settings"
+                                                )
+                                        }
+                                },
+                                colors =
+                                        TopAppBarDefaults.topAppBarColors(
+                                                containerColor = Orange300,
+                                                titleContentColor = Black,
+                                                actionIconContentColor = Gray800
+                                        ),
+                                scrollBehavior = scrollBehavior
+                        )
+                },
+                bottomBar = {
+                        BottomAppBar(containerColor = Sky500) {
+                                val icons =
+                                        listOf(
+                                                "Beranda" to R.drawable.ic_house_24dp,
+                                                "Statistik" to R.drawable.ic_grafik_24dp,
+                                                "Maps" to R.drawable.ic_geotag_24dp,
+                                                "Infografik" to R.drawable.ic_open_book_24dp,
+                                                "Lainnya" to R.drawable.ic_menu_24dp
+                                        )
+                                icons.forEach { (title, iconRes) ->
+                                        NavigationBarItem(
+                                                icon = {
+                                                        Icon(
+                                                                painterResource(id = iconRes),
+                                                                contentDescription = title
+                                                        )
+                                                },
+                                                label = { Text(title) },
+                                                selected =
+                                                        navController.currentDestination?.route ==
+                                                                title.lowercase(),
+                                                onClick = {
+                                                        navController.navigate(title.lowercase())
+                                                },
+                                                colors =
+                                                        NavigationBarItemDefaults.colors(
+                                                                selectedIconColor = White,
+                                                                selectedTextColor = White,
+                                                                unselectedIconColor = Gray800,
+                                                                unselectedTextColor = Gray800,
+                                                                indicatorColor = Color.Transparent
+                                                        )
+                                        )
+                                }
+                        }
+                }
+        ) { innerPadding ->
+                NavHost(
+                        navController = navController,
+                        startDestination = "beranda",
+                        modifier = Modifier.padding(innerPadding)
+                ) {
+                        composable("beranda") { BerandaScreen() }
+                        composable("statistik") { StatistikScreen(navController) }
+                        composable("maps") { MapsScreen() }
+                        composable("infografik") { InfografikScreen() }
+                        composable("lainnya") { LainScreen() }
+                        composable("dataset_list/{subject}") { backStackEntry ->
+                                val subject =
+                                        backStackEntry.arguments?.getString("subject") ?: "default"
+
+                                DatasetListScreen(categoryId = subject, navController = navController)
+                        }
+                        composable(
+                                route = "detail_screen/{datasetId}",
+                                arguments =
+                                        listOf(
+                                                navArgument("datasetId") {
+                                                        type = NavType.StringType
+                                                }
+                                        )
+                        ) { backStackEntry ->
+                                val datasetId =
+                                        backStackEntry.arguments?.getString("datasetId") ?: ""
+                                DatasetDetailScreen(
+                                        datasetId = datasetId,
+                                        navController = navController
+                                )
+                        }
+                }
         }
-    }
 }
 
 @Preview(
@@ -194,5 +233,5 @@ fun MainScreen() {
 )
 @Composable
 fun MainActivityPreview() {
-    BpsTheme { MainScreen() }
+        BpsTheme { MainScreen() }
 }
