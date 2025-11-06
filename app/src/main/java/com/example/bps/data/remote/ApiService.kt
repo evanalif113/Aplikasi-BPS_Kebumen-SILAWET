@@ -5,6 +5,7 @@ import com.example.bps.data.remote.responses.* // Import data class dari folder 
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.example.bps.data.remote.responses.BpsDatasetResponse
 import com.example.bps.data.remote.responses.SimpleDatasetResponse
 
 /** Interface ini berisi SEMUA definisi endpoint API yang akan dipanggil menggunakan Retrofit. */
@@ -15,8 +16,8 @@ interface ApiService {
 
     @GET("datasets")
     suspend fun getDatasetList(
-            @Query("subject") subject: String? = null,
-            @Query("q") searchQuery: String? = null
+        @Query("category") category: Int? = null,
+        @Query("q") searchQuery: String? = null
     ): List<SimpleDatasetResponse>
 
 

@@ -42,7 +42,7 @@ fun StatistikScreen(navController: NavController) {
                 iconRes = R.drawable.ic_open_book_24dp, // replace with correct icon resource
                 title = "Statistik Demografi dan Sosial",
                 showArrow = true,
-                onClick = { navController.navigate("dataset_list/Kependudukan dan Migrasi") }
+                onClick = { navController.navigate("dataset_list/1") }
         )
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -51,7 +51,7 @@ fun StatistikScreen(navController: NavController) {
                 iconRes = R.drawable.ic_grafik_24dp, // replace with correct icon resource
                 title = "Statistik Ekonomi",
                 showArrow = true,
-                onClick = { navController.navigate("dataset_list/Ekonomi") }
+                onClick = { navController.navigate("dataset_list/2") }
         )
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -60,7 +60,7 @@ fun StatistikScreen(navController: NavController) {
                 iconRes = R.drawable.ic_sprout_24dp, // replace with correct icon resource
                 title = "Statistik Lingkungan Hidup dan Multi Domain",
                 showArrow = true,
-                onClick = { navController.navigate("dataset_list/Lingkungan") }
+                onClick = { navController.navigate("dataset_list/3") }
         )
     }
 }

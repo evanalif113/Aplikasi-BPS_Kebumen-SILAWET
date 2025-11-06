@@ -32,8 +32,11 @@ fun DatasetListScreen(
     // 1. Ambil uiState dari ViewModel
     val uiState by viewModel.uiState
 
-    // 2. Pemicu: Panggil API saat layar pertama kali dibuka
-    LaunchedEffect(categoryId) { viewModel.getDatasetList(subject = categoryId) }
+    LaunchedEffect(categoryId) {
+        // Ganti nama parameter menjadi 'categoryId' agar sesuai
+        // dengan ViewModel yang sudah kita perbaiki
+        viewModel.getDatasetList(categoryId = categoryId)
+    }
 
     Scaffold(
             topBar = {
@@ -69,7 +72,7 @@ fun DatasetListScreen(
                                 color = MaterialTheme.colorScheme.error
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = { viewModel.getDatasetList(subject = categoryId) }) {
+                        Button(onClick = { viewModel.getDatasetList(categoryId = categoryId) }) {
                             Text("Coba Lagi")
                         }
                     }

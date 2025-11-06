@@ -199,11 +199,10 @@ fun MainScreen() {
                         composable("maps") { MapsScreen() }
                         composable("infografik") { InfografikScreen() }
                         composable("lainnya") { LainScreen() }
-                        composable("dataset_list/{subject}") { backStackEntry ->
-                                val subject =
-                                        backStackEntry.arguments?.getString("subject") ?: "default"
-
-                                DatasetListScreen(categoryId = subject, navController = navController)
+                        composable("dataset_list/{categoryId}") { backStackEntry ->
+                                val categoryId =
+                                        backStackEntry.arguments?.getString("categoryId") ?: "0"
+                                DatasetListScreen(categoryId = categoryId, navController = navController)
                         }
                         composable(
                                 route = "detail_screen/{datasetId}",

@@ -5,76 +5,126 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.bps.data.remote.responses.TableData
+import androidx.compose.ui.unit.sp
+import com.example.bps.data.remote.responses.TableData // <-- Pastikan import ini
 
-private val CellWidth = 120.dp
+// --- 🎨 WARNA-WARNA TABEL (Mirip BPS) ---
+val TableBorderColor = Color(0xFFE0E0E0) // Abu-abu border
+val TableHeaderBg = Color(0xFF003366) // Biru tua BPS
+val TableHeaderColor = Color.White // Teks header putih
 
-/**
- * Composable "bodoh" yang hanya bertugas menampilkan data tabel. Dibuat agar bisa di-scroll
- * horizontal jika kolomnya banyak.
- *
- * @param tableData Objek TableData yang berisi headers dan rows.
- */
+val TableRowEvenBg = Color.White // Baris genap
+val TableRowOddBg = Color(0xFFF7F7F7) // Baris ganjil (abu-abu sangat muda)
+// ------------------------------------------
+
 @Composable
-fun TabelDataSection(tableData: TableData, modifier: Modifier = Modifier) {
-    val hScroll = rememberScrollState()
+fun TabelDataSection(
+    tableData: TableData,
+    modifier: Modifier = Modifier
+) {
+    val headers = tableData.headers
+    val rows = tableData.rows
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        // Satu-satunya horizontalScroll: membungkus header + baris
-        Box(modifier = Modifier.fillMaxWidth().horizontalScroll(hScroll)) {
-            Column {
-                // 1) Header
+    val horizontalScrollState = rememberScrollState()
+
+    Column(
+        modifier = modifier
+            // Border untuk seluruh tabel
+            .border(1.dp, TableBorderColor)
+    ) {
+
+        // --- BARIS HEADER ---
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(horizontalScrollState)
+                // Warna latar header
+                .background(TableHeaderBg)
+        ) {
+            headers.forEachIndexed { index, header ->
+                val width = if (index == 0) 180.dp else 120.dp
+                val align = if (index == 0) TextAlign.Start else TextAlign.Center
+
+                TableCell(
+                    text = header,
+                    isHeader = true, // Ini adalah header
+                    modifier = Modifier.width(width),
+                    textAlign = align
+                )
+            }
+        }
+
+        // --- BARIS-BARIS DATA ---
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 600.dp) // Batasi tinggi tabel
+        ) {
+            itemsIndexed(rows) { rowIndex, rowMap ->
+                // Tentukan warna baris selang-seling
+                val bgColor = if (rowIndex % 2 == 0) TableRowEvenBg else TableRowOddBg
+
                 Row(
-                        modifier =
-                                Modifier.fillMaxWidth()
-                                        .background(MaterialTheme.colorScheme.primaryContainer)
-                                        .padding(vertical = 4.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(horizontalScrollState) // Sinkronkan scroll
+                        .background(bgColor) // Terapkan warna baris
                 ) {
-                    tableData.headers.forEach { header ->
-                        Text(
-                                text = header,
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier =
-                                        Modifier.width(CellWidth)
-                                                .padding(horizontal = 8.dp, vertical = 8.dp)
+                    headers.forEachIndexed { colIndex, headerKey ->
+
+                        val cellValue = rowMap[headerKey]?.toString() ?: "-"
+
+                        val width = if (colIndex == 0) 180.dp else 120.dp
+                        val align = if (colIndex == 0) TextAlign.Start else TextAlign.Center
+
+                        TableCell(
+                            text = cellValue,
+                            isHeader = false, // Ini adalah data
+                            modifier = Modifier.width(width),
+                            textAlign = align
                         )
-                    }
-                }
-
-                Divider(color = Color.LightGray, thickness = 1.dp)
-
-                // 2) Baris data (scroll vertikal saja)
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(tableData.rows) { rowMap ->
-                        Row(modifier = Modifier.fillMaxWidth().border(0.5.dp, Color.LightGray)) {
-                            tableData.headers.forEach { headerKey ->
-                                val cellValue = rowMap[headerKey]
-                                Text(
-                                        text = cellValue?.toString() ?: "-",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        modifier =
-                                                Modifier.width(CellWidth)
-                                                        .padding(
-                                                                horizontal = 8.dp,
-                                                                vertical = 10.dp
-                                                        )
-                                )
-                            }
-                        }
                     }
                 }
             }
         }
     }
+}
+
+/**
+ * Composable untuk satu sel
+ */
+@Composable
+fun TableCell(
+    text: String,
+    isHeader: Boolean,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
+    // Tentukan warna teks berdasarkan apakah ini header atau bukan
+    val textColor = if (isHeader) TableHeaderColor else Color.Black
+
+    Text(
+        text = text,
+        fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
+        fontSize = 13.sp,
+        color = textColor, // Terapkan warna teks
+        textAlign = textAlign,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
+            // Border tipis untuk tiap sel
+            .border(0.5.dp, TableBorderColor)
+            .padding(horizontal = 10.dp, vertical = 12.dp) // Tambah padding
+            .height(IntrinsicSize.Min)
+    )
 }
