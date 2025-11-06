@@ -60,6 +60,11 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // Untuk Konverter Gson (JSON ke Kotlin Data Class)
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     // Choose one of the following:
     // Material Design 3
     implementation("androidx.compose.material3:material3")
