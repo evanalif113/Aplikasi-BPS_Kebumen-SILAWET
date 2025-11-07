@@ -26,12 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bps.R
-import com.example.bps.theme.Black
-import com.example.bps.theme.Blue400
-import com.example.bps.theme.Green300
-import com.example.bps.theme.Orange300
-import com.example.bps.theme.Red300
-import com.example.bps.theme.White
+import com.example.bps.theme.*
 
 @Composable
 fun MenuItem(iconRes: Int, title: String, colorCard: Color) {
@@ -93,9 +88,9 @@ fun MenuItemSection() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             MenuItem(iconRes = R.drawable.ic_maps_24dp, title = "Peta", colorCard = Blue400)
-            MenuItem(iconRes = R.drawable.ic_grafik_24dp, title = "Statistik", colorCard = Orange300)
-            MenuItem(iconRes = R.drawable.ic_open_book_24dp, title = "Infografik", colorCard = Red300)
-            MenuItem(iconRes = R.drawable.ic_menu_24dp, title = "Lainnya", colorCard = Green300)
+            MenuItem(iconRes = R.drawable.ic_grafik_24dp, title = "Statistik", colorCard = Orange400)
+            MenuItem(iconRes = R.drawable.ic_open_book_24dp, title = "Infografik", colorCard = Red400)
+            MenuItem(iconRes = R.drawable.ic_menu_24dp, title = "Lainnya", colorCard = Green400)
         }
     }
 }

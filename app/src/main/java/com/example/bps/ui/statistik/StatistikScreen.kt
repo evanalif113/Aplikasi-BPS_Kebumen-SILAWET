@@ -39,7 +39,7 @@ fun StatistikScreen(navController: NavController) {
 
         // Category Cards
         StatCategoryCard(
-            backgroundColor = Color(0xFF008AD4), // Orange
+            backgroundColor = Color(0xFF03A9F4), // Orange
             iconRes = R.drawable.ic_open_book_24dp, // replace with correct icon resource
             title = "Statistik Demografi dan Sosial",
             showArrow = true,
@@ -49,7 +49,7 @@ fun StatistikScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(12.dp))
 
         StatCategoryCard(
-            backgroundColor = Color(0xFFDD7F06), // Green
+            backgroundColor = Color(0xFFFF9800), // Green
             iconRes = R.drawable.ic_grafik_24dp, // replace with correct icon resource
             title = "Statistik Ekonomi",
             showArrow = true,
@@ -59,7 +59,7 @@ fun StatistikScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(12.dp))
 
         StatCategoryCard(
-            backgroundColor = Color(0xFF54A506), // Blue
+            backgroundColor = Color(0xFF4CAF50), // Blue
             iconRes = R.drawable.ic_sprout_24dp, // replace with correct icon resource
             title = "Statistik Lingkungan Hidup dan Multi Domain",
             showArrow = true,
@@ -93,7 +93,7 @@ private fun StatCategoryCard(
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = title,
-                tint = Color.Unspecified,
+                tint = Color.White,
                 modifier = Modifier.size(40.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))

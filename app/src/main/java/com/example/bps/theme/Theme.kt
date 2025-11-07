@@ -10,66 +10,67 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.MaterialTheme
+import com.example.bps.theme.Black // <-- Impor ditambahkan
 
 // Skema warna untuk Tema Gelap (Dark Theme)
 private val DarkColorScheme = darkColorScheme(
     primary = Orange300,
-    onPrimary = Orange900,
+    onPrimary = Black, // Diubah
     primaryContainer = Orange800,
-    onPrimaryContainer = Orange100,
+    onPrimaryContainer = Black, // Diubah
     secondary = Emerald300,
-    onSecondary = Emerald900,
+    onSecondary = Black, // Diubah
     secondaryContainer = Emerald800,
-    onSecondaryContainer = Emerald100,
+    onSecondaryContainer = Black, // Diubah
     tertiary = Sky300,
-    onTertiary = Sky900,
+    onTertiary = Black, // Diubah
     tertiaryContainer = Sky800,
-    onTertiaryContainer = Sky100,
+    onTertiaryContainer = Black, // Diubah
     error = Red300,
-    onError = Red900,
+    onError = Black, // Diubah
     errorContainer = Red800,
-    onErrorContainer = Red100,
+    onErrorContainer = Black, // Diubah
     background = Gray100,
-    onBackground = Gray100,
-    surface = Gray50,
-    onSurface = Gray200,
+    onBackground = Black, // Diubah
+    surface = Gray900,
+    onSurface = Black, // Diubah
     surfaceVariant = Gray700,
-    onSurfaceVariant = Gray300,
+    onSurfaceVariant = Black, // Diubah
     outline = Gray600
 )
 
 // Skema warna untuk Tema Terang (Light Theme)
 private val LightColorScheme = lightColorScheme(
     primary = Orange500,
-    onPrimary = White,
+    onPrimary = Black, // Sudah Benar
     primaryContainer = Orange100,
-    onPrimaryContainer = Orange900,
+    onPrimaryContainer = Black, // Diubah
     secondary = Emerald600,
-    onSecondary = White,
+    onSecondary = Black, // Sudah Benar
     secondaryContainer = Emerald100,
-    onSecondaryContainer = Emerald900,
+    onSecondaryContainer = Black, // Diubah
     tertiary = Sky500,
-    onTertiary = White,
+    onTertiary = Black, // Sudah Benar
     tertiaryContainer = Sky100,
-    onTertiaryContainer = Sky900,
+    onTertiaryContainer = Black, // Diubah
     error = Red600,
-    onError = White,
+    onError = Black, // Sudah Benar
     errorContainer = Red100,
-    onErrorContainer = Red900,
+    onErrorContainer = Black, // Diubah
     background = Gray50,
-    onBackground = Gray900,
-    surface = Gray50,
-    onSurface = Gray900,
-    surfaceVariant = Gray200,
-    onSurfaceVariant = Gray700,
-    outline = Gray400
+    onBackground = Black, // Diubah
+    surface = White, // Sebaiknya ini warna terang (misal White)
+    onSurface = Black, // Diubah
+    surfaceVariant = Orange300, // Sebaiknya ini warna terang
+    onSurfaceVariant = Gray900, // Diubah
+    outline = Gray900
 )
 
 @Composable
 fun BpsTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

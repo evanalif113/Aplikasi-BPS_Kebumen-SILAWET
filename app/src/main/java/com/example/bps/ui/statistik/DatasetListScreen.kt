@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
 /**
  * Screen ini menampilkan DAFTAR dataset berdasarkan kategori/subject.
  *
@@ -117,7 +116,7 @@ fun DatasetListScreen(
                                     Text(
                                             text = "Subjek: ${dataset.subject}",
                                             style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
                                 }
                             }

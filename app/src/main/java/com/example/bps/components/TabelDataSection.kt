@@ -6,6 +6,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -126,5 +127,41 @@ fun TableCell(
             .border(0.5.dp, TableBorderColor)
             .padding(horizontal = 10.dp, vertical = 12.dp) // Tambah padding
             .height(IntrinsicSize.Min)
+    )
+}
+
+@Preview
+@Composable
+fun TabelDataSectionPreview() {
+    val tableData = TableData(
+        headers = listOf("Wilayah", "2021", "2022", "2023"),
+        rows = listOf(
+            mapOf("Wilayah" to "JAWA BARAT", "2021" to 1500, "2022" to 1600, "2023" to 1700),
+            mapOf("Wilayah" to "DKI JAKARTA", "2021" to 1200, "2022" to 1300, "2023" to 1400),
+            mapOf("Wilayah" to "BANTEN", "2021" to 1100, "2022" to 1150, "2023" to 1200)
+        )
+    )
+    TabelDataSection(tableData = tableData)
+}
+
+@Preview
+@Composable
+fun TableCellHeaderPreview() {
+    TableCell(
+        text = "Header Cell",
+        isHeader = true,
+        modifier = Modifier.width(120.dp),
+        textAlign = TextAlign.Center
+    )
+}
+
+@Preview
+@Composable
+fun TableCellDataPreview() {
+    TableCell(
+        text = "Data Cell",
+        isHeader = false,
+        modifier = Modifier.width(120.dp),
+        textAlign = TextAlign.Start
     )
 }
