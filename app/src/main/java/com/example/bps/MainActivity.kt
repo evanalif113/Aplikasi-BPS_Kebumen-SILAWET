@@ -47,6 +47,8 @@ import com.example.bps.ui.infografik.InfografikScreen
 import com.example.bps.ui.lain.LainScreen
 import com.example.bps.ui.maps.MapsScreen
 import com.example.bps.ui.statistik.StatistikScreen
+import com.example.bps.ui.statistik.SubjectListScreen
+
 
 class MainActivity : ComponentActivity() {
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -189,20 +191,47 @@ fun MainScreen() {
                         }
                 }
         ) { innerPadding ->
-                NavHost(
+            NavHost(
                         navController = navController,
                         startDestination = "beranda",
                         modifier = Modifier.padding(innerPadding)
-                ) {
+                    ) {
+                        // --- LAYAR 1 (NAVIGASI UTAMA) ---
                         composable("beranda") { BerandaScreen() }
-                        composable("statistik") { StatistikScreen(navController) }
+                        composable("statistik") { StatistikScreen(navController) } // <-- Tombol Kategori ada di sini
                         composable("maps") { MapsScreen() }
                         composable("infografik") { InfografikScreen() }
                         composable("lainnya") { LainScreen() }
-                        composable("dataset_list/{categoryId}") { backStackEntry ->
-                                val categoryId =
-                                        backStackEntry.arguments?.getString("categoryId") ?: "0"
-                                DatasetListScreen(categoryId = categoryId, navController = navController)
+
+                        // --- LAYAR 2 (DAFTAR SUBJECT) ---
+                        // Rute BARU untuk halaman SubjectListScreen
+                        // Dipanggil dari StatistikScreen
+                        composable(
+                            route = "subject_list/{categoryId}", // <-- Menerima ID Kategori
+                            arguments = listOf(navArgument("categoryId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val categoryId = backStackEntry.arguments?.getString("categoryId") ?: "0"
+
+                            SubjectListScreen(
+                                categoryId = categoryId,
+                                navController = navController
+                            )
+                        }
+
+                        // --- LAYAR 3 (DAFTAR TABEL) ---
+                        // Rute LAMA yang DIPERBAIKI
+                        // Dipanggil dari SubjectListScreen
+                        composable(
+                            route = "dataset_list/{subjectName}", // <-- Diubah dari categoryId
+                            arguments = listOf(navArgument("subjectName") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val subjectName = backStackEntry.arguments?.getString("subjectName") ?: ""
+
+                            // Panggil DatasetListScreen (Halaman LAMA)
+                            DatasetListScreen(
+                                subjectName = subjectName, // <-- Kirim subjectName
+                                navController = navController
+                            )
                         }
                         composable(
                                 route = "detail_screen/{datasetId}",

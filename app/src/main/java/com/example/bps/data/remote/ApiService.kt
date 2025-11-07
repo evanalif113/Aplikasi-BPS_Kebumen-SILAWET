@@ -16,10 +16,12 @@ interface ApiService {
 
     @GET("datasets")
     suspend fun getDatasetList(
-        @Query("category") category: Int? = null,
+        @Query("subject") subject: String? = null, // <-- KEMBALI KE 'subject'
         @Query("q") searchQuery: String? = null
     ): List<SimpleDatasetResponse>
 
+    @GET("datasets/categories")
+    suspend fun getCategories(): List<CategorySubjectResponse> // <-- FUNGSI BARU
 
     
 

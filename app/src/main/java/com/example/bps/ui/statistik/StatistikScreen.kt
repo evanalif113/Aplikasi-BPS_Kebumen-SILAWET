@@ -20,16 +20,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController // <-- Tambah import ini untuk Preview
 import com.example.bps.R
 import com.example.bps.components.SearchBar
 
 @Composable
 fun StatistikScreen(navController: NavController) {
     Column(
-            modifier =
-                    Modifier.fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(bottom = 32.dp)
+        modifier =
+            Modifier.fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 32.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         // Search bar (reuse component)
@@ -38,74 +39,77 @@ fun StatistikScreen(navController: NavController) {
 
         // Category Cards
         StatCategoryCard(
-                backgroundColor = Color(0xFF008AD4), // Orange
-                iconRes = R.drawable.ic_open_book_24dp, // replace with correct icon resource
-                title = "Statistik Demografi dan Sosial",
-                showArrow = true,
-                onClick = { navController.navigate("dataset_list/1") }
+            backgroundColor = Color(0xFF008AD4), // Orange
+            iconRes = R.drawable.ic_open_book_24dp, // replace with correct icon resource
+            title = "Statistik Demografi dan Sosial",
+            showArrow = true,
+            // --- PERBAIKAN 1 ---
+            onClick = { navController.navigate("subject_list/1") }
         )
         Spacer(modifier = Modifier.height(12.dp))
 
         StatCategoryCard(
-                backgroundColor = Color(0xFFDD7F06), // Green
-                iconRes = R.drawable.ic_grafik_24dp, // replace with correct icon resource
-                title = "Statistik Ekonomi",
-                showArrow = true,
-                onClick = { navController.navigate("dataset_list/2") }
+            backgroundColor = Color(0xFFDD7F06), // Green
+            iconRes = R.drawable.ic_grafik_24dp, // replace with correct icon resource
+            title = "Statistik Ekonomi",
+            showArrow = true,
+            // --- PERBAIKAN 2 ---
+            onClick = { navController.navigate("subject_list/2") }
         )
         Spacer(modifier = Modifier.height(12.dp))
 
         StatCategoryCard(
-                backgroundColor = Color(0xFF54A506), // Blue
-                iconRes = R.drawable.ic_sprout_24dp, // replace with correct icon resource
-                title = "Statistik Lingkungan Hidup dan Multi Domain",
-                showArrow = true,
-                onClick = { navController.navigate("dataset_list/3") }
+            backgroundColor = Color(0xFF54A506), // Blue
+            iconRes = R.drawable.ic_sprout_24dp, // replace with correct icon resource
+            title = "Statistik Lingkungan Hidup dan Multi Domain",
+            showArrow = true,
+            // --- PERBAIKAN 3 ---
+            onClick = { navController.navigate("subject_list/3") }
         )
     }
 }
 
 @Composable
 private fun StatCategoryCard(
-        backgroundColor: Color,
-        iconRes: Int,
-        title: String,
-        showArrow: Boolean,
-        onClick: () -> Unit = {}
+    backgroundColor: Color,
+    iconRes: Int,
+    title: String,
+    showArrow: Boolean,
+    onClick: () -> Unit = {}
 ) {
     Card(
-            modifier =
-                    Modifier.fillMaxWidth().height(80.dp).padding(horizontal = 16.dp).clickable {
-                        onClick()
-                    },
-            colors = CardDefaults.cardColors(containerColor = backgroundColor),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            shape = CardDefaults.shape
+        modifier =
+            Modifier.fillMaxWidth().height(80.dp).padding(horizontal = 16.dp).clickable {
+                onClick()
+            },
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = CardDefaults.shape
     ) {
         Row(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = title,
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(40.dp)
+                painter = painterResource(id = iconRes),
+                contentDescription = title,
+                tint = Color.Unspecified,
+                modifier = Modifier.size(40.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                    text = title,
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.weight(1f)
+                text = title,
+                color = Color.White,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.weight(1f)
             )
             if (showArrow) {
                 Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "Lihat detail",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "Lihat detail",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -115,5 +119,6 @@ private fun StatCategoryCard(
 @Preview(showBackground = true)
 @Composable
 fun StatistikScreenPreview() {
-    // Preview with a mock NavController if needed
+    // Perbaiki preview agar tidak error
+    StatistikScreen(navController = rememberNavController())
 }

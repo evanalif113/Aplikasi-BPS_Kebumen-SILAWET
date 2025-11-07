@@ -25,24 +25,20 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatasetListScreen(
-        categoryId: String,
-        navController: NavController,
-        viewModel: DatasetListViewModel = viewModel() // Menggunakan ViewModel yang baru
+    subjectName: String, // <-- Ganti nama parameter ini
+    navController: NavController,
+    viewModel: DatasetListViewModel = viewModel()
 ) {
-    // 1. Ambil uiState dari ViewModel
     val uiState by viewModel.uiState
 
-    LaunchedEffect(categoryId) {
-        // Ganti nama parameter menjadi 'categoryId' agar sesuai
-        // dengan ViewModel yang sudah kita perbaiki
-        viewModel.getDatasetList(categoryId = categoryId)
+    LaunchedEffect(subjectName) { // <-- Ganti ini
+        viewModel.getDatasetList(subject = subjectName) // <-- Ganti ini
     }
 
     Scaffold(
-            topBar = {
-                TopAppBar(
-                        // Judulnya dinamis sesuai kategori
-                        title = { Text(categoryId) },
+        topBar = {
+            TopAppBar(
+                title = { Text(subjectName) },
                         navigationIcon = {
                             IconButton(onClick = { navController.popBackStack() }) {
                                 Icon(
@@ -72,7 +68,7 @@ fun DatasetListScreen(
                                 color = MaterialTheme.colorScheme.error
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = { viewModel.getDatasetList(categoryId = categoryId) }) {
+                        Button(onClick = { viewModel.getDatasetList(subject = subjectName) }) {
                             Text("Coba Lagi")
                         }
                     }

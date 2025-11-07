@@ -26,21 +26,14 @@ class DatasetListViewModel : ViewModel() {
     val uiState: State<DatasetListUiState> = _uiState
 
     /** @param subject Filter berdasarkan subject (misal: "Ekonomi") */
-    fun getDatasetList(categoryId: String) {
+    fun getDatasetList(subject: String) {
         viewModelScope.launch {
             _uiState.value = DatasetListUiState(isLoading = true)
-
             try {
-                // Ubah String "2" menjadi Int 2
-                val idAsInt = categoryId.toIntOrNull()
-
-                // Panggil API menggunakan 'category' (Int)
-                val response = ApiClient.apiService.getDatasetList(category = idAsInt)
-
+                // Pastikan memanggil API pakai 'subject'
+                val response = ApiClient.apiService.getDatasetList(subject = subject)
                 _uiState.value = DatasetListUiState(isLoading = false, datasets = response)
-
             } catch (e: Exception) {
-                // 4. Gagal: update state dengan pesan error
                 _uiState.value =
                         DatasetListUiState(
                                 isLoading = false,
