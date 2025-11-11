@@ -40,7 +40,7 @@ fun StatistikScreen(navController: NavController) {
         // Category Cards
         StatCategoryCard(
             backgroundColor = Color(0xFF03A9F4), // Orange
-            iconRes = R.drawable.ic_open_book_24dp, // replace with correct icon resource
+            iconRes = R.drawable.ic_demografi, // replace with correct icon resource
             title = "Statistik Demografi dan Sosial",
             showArrow = true,
             // --- PERBAIKAN 1 ---
@@ -50,7 +50,7 @@ fun StatistikScreen(navController: NavController) {
 
         StatCategoryCard(
             backgroundColor = Color(0xFFFF9800), // Green
-            iconRes = R.drawable.ic_grafik_24dp, // replace with correct icon resource
+            iconRes = R.drawable.ic_ekonomi, // replace with correct icon resource
             title = "Statistik Ekonomi",
             showArrow = true,
             // --- PERBAIKAN 2 ---
@@ -60,7 +60,8 @@ fun StatistikScreen(navController: NavController) {
 
         StatCategoryCard(
             backgroundColor = Color(0xFF4CAF50), // Blue
-            iconRes = R.drawable.ic_sprout_24dp, // replace with correct icon resource
+            iconRes = R.drawable.ic_lingkungan
+            , // replace with correct icon resource
             title = "Statistik Lingkungan Hidup dan Multi Domain",
             showArrow = true,
             // --- PERBAIKAN 3 ---
