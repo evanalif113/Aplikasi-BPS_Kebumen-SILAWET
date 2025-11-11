@@ -16,19 +16,17 @@ interface ApiService {
 
     @GET("datasets")
     suspend fun getDatasetList(
-        @Query("subject") subject: String? = null, // <-- KEMBALI KE 'subject'
+        @Query("subject") subject: String? = null,
         @Query("q") searchQuery: String? = null
     ): List<SimpleDatasetResponse>
 
     @GET("datasets/categories")
-    suspend fun getCategories(): List<CategorySubjectResponse> // <-- FUNGSI BARU
+    suspend fun getCategories(): List<CategorySubjectResponse>
 
-    
-
-//     @GET("datasets/{dataset}/history")
-//     suspend fun getDatasetHistory(
-//             @Path("dataset") datasetId: String
-//     ): DatasetHistoryResponse // <- Anda perlu buat data class 'DatasetHistoryResponse'
+    //@GET("datasets/{dataset}/history")
+    //suspend fun getDatasetHistory(
+      //     @Path("dataset") datasetId: String
+    //): DatasetHistoryResponse // <- Anda perlu buat data class 'DatasetHistoryResponse'
 
 //     @GET("datasets/{dataset}/insights")
 //     suspend fun getDatasetInsights(

@@ -77,7 +77,6 @@ fun MainScreen() {
                         currentRoute == "lainnya" -> "Lainnya"
                         currentRoute?.startsWith("dataset_list/") == true -> "Daftar Statistik" // Judul untuk Layar 2
                         currentRoute?.startsWith("detail_screen/") == true -> "Detail Dataset" // Judul untuk Layar 3
-
                         else -> "SILAWET"
                 }
 

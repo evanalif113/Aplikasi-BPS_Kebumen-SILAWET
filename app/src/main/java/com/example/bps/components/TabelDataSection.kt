@@ -17,15 +17,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bps.data.remote.responses.TableData // <-- Pastikan import ini
+import com.example.bps.data.remote.responses.TableData
+import com.example.bps.theme.*
 
-// --- 🎨 WARNA-WARNA TABEL (Mirip BPS) ---
-val TableBorderColor = Color(0xFFE0E0E0) // Abu-abu border
-val TableHeaderBg = Color(0xFF003366) // Biru tua BPS
-val TableHeaderColor = Color.White // Teks header putih
+val TableBorderColor = Gray300 // Abu-abu border
+val TableHeaderBg = Blue600 // Biru tua BPS
+val TableHeaderColor = White // Teks header putih
 
-val TableRowEvenBg = Color.White // Baris genap
-val TableRowOddBg = Color(0xFFF7F7F7) // Baris ganjil (abu-abu sangat muda)
+val TableRowEvenBg = White // Baris genap
+val TableRowOddBg = Gray200 // Baris ganjil (abu-abu sangat muda)
 // ------------------------------------------
 
 @Composable
