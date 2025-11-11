@@ -65,6 +65,9 @@ dependencies {
     // Untuk Konverter Gson (JSON ke Kotlin Data Class)
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // Untuk menghubungkan ViewModel dengan Compose (menyediakan fungsi viewModel())
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
     // Choose one of the following:
     // Material Design 3
     implementation("androidx.compose.material3:material3")

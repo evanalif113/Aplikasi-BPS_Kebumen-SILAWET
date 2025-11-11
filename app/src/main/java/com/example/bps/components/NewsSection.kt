@@ -14,29 +14,28 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImage
+import com.example.bps.R // <-- Import R dari proyek Anda
+import com.example.bps.data.remote.responses.NewsItem
+import com.example.bps.ui.news.NewsUiState
 import com.example.bps.theme.Gray200
-
-// Data class untuk menampung informasi berita
-data class NewsVariable(
-    val date: String,
-    val title: String,
-    val imageUrl: String
-)
 
 // Composable untuk menampilkan satu kartu berita
 @Composable
-fun NewsCard(NewsVal: NewsVariable) {
+fun NewsCard(newsItem: NewsItem) { // <-- Diperbaiki: Menerima NewsItem dari API
     Card(
         modifier = Modifier.width(150.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -51,25 +50,28 @@ fun NewsCard(NewsVal: NewsVariable) {
                     .background(Gray200)
             ) {
                 AsyncImage(
-                    model = NewsVal.imageUrl,
-                    contentDescription = NewsVal.title,
+                    model = newsItem.thumbnailUrl, // <-- Diperbaiki: Data dari NewsItem
+                    contentDescription = newsItem.title, // <-- Diperbaiki: Data dari NewsItem
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    // Tambahkan placeholder jika gambar gagal dimuat
+                    placeholder = painterResource(id = R.drawable.ic_placeholder), // <-- GANTI dengan drawable Anda
+                    error = painterResource(id = R.drawable.ic_placeholder) // <-- GANTI dengan drawable Anda
                 )
             }
 
             // Konten teks di bawah gambar
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    text = NewsVal.date,
+                    text = newsItem.date, // <-- Diperbaiki: Data dari NewsItem
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = NewsVal.title,
+                    text = newsItem.title, // <-- Diperbaiki: Data dari NewsItem
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 3,
@@ -83,47 +85,101 @@ fun NewsCard(NewsVal: NewsVariable) {
 
 // Composable untuk seluruh bagian "Berita dan Pers"
 @Composable
-fun NewsSection() {
-    // Data dummy untuk ditampilkan (tipikal struktur mirror InfografikSection)
-    val newsList = listOf(
-        NewsVariable(
-            "8 Oktober 2025",
-            "RESMI RILIS! Booklet SAKERNAS Agustus 2024 Telah Terbit!",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s"
-        ),
-        NewsVariable(
-            "7 Oktober 2025",
-            "Alamat Misterius, Data Sensus Serius",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s"
-        ),
-        NewsVariable(
-            "2 Oktober 2025",
-            "Selamat Hari Batik Nasional 2025",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s"
-        ),
-        NewsVariable(
-            "2 Oktober 2025",
-            "Pengolahan Peta Wilkerstat",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s"
-        )
-    )
+fun NewsSection(
+    uiState: NewsUiState, // <-- Diperbaiki: Menerima UiState dari ViewModel
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.padding(vertical = 16.dp)) {
 
-    Column(modifier = Modifier.padding(vertical = 16.dp)) {
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(newsList) { newsItem ->
-                NewsCard(NewsVal = newsItem)
+        // Judul Section
+        Text(
+            text = "Berita & Rilis Pers",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 12.dp)
+        )
+
+        // Tampilkan UI berdasarkan state
+        when (uiState) {
+            is NewsUiState.Loading -> {
+                // Tampilkan loading di tengah
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp), // Samakan tinggi dengan kartu
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            is NewsUiState.Success -> {
+                // Tampilkan daftar berita jika sukses
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(uiState.news) { newsItem -> // <-- Diperbaiki: Loop data dari state
+                        NewsCard(newsItem = newsItem) // <-- Diperbaiki: Kirim NewsItem
+                    }
+                }
+            }
+            is NewsUiState.Error -> {
+                // Tampilkan pesan error
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = uiState.message,
+                        color = Color.Red,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true, apiLevel = 34, showSystemUi = false,
-    device = "id:pixel_9a"
-)
+@Preview(showBackground = true)
 @Composable
 fun NewsSectionPreview() {
-    NewsSection()
+    // Buat data dummy NewsItem untuk preview
+    val dummyNewsList = listOf(
+        NewsItem(
+            id = 1,
+            date = "9 Oktober 2025",
+            category = "Kegiatan",
+            title = "Selamat Hari Pos Sedunia!",
+            abstract = "...",
+            thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s",
+            link = "",
+            createdAt = "",
+            updatedAt = ""
+        ),
+        NewsItem(
+            id = 2,
+            date = "29 Oktober 2025",
+            category = "Kegiatan",
+            title = "Forum Satu Data Kabupaten Kebumen",
+            abstract = "...",
+            thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s",
+            link = "",
+            createdAt = "",
+            updatedAt = ""
+        )
+    )
+
+    // Tampilkan NewsSection dengan state Success
+    NewsSection(uiState = NewsUiState.Success(dummyNewsList))
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NewsSectionLoadingPreview() {
+    // Tampilkan NewsSection dengan state Loading
+    NewsSection(uiState = NewsUiState.Loading)
 }

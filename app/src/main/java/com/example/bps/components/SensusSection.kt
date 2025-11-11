@@ -24,16 +24,18 @@ import com.example.bps.R
 fun SensusBanner(imageRes: Int, backgroundColor: Color, contentDescription: String) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            .fillMaxWidth()
+            .height(100.dp),
+        shape = RoundedCornerShape(10.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Image(
             painter = painterResource(id = imageRes),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp), // Menambahkan padding agar background terlihat
+                .height(100.dp)
+                .padding(6.dp), // Kurangi padding agar proporsional
             contentDescription = contentDescription
         )
     }
@@ -41,13 +43,13 @@ fun SensusBanner(imageRes: Int, backgroundColor: Color, contentDescription: Stri
 
 @Composable
 fun InfoSensusSection() {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
         Text(
             text = "Info Sensus",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         SensusBanner(
             imageRes = R.drawable.banner_sp2020,
             backgroundColor = Color(0xFFA0E7F8),
@@ -69,8 +71,6 @@ fun InfoSensusSection() {
         )
     }
 }
-
-// 6. Composable untuk setiap banner Sensus
 
 @Preview
 @Composable

@@ -7,6 +7,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import com.example.bps.data.remote.responses.BpsDatasetResponse
 import com.example.bps.data.remote.responses.SimpleDatasetResponse
+import com.example.bps.data.remote.responses.BpsNewsResponse
 
 /** Interface ini berisi SEMUA definisi endpoint API yang akan dipanggil menggunakan Retrofit. */
 interface ApiService {
@@ -33,9 +34,8 @@ interface ApiService {
 //             @Path("dataset") datasetId: String
 //     ): DatasetInsightResponse // <- Anda perlu buat data class 'DatasetInsightResponse'
 
-//     @GET("content/news")
-//     suspend fun getNews():
-//             List<NewsItemResponse> // <- Anda perlu buat data class 'NewsItemResponse'
+    @GET("content/news")
+    suspend fun getNews(): BpsNewsResponse
 
 //     @GET("content/press-releases")
 //     suspend fun getPressReleases():
