@@ -7,13 +7,11 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -38,6 +36,8 @@ import com.example.bps.R
 @Composable
 fun CantikCard(modifier: Modifier = Modifier) {
     val context = LocalContext.current
+    // Definisikan warna hijau WhatsApp
+    val waGreen = Color(0xFF4CAF50)
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -68,7 +68,7 @@ fun CantikCard(modifier: Modifier = Modifier) {
                     Text(
                         text = "Chat Layanan Statistik Kebumen",
                         fontSize = 14.sp,
-                        color = Color.Gray
+                        color = Color.DarkGray
                     )
                 }
             }
@@ -76,18 +76,23 @@ fun CantikCard(modifier: Modifier = Modifier) {
             // Tombol Aksi
             Button(
                 onClick = {
-                    openWhatsApp(context, "+6285179763305") // Nomor dari brosur
+                    openWhatsApp(context, "+6285179763305") // Nomor Kontak BPS Kebumen
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                // --- 2. UBAH WARNA TOMBOL DI SINI ---
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = waGreen
+                )
             ) {
                 Icon(
-                    // --- INI PERBAIKANNYA ---
                     painter = painterResource(id = R.drawable.ic_whatsapp_fill),
                     contentDescription = "WhatsApp",
                     modifier = Modifier
                         .padding(end = 8.dp)
-                        .size(20.dp), // Atur ukuran ikon
-                    tint = Color.Unspecified // Hapus tint agar warna WA asli
+                        .size(20.dp),
+                    // Hapus tint agar warna WA asli (jika ikon Anda berwarna)
+                    // Jika ikon Anda hanya siluet, gunakan Color.White
+                    tint = Color.White
                 )
                 Text("Konsultasi via WhatsApp")
             }
@@ -98,13 +103,15 @@ fun CantikCard(modifier: Modifier = Modifier) {
 /**
  * Composable untuk Kartu Layanan LAPOR KAKANDA (Pengaduan)
  */
-/**
- * Composable untuk Kartu Layanan LAPOR KAKANDA (Pengaduan)
- */
 @Composable
 fun LaporKakandaCard(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
+
+    // --- 3. DEFINISIKAN WARNA-WARNA ---
+    val WaColor = Color(0xFF4CAF50)
+    val WebColor = Color(0xFF4285F4)
+    val MailColor = Color(0xFFEA4335)
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -135,7 +142,7 @@ fun LaporKakandaCard(modifier: Modifier = Modifier) {
                     Text(
                         text = "Laporan Saran, Masukan, & Pengaduan",
                         fontSize = 14.sp,
-                        color = Color.Gray
+                        color = Color.DarkGray
                     )
                 }
             }
@@ -150,53 +157,61 @@ fun LaporKakandaCard(modifier: Modifier = Modifier) {
                     onClick = {
                         openWhatsApp(context, "+6285183110040") // Nomor dari brosur
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    // --- 4. ATUR WARNA TOMBOL WA ---
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = WaColor
+                    )
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_whatsapp_fill),
                         contentDescription = "WhatsApp",
-                        // --- 1. TAMBAHKAN INI ---
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .size(20.dp),
-                        tint = Color.Unspecified
+                        tint = Color.White
                     )
                     Text("Lapor via WhatsApp")
                 }
                 // Tombol Website
                 Button(
                     onClick = {
-                        // Link dari brosur
                         uriHandler.openUri("https://bps.go.id/bps3305_pengaduan")
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    // --- 5. ATUR WARNA TOMBOL WEBSITE ---
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = WebColor
+                    )
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_internet_filled),
                         contentDescription = "Website",
-                        // --- 2. TAMBAHKAN INI ---
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .size(20.dp),
-                        tint = Color.Unspecified
+                        tint = Color.White
                     )
                     Text("Lapor via Website")
                 }
                 // Tombol Email
                 Button(
                     onClick = {
-                        openEmail(context, "bps3305@bps.go.id") // Email dari brosur
+                        openEmail(context, "bps3305@bps.go.id")
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    // --- 6. ATUR WARNA TOMBOL EMAIL ---
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MailColor
+                    )
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_email_fill),
                         contentDescription = "Email",
-                        // --- 3. TAMBAHKAN INI ---
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .size(20.dp),
-                        tint = Color.Unspecified
+                        tint = Color.White
                     )
                     Text("Lapor via Email")
                 }

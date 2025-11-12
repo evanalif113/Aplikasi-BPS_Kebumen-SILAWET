@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName
  * [ { "category": 1, "subjects": ["...", "..."] } ]
  */
 data class CategorySubjectResponse(
-
     @SerializedName("category") val category: Int,
     @SerializedName("subjects") val subjects: List<String>
 )

@@ -17,7 +17,6 @@ data class DetailUiState(
 )
 
 class DetailDatasetViewModel : ViewModel() {
-
     private val _uiState = mutableStateOf(DetailUiState())
     val uiState: State<DetailUiState> = _uiState
 
@@ -32,7 +31,8 @@ class DetailDatasetViewModel : ViewModel() {
                         }
                 _uiState.value =
                         _uiState.value.copy(isLoading = false, dataset = response, error = null)
-            } catch (e: Exception) {
+            }
+            catch (e: Exception) {
                 _uiState.value =
                         _uiState.value.copy(
                                 isLoading = false,
