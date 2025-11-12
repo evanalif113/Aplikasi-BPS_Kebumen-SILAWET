@@ -28,12 +28,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.example.bps.R // <-- Import R dari proyek Anda
+import com.example.bps.R
 import com.example.bps.data.remote.responses.NewsItem
-import com.example.bps.ui.news.NewsUiState
+import com.example.bps.ui.infografik.news.NewsUiState
 import com.example.bps.theme.Gray200
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.clickable
 
-// Composable untuk menampilkan satu kartu berita
+
 @Composable
 fun NewsCard(newsItem: NewsItem) { // <-- Diperbaiki: Menerima NewsItem dari API
     Card(
@@ -86,20 +90,33 @@ fun NewsCard(newsItem: NewsItem) { // <-- Diperbaiki: Menerima NewsItem dari API
 // Composable untuk seluruh bagian "Berita dan Pers"
 @Composable
 fun NewsSection(
-    uiState: NewsUiState, // <-- Diperbaiki: Menerima UiState dari ViewModel
+    uiState: NewsUiState,
+    onSeeAllClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.padding(vertical = 16.dp)) {
 
-        // Judul Section
-        Text(
-            text = "Berita & Rilis Pers",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
+        Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 12.dp)
-        )
+                .padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Berita & Rilis Pers",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Lihat Semua",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.primary, // Warna tema
+                modifier = Modifier.clickable(onClick = onSeeAllClicked) // Aksi klik
+            )
+        }
 
         // Tampilkan UI berdasarkan state
         when (uiState) {
@@ -120,8 +137,8 @@ fun NewsSection(
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(uiState.news) { newsItem -> // <-- Diperbaiki: Loop data dari state
-                        NewsCard(newsItem = newsItem) // <-- Diperbaiki: Kirim NewsItem
+                    items(uiState.news.take(5)) { newsItem ->
+                        NewsCard(newsItem = newsItem)
                     }
                 }
             }
@@ -155,7 +172,7 @@ fun NewsSectionPreview() {
             category = "Kegiatan",
             title = "Selamat Hari Pos Sedunia!",
             abstract = "...",
-            thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s",
+            thumbnailUrl = "...", // Isi dengan URL gambar dummy jika ada
             link = "",
             createdAt = "",
             updatedAt = ""
@@ -166,7 +183,7 @@ fun NewsSectionPreview() {
             category = "Kegiatan",
             title = "Forum Satu Data Kabupaten Kebumen",
             abstract = "...",
-            thumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s",
+            thumbnailUrl = "...", // Isi dengan URL gambar dummy jika ada
             link = "",
             createdAt = "",
             updatedAt = ""
@@ -174,12 +191,28 @@ fun NewsSectionPreview() {
     )
 
     // Tampilkan NewsSection dengan state Success
-    NewsSection(uiState = NewsUiState.Success(dummyNewsList))
+    NewsSection(
+        uiState = NewsUiState.Success(dummyNewsList),
+        onSeeAllClicked = {} // <-- TAMBAHKAN INI
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun NewsSectionLoadingPreview() {
     // Tampilkan NewsSection dengan state Loading
-    NewsSection(uiState = NewsUiState.Loading)
+    NewsSection(
+        uiState = NewsUiState.Loading,
+        onSeeAllClicked = {} // <-- TAMBAHKAN INI
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NewsSectionErrorPreview() {
+    // Tampilkan NewsSection dengan state Error
+    NewsSection(
+        uiState = NewsUiState.Error("Gagal memuat berita."),
+        onSeeAllClicked = {} // <-- TAMBAHKAN INI
+    )
 }

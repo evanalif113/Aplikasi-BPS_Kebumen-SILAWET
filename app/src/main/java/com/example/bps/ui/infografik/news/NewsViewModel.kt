@@ -1,4 +1,4 @@
-package com.example.bps.ui.news // Ganti package ini sesuai struktur proyek Anda
+package com.example.bps.ui.infografik.news // Ganti package ini sesuai struktur proyek Anda
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

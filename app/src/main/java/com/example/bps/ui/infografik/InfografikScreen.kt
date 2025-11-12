@@ -1,11 +1,8 @@
 package com.example.bps.ui.infografik
 
-// Untuk fungsi viewModel()
 import androidx.lifecycle.viewmodel.compose.viewModel
-
-// Untuk fungsi collectAsState()
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue // Biasanya diperlukan saat menggunakan 'by'
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,16 +16,24 @@ import androidx.compose.ui.unit.dp
 import com.example.bps.components.InfografikSection
 import com.example.bps.components.SearchBar
 import com.example.bps.components.NewsSection
-import com.example.bps.ui.news.NewsUiState
-import com.example.bps.ui.news.NewsViewModel
+
+// --- PERBAIKAN IMPORT ---
+// Lokasi yang benar, sesuai dengan MainActivity.kt Anda
+import com.example.bps.ui.infografik.news.NewsUiState
+import com.example.bps.ui.infografik.news.NewsViewModel
+// -------------------------
 
 @Composable
 fun InfografikScreen(
-    // 1. Inisialisasi ViewModel di level Screen
-    newsViewModel: NewsViewModel = viewModel()
+    // --- PERBAIKAN PARAMETER ---
+    // 1. Ganti nama 'newsViewModel' menjadi 'viewModel' agar cocok dengan panggilan di MainActivity
+    // 2. Hapus `= viewModel()` agar tidak membuat instance baru
+    viewModel: NewsViewModel,
+    onNavigateToAllNews: () -> Unit
+    // ---------------------------
 ) {
-    // 2. Ambil (collect) state dari ViewModel
-    val newsUiState by newsViewModel.uiState.collectAsState()
+    // Ambil state dari ViewModel yang DIOPERKAN
+    val newsUiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -39,18 +44,27 @@ fun InfografikScreen(
         SearchBar()
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Ini mungkin section statis (tanpa parameter), jadi ini OK
         InfografikSection()
 
-        Spacer(modifier = Modifier.height(24.dp)) // Beri jarak antar section
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // 3. Panggil NewsSection dan MASUKKAN uiState
-        NewsSection(uiState = newsUiState) // <-- INI PERBAIKANNYA
+        // Panggil NewsSection dan masukkan kedua parameter
+        NewsSection(
+            uiState = newsUiState,
+            onSeeAllClicked = onNavigateToAllNews
+        )
 
-        Spacer(modifier = Modifier.height(24.dp)) // Jarak di bagian bawah
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun InfografikScreenPreview() {
-    InfografikScreen()
+
+    InfografikScreen(
+        viewModel = viewModel(), // <-- Tambahkan ini
+        onNavigateToAllNews = {}
+    )
 }

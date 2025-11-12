@@ -67,7 +67,7 @@ fun MenuItem(
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(colorCard.copy(alpha = 0.1f))
+            .background(Color.Transparent)
             .clickable { }
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -111,3 +111,5 @@ fun PreviewMenuItemSection() {
         MenuItemSection()
     }
 }
+
+

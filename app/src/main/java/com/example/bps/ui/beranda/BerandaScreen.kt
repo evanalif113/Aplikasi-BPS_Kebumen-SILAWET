@@ -13,38 +13,50 @@ import androidx.compose.ui.unit.dp
 import com.example.bps.components.MenuItemSection
 import com.example.bps.components.SearchBar
 import com.example.bps.components.CarouselInsight
-import com.example.bps.components.InfografikSection
+import com.example.bps.components.NewsSection
 import com.example.bps.components.InfoSensusSection
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bps.ui.infografik.news.NewsViewModel
 
 @Composable
-fun BerandaScreen() {
+fun BerandaScreen(
+    // 1. Terima ViewModel dan event click
+    viewModel: NewsViewModel,
+    onSeeAllNews: () -> Unit
+) {
+    // 2. Ambil state dari ViewModel
+    val newsUiState by viewModel.uiState.collectAsState()
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
-        // CardInsight sekarang memiliki padding horizontal sendiri
         CarouselInsight()
-
         Spacer(modifier = Modifier.height(24.dp))
-
-        // SearchBar di bagian atas
         SearchBar()
         Spacer(modifier = Modifier.height(24.dp))
-
-        // Bagian Menu Utama (Infografi, Statistik, Lainnya)
         MenuItemSection()
         Spacer(modifier = Modifier.height(24.dp))
-
-        // Bagian Info Sensus
         InfoSensusSection()
         Spacer(modifier = Modifier.height(24.dp))
-        InfografikSection()
+
+        // 3. Teruskan state dan click handler ke Section yang relevan
+        NewsSection(
+            uiState = newsUiState, // <-- Teruskan state
+            onSeeAllClicked = onSeeAllNews // <-- Teruskan fungsi klik
+        )
     }
 }
 
 @Preview(showBackground = true, showSystemUi = false)
 @Composable
 fun BerandaScreenPreview() {
-    BerandaScreen()
+
+    BerandaScreen(
+        viewModel = viewModel(), // Cara mudah untuk Preview
+        onSeeAllNews = {} // Fungsi kosong untuk preview
+    )
 }
