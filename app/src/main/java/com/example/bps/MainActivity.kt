@@ -27,7 +27,6 @@ import com.example.bps.ui.beranda.BerandaScreen
 import com.example.bps.ui.datasetdetail.DatasetDetailScreen
 import com.example.bps.ui.infografik.InfografikScreen
 import com.example.bps.ui.infografik.news.NewsViewModel
-import com.example.bps.ui.lain.LainScreen
 import com.example.bps.ui.maps.MapsScreen
 import com.example.bps.ui.statistik.DatasetListScreen
 import com.example.bps.ui.statistik.StatistikScreen
@@ -59,7 +58,6 @@ fun MainScreen() {
         currentRoute == "statistik" -> "Statistik"
         currentRoute == "maps" -> "Maps"
         currentRoute == "infografik" -> "Infografik"
-        currentRoute == "lainnya" -> "Lainnya"
         currentRoute?.startsWith("dataset_list/") == true -> "Daftar Statistik"
         currentRoute?.startsWith("detail_screen/") == true -> "Detail Dataset"
         else -> "SILAWET"
@@ -133,7 +131,6 @@ fun MainScreen() {
                     onNavigateToAllNews = { navController.navigate("all_news") }
                 )
             }
-            composable("lainnya") { LainScreen() }
 
             // Layar Statistik: Subject List
             composable(
@@ -165,6 +162,7 @@ fun MainScreen() {
     }
 }
 
+@Preview
 @Composable
 fun MainActivityPreview() {
     BpsTheme { MainScreen() }

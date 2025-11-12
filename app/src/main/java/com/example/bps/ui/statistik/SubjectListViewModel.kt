@@ -17,16 +17,6 @@ data class SubjectUiState(
 )
 
 class SubjectListViewModel : ViewModel() {
-
-    private val _uiState = mutableStateOf(SubjectUiState())
-    val uiState: State<SubjectUiState> = _uiState
-
-    init {
-        // Langsung panggil API 'getCategories' saat ViewModel ini dibuat
-        // agar datanya siap
-        loadCategories()
-    }
-
     private fun loadCategories() {
         viewModelScope.launch {
             _uiState.value = SubjectUiState(isLoading = true)
@@ -38,4 +28,14 @@ class SubjectListViewModel : ViewModel() {
             }
         }
     }
+    private val _uiState = mutableStateOf(SubjectUiState())
+    val uiState: State<SubjectUiState> = _uiState
+
+    init {
+        // Langsung panggil API 'getCategories' saat ViewModel ini dibuat
+        // agar datanya siap
+        loadCategories()
+    }
+
+
 }

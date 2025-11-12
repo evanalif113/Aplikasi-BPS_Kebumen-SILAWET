@@ -31,7 +31,7 @@ fun SubjectListScreen(
         ?.subjects ?: emptyList() // Ambil daftar subjects-nya (misal: ["Neraca Ekonomi"])
 
     // Beri judul
-    val title = when (categoryInt) {
+    val title = when (categoryInt) { //Subjek Statistik
         1 -> "Statistik Demografi dan Sosial"
         2 -> "Statistik Ekonomi"
         3 -> "Statistik Lingkungan Hidup"
