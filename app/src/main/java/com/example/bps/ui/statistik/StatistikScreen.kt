@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController // <-- Tambah import ini untuk Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.bps.R
 import com.example.bps.components.SearchBar
 
@@ -116,6 +116,5 @@ private fun StatCategoryCard(
 @Preview(showBackground = true)
 @Composable
 fun StatistikScreenPreview() {
-    // Perbaiki preview agar tidak error
     StatistikScreen(navController = rememberNavController())
 }

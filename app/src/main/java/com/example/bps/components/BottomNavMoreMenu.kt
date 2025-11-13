@@ -18,11 +18,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.bps.R
-
-// Warna custom
-val Sky500 = Color(0xFF03A9F4)
-val AppWhite = Color(0xFFFFFFFF)
-val Gray800 = Color(0xFF424242)
+import com.example.bps.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +61,7 @@ fun BottomNavWithMoreMenu(
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },
             sheetState = sheetState,
-            containerColor = AppWhite,
+            containerColor = White,
             dragHandle = null
         ) {
             Column(
@@ -74,7 +70,7 @@ fun BottomNavWithMoreMenu(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Menu Lainnya", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text("Lainnya", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Spacer(Modifier.height(16.dp))
                 SheetTextItem("Profil") { showSheet = false }
                 SheetTextItem("Pengaturan") { showSheet = false }
@@ -102,8 +98,8 @@ onClick: () -> Unit
                 painter = painterResource(id = iconRes),
                 contentDescription = title,
                 tint = when {
-                    selected -> AppWhite
-                    isHovered -> AppWhite.copy(alpha = 0.7f)
+                    selected -> White
+                    isHovered -> White.copy(alpha = 0.7f)
                     else -> Gray800
                 }
             )
@@ -112,8 +108,8 @@ onClick: () -> Unit
             Text(
                 title,
                 color = when {
-                    selected -> AppWhite
-                    isHovered -> AppWhite.copy(alpha = 0.7f)
+                    selected -> White
+                    isHovered -> White.copy(alpha = 0.7f)
                     else -> Gray800
                 }
             )
@@ -130,8 +126,8 @@ onClick: () -> Unit
             )
         },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = AppWhite,
-            selectedTextColor = AppWhite,
+            selectedIconColor = White,
+            selectedTextColor = White,
             unselectedIconColor = Gray800,
             unselectedTextColor = Gray800,
             indicatorColor = Color.Transparent

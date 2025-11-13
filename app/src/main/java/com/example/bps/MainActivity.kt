@@ -57,7 +57,7 @@ fun MainScreen() {
     val title = when {
         currentRoute == "beranda" -> "Beranda"
         currentRoute == "statistik" -> "Statistik"
-        currentRoute == "maps" -> "Maps"
+        currentRoute == "maps" -> "Peta"
         currentRoute == "infografik" -> "Infografik"
         currentRoute?.startsWith("dataset_list/") == true -> "Daftar Statistik"
         currentRoute?.startsWith("detail_screen/") == true -> "Detail Dataset"

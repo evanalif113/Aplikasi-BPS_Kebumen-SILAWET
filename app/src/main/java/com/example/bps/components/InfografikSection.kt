@@ -86,7 +86,7 @@ fun InfografikSection() {
     val newsList = listOf(
         InfografikVariable(
             "8 Oktober 2025",
-            "Booklet SAKERNAS Agustus 2024 Telah Terbit!",
+            "SAKERNAS Agustus 2024 Telah Terbit!",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj76KyQ_kxext54OeEe3Z0VsfpUmUmtIZ9mw&s"
         ),
         InfografikVariable(
