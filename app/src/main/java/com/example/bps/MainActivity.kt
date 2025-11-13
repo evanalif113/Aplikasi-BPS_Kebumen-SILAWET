@@ -1,13 +1,10 @@
 package com.example.bps
 
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -30,13 +27,17 @@ import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.maps.MapsScreen
 import com.example.bps.ui.statistik.DatasetListScreen
 import com.example.bps.ui.statistik.StatistikScreen
-import com.example.bps.ui.statistik.SubjectListScreen
+import com.example.bps.ui.statistik.SubjectList.SubjectListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { BpsTheme { MainScreen() } }
+        setContent {
+            BpsTheme {
+                MainScreen()
+            }
+        }
     }
 }
 
@@ -120,15 +121,21 @@ fun MainScreen() {
             composable("beranda") {
                 BerandaScreen(
                     viewModel = newsViewModel,
-                    onSeeAllNews = { navController.navigate("infografik") }
+                    onSeeAllNews = {
+                        navController.navigate("infografik") }
                 )
             }
-            composable("statistik") { StatistikScreen(navController) }
-            composable("maps") { MapsScreen() }
+            composable("statistik") {
+                StatistikScreen(navController)
+            }
+            composable("maps") {
+                MapsScreen()
+            }
             composable("infografik") {
                 InfografikScreen(
                     viewModel = newsViewModel,
-                    onNavigateToAllNews = { navController.navigate("all_news") }
+                    onNavigateToAllNews = {
+                        navController.navigate("all_news") }
                 )
             }
 

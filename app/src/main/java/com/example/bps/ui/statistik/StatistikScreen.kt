@@ -43,7 +43,6 @@ fun StatistikScreen(navController: NavController) {
             iconRes = R.drawable.ic_demografi, // replace with correct icon resource
             title = "Statistik Demografi dan Sosial",
             showArrow = true,
-            // --- PERBAIKAN 1 ---
             onClick = { navController.navigate("subject_list/1") }
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -53,18 +52,15 @@ fun StatistikScreen(navController: NavController) {
             iconRes = R.drawable.ic_ekonomi, // replace with correct icon resource
             title = "Statistik Ekonomi",
             showArrow = true,
-            // --- PERBAIKAN 2 ---
             onClick = { navController.navigate("subject_list/2") }
         )
         Spacer(modifier = Modifier.height(12.dp))
 
         StatCategoryCard(
             backgroundColor = Color(0xFF4CAF50), // Blue
-            iconRes = R.drawable.ic_lingkungan
-            , // replace with correct icon resource
+            iconRes = R.drawable.ic_lingkungan,
             title = "Statistik Lingkungan Hidup dan Multi Domain",
             showArrow = true,
-            // --- PERBAIKAN 3 ---
             onClick = { navController.navigate("subject_list/3") }
         )
     }

@@ -2,9 +2,8 @@ package com.example.bps.ui.infografik.news // Ganti package ini sesuai struktur 
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bps.data.remote.ApiClient // <-- Pastikan import ini benar
+import com.example.bps.data.remote.ApiClient
 import com.example.bps.data.remote.responses.NewsItem
-import com.example.bps.data.remote.responses.BpsNewsResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

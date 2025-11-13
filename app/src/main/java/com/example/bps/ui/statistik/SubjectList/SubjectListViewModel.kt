@@ -1,4 +1,4 @@
-package com.example.bps.ui.statistik
+package com.example.bps.ui.statistik.SubjectList
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

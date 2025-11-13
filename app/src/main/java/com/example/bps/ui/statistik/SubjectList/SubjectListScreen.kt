@@ -1,4 +1,4 @@
-package com.example.bps.ui.statistik
+package com.example.bps.ui.statistik.SubjectList
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
