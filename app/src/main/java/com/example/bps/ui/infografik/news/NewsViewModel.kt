@@ -3,6 +3,7 @@ package com.example.bps.ui.infografik.news // Ganti package ini sesuai struktur 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bps.data.remote.ApiClient
+import com.example.bps.data.remote.responses.BpsNewsResponse
 import com.example.bps.data.remote.responses.NewsItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -174,8 +174,7 @@ fun NewsSectionPreview() {
             abstract = "...",
             thumbnailUrl = "...", // Isi dengan URL gambar dummy jika ada
             link = "",
-            createdAt = "",
-            updatedAt = ""
+
         ),
         NewsItem(
             id = 2,
@@ -185,8 +184,7 @@ fun NewsSectionPreview() {
             abstract = "...",
             thumbnailUrl = "...", // Isi dengan URL gambar dummy jika ada
             link = "",
-            createdAt = "",
-            updatedAt = ""
+
         )
     )
 

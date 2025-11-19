@@ -105,4 +105,10 @@ dependencies {
     // Optional - Integration with RxJava
     //implementation("androidx.compose.runtime:runtime-rxjava2")
 
+    // Optional - librarys for pager tab
+    implementation("androidx.compose.foundation:foundation:1.6.0")
+
+    // Optional - Library Coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
 }
