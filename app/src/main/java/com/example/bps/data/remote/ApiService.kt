@@ -7,7 +7,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import com.example.bps.data.remote.responses.BpsDatasetResponse
 import com.example.bps.data.remote.responses.SimpleDatasetResponse
-import com.example.bps.data.remote.responses.PublicationItem
+import com.example.bps.data.remote.responses.BpsPublicationResponse
 import com.example.bps.data.remote.responses.NewsItem
 
 /** Interface ini berisi SEMUA definisi endpoint API yang akan dipanggil menggunakan Retrofit. */
@@ -26,36 +26,22 @@ interface ApiService {
     @GET("datasets/categories")
     suspend fun getCategories(): List<CategorySubjectResponse>
 
-    // --- ENDPOINT KONTEN BERANDA (DIPERBAIKI) ---
+    // --- ENDPOINT KONTEN BERANDA (SUDAH DIPERBAIKI) ---
 
-    // 1. Berita Kegiatan (News)
-    // FIX: Ubah return type dari NewsItem menjadi BpsNewsResponse
+    // 1. Berita Kegiatan (News) -> SUDAH BENAR
     @GET("content/news")
     suspend fun getNews(): BpsNewsResponse
 
-    // 2. Berita Resmi Statistik (BRS)
-    // Kita gunakan BpsNewsResponse juga karena strukturnya sama (List of NewsItem)
+    // 2. Berita Resmi Statistik (BRS) -> SUDAH BENAR
     @GET("content/press-releases")
     suspend fun getPressReleases(): BpsNewsResponse
 
-    // 3. Infografis
-    // Menggunakan wrapper yang sudah kita siapkan
+    // 3. Infografis -> SUDAH BENAR
     @GET("content/infographics")
     suspend fun getInfographics(): BpsInfografisResponse
 
-    // 4. Publikasi
-    // Menggunakan wrapper khusus untuk buku
+    // 4. Publikasi -> PERBAIKAN DI SINI
+    // Ganti PublicationItem menjadi BpsPublicationResponse
     @GET("content/publications")
-    suspend fun getPublications(): PublicationItem
-//     @GET("content/press-releases")
-//     suspend fun getPressReleases():
-//             List<PressReleaseResponse> // <- Anda perlu buat data class 'PressReleaseResponse'
-
-//     @GET("content/infographics")
-//     suspend fun getInfographics():
-//             List<InfographicResponse> // <- Anda perlu buat data class 'InfographicResponse'
-
-//     @GET("content/publications")
-//     suspend fun getPublications():
-//             List<PublicationResponse> // <- Anda perlu buat data class 'PublicationResponse'
+    suspend fun getPublications(): BpsPublicationResponse
 }

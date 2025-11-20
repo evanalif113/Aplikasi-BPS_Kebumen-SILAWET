@@ -2,33 +2,18 @@ package com.example.bps.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -37,49 +22,57 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-// --- IMPORT UNTUK GAMBAR (COIL) ---
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-// --- IMPORT MODEL DATA (Pastikan path-nya benar) ---
 import com.example.bps.data.remote.responses.NewsItem
 import com.example.bps.data.remote.responses.PublicationItem
+import com.example.bps.ui.common.ContentType
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TabbedContentSection(
     modifier: Modifier = Modifier,
-    // Tab 1: Publikasi (Buku)
     publicationList: List<PublicationItem> = emptyList(),
-    // Tab 2: Berita Resmi Statistik (Pakai NewsItem)
     brsList: List<NewsItem> = emptyList(),
-    // Tab 3: Infografis (Pakai NewsItem)
-    infografikList: List<NewsItem> = emptyList()
+    infografikList: List<NewsItem> = emptyList(),
+    onItemClick: (Int, ContentType) -> Unit
 ) {
-    // Nama Tab
     val tabs = listOf("Publikasi", "BRS", "Infografis")
-
-    // State untuk Pager (Geser Halaman)
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val scope = rememberCoroutineScope()
 
     Column(modifier = modifier.fillMaxWidth()) {
 
-        // --- HEADER: JUDUL & TAB ---
+        // --- HEADER & TAB ---
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Text(
-                text = "Rilis Data Terbaru",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Rilis Data Terbaru",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                // Tombol Lihat Semua (Opsional)
+                Text(
+                    text = "Lihat Semua",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable { /* Aksi navigasi */ }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Tab Navigation
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 containerColor = Color.Transparent,
                 contentColor = MaterialTheme.colorScheme.primary,
-                divider = {}, // Hilangkan garis bawah panjang default
+                divider = {},
                 indicator = { tabPositions ->
                     if (pagerState.currentPage < tabPositions.size) {
                         TabRowDefaults.Indicator(
@@ -93,16 +86,12 @@ fun TabbedContentSection(
                 tabs.forEachIndexed { index, title ->
                     Tab(
                         selected = pagerState.currentPage == index,
-                        onClick = {
-                            scope.launch { pagerState.animateScrollToPage(index) }
-                        },
+                        onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
                         text = {
                             Text(
                                 text = title,
                                 fontSize = 13.sp,
-                                fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Medium,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Medium
                             )
                         }
                     )
@@ -112,183 +101,107 @@ fun TabbedContentSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- ISI KONTEN (YANGb BISA DIGESER) ---
-        HorizontalPager(state = pagerState) { page ->
-            when (page) {
-                0 -> PublicationList(publicationList) // Tab 1: Tampilan Buku
-                1 -> NewsList(brsList, isInfographic = false) // Tab 2: Tampilan Berita
-                2 -> NewsList(infografikList, isInfographic = true) // Tab 3: Tampilan Infografis
+        // --- ISI KONTEN (Pager) ---
+        // Kita atur tinggi fix atau biarkan wrap content
+        HorizontalPager(state = pagerState, verticalAlignment = Alignment.Top) { page ->
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                when (page) {
+                    0 -> VerticalPublicationList(publicationList, onItemClick) // Kirim callback
+                    1 -> VerticalNewsList(brsList, ContentType.BRS, onItemClick) // Kirim callback + Tipe
+                    2 -> VerticalNewsList(infografikList, ContentType.INFOGRAFIS, onItemClick) // Kirim callback + Tipe
+                }
             }
         }
     }
 }
 
-// --- SUB-COMPONENT 1: LIST BUKU (PUBLIKASI) ---
+// --- LIST VERTIKAL (PUBLIKASI) ---
 @Composable
-fun PublicationList(items: List<PublicationItem>) {
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        // Jika data kosong, bisa tampilkan placeholder atau kosong saja
-        if (items.isEmpty()) {
-            // Opsional: Tampilkan dummy saat loading/kosong
-            items(3) { DummyPublicationCard() }
-        } else {
-            items(items) { item ->
-                PublicationCard(item)
-            }
+fun VerticalPublicationList(items: List<PublicationItem>, onClick: (Int, ContentType) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        items.take(3).forEach { item ->
+            // Panggil onClick dengan Tipe PUBLIKASI
+            PublicationRowItem(item, onClick = { onClick(item.id, ContentType.PUBLIKASI) })
         }
     }
 }
 
-// --- SUB-COMPONENT 2: LIST BERITA/INFOGRAFIS ---
 @Composable
-fun NewsList(items: List<NewsItem>, isInfographic: Boolean) {
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        if (items.isEmpty()) {
-            items(3) { DummyMiniNewsCard(isInfographic) }
-        } else {
-            items(items) { item ->
-                MiniNewsCard(item, isInfographic)
-            }
+fun VerticalNewsList(items: List<NewsItem>, type: ContentType, onClick: (Int, ContentType) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        items.take(3).forEach { item ->
+            // Panggil onClick dengan Tipe yang sesuai (BRS/INFOGRAFIS)
+            NewsRowItem(item, onClick = { onClick(item.id, type) })
         }
     }
 }
 
-// --- UI KARTU: PUBLIKASI (MODEL BUKU BERDIRI) ---
+// --- DESAIN BARU: LIST ITEM (GAMBAR KIRI, TEKS KANAN) ---
+
 @Composable
-fun PublicationCard(item: PublicationItem) {
-    Column(modifier = Modifier.width(110.dp)) {
-        // Gambar Cover (Vertikal)
-        Card(
-            shape = RoundedCornerShape(4.dp),
-            elevation = CardDefaults.cardElevation(4.dp),
-            modifier = Modifier
-                .height(150.dp)
-                .fillMaxWidth()
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(item.coverUrl) // Mengambil URL Cover
-                    .crossfade(true)
-                    .build(),
-                contentDescription = item.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Judul
-        Text(
-            text = item.title,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            lineHeight = 16.sp
-        )
-
-        // Tanggal (Menggunakan helper dari PublicationItem.kt)
-        Text(
-            text = item.getSimpleDate(),
-            fontSize = 10.sp,
-            color = Color.Gray
-        )
-    }
-}
-
-// --- UI KARTU: BERITA & INFOGRAFIS (MODEL LANDSCAPE) ---
-@Composable
-fun MiniNewsCard(item: NewsItem, isInfographic: Boolean) {
-    Card(
+fun PublicationRowItem(item: PublicationItem, onClick: () -> Unit) {
+    Row(
         modifier = Modifier
-            .width(220.dp)
-            .height(150.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(2.dp)
+            .fillMaxWidth()
+            .height(100.dp)
+            .background(Color.White, RoundedCornerShape(8.dp))
+            .clickable { onClick() }, // <--- Pasang Klik di sini
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
-            // Gambar Thumbnail (Menggunakan helper dari NewsItem.kt)
-            Box(modifier = Modifier
-                .height(90.dp)
-                .fillMaxWidth()
-                .background(Color.LightGray) // Background sementara loading
-            ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.getDisplayImage()) // Helper otomatis pilih gambar
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            // Teks Info
-            Column(modifier = Modifier.padding(10.dp)) {
-                // Label Kategori
-                Text(
-                    text = if (isInfographic) "Infografis" else "Berita Resmi",
-                    fontSize = 9.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
-                )
-
-                // Judul
-                Text(
-                    text = item.title,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    lineHeight = 16.sp
-                )
-
-                // Tanggal (Menggunakan helper)
-                Text(
-                    text = item.getSimpleDate(),
-                    fontSize = 10.sp,
-                    color = Color.Gray
-                )
-            }
+        // ... (Isi UI Row sama seperti sebelumnya) ...
+        Card(shape = RoundedCornerShape(8.dp), modifier = Modifier.width(70.dp).fillMaxHeight()) {
+            AsyncImage(model = ImageRequest.Builder(LocalContext.current).data(item.coverUrl).crossfade(true).build(), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+            Text(item.getSimpleDate(), fontSize = 11.sp, color = Color.Gray)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(item.title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 3, overflow = TextOverflow.Ellipsis, lineHeight = 18.sp)
         }
     }
 }
 
-// --- DUMMY UNTUK PREVIEW (Opsional) ---
 @Composable
-fun DummyPublicationCard() {
-    // Placeholder UI jika data kosong
-    Column(modifier = Modifier.width(110.dp)) {
-        Box(modifier = Modifier
-            .height(150.dp)
+fun NewsRowItem(item: NewsItem, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Gray, RoundedCornerShape(4.dp)))
-        Spacer(modifier = Modifier.height(8.dp))
-        Box(modifier = Modifier.height(12.dp).fillMaxWidth().background(Color.LightGray))
-        Spacer(modifier = Modifier.height(4.dp))
-        Box(modifier = Modifier.height(10.dp).width(50.dp).background(Color.LightGray))
+            .height(90.dp)
+            .background(Color.White, RoundedCornerShape(8.dp))
+            .clickable { onClick() }, // <--- Pasang Klik di sini
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // ... (Isi UI Row sama seperti sebelumnya) ...
+        Card(shape = RoundedCornerShape(8.dp), modifier = Modifier.width(100.dp).fillMaxHeight()) {
+            AsyncImage(model = ImageRequest.Builder(LocalContext.current).data(item.getDisplayImage()).crossfade(true).build(), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Top) {
+            Text(item.getSimpleDate(), fontSize = 11.sp, color = Color.Gray)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(item.title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis, lineHeight = 18.sp)
+        }
     }
 }
 
 @Composable
-fun DummyMiniNewsCard(isInfographic: Boolean) {
-    // Placeholder UI jika data kosong
-    Box(modifier = Modifier
-        .width(220.dp)
-        .height(150.dp)
-        .background(Color.LightGray, RoundedCornerShape(12.dp)))
+fun DummyRowItem() {
+    Row(modifier = Modifier.fillMaxWidth().height(90.dp)) {
+        Box(modifier = Modifier.width(80.dp).fillMaxHeight().background(Color.LightGray, RoundedCornerShape(8.dp)))
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(verticalArrangement = Arrangement.Center) {
+            Box(modifier = Modifier.height(12.dp).width(60.dp).background(Color.LightGray))
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(modifier = Modifier.height(16.dp).fillMaxWidth().background(Color.LightGray))
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun TabbedSectionPreview() {
-    TabbedContentSection()
+    TabbedContentSection(
+        onItemClick = { id, type ->
+        }
+    )
 }

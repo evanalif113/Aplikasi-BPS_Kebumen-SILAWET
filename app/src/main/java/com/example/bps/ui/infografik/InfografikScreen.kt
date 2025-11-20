@@ -13,27 +13,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+
+// Import Komponen
 import com.example.bps.components.InfografikSection
 import com.example.bps.components.SearchBar
 import com.example.bps.components.NewsSection
 
-// --- PERBAIKAN IMPORT ---
-// Lokasi yang benar, sesuai dengan MainActivity.kt Anda
+// Import ViewModel & State
 import com.example.bps.ui.infografik.news.NewsUiState
 import com.example.bps.ui.infografik.news.NewsViewModel
-// -------------------------
 
 @Composable
 fun InfografikScreen(
-    // --- PERBAIKAN PARAMETER ---
-    // 1. Ganti nama 'newsViewModel' menjadi 'viewModel' agar cocok dengan panggilan di MainActivity
-    // 2. Hapus `= viewModel()` agar tidak membuat instance baru
     viewModel: NewsViewModel,
     onNavigateToAllNews: () -> Unit
-    // ---------------------------
 ) {
-    // Ambil state dari ViewModel yang DIOPERKAN
-    val newsUiState by viewModel.uiState.collectAsState()
+    // --- PERBAIKAN DI SINI ---
+    // Ganti 'uiState' menjadi 'newsState' (karena uiState sudah tidak ada di ViewModel)
+    val newsUiState by viewModel.newsState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -44,12 +41,12 @@ fun InfografikScreen(
         SearchBar()
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Ini mungkin section statis (tanpa parameter), jadi ini OK
+        // Infografik Section (Mungkin ini statis atau perlu viewModel juga nanti)
         InfografikSection()
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Panggil NewsSection dan masukkan kedua parameter
+        // Menampilkan Berita Kegiatan
         NewsSection(
             uiState = newsUiState,
             onSeeAllClicked = onNavigateToAllNews
@@ -62,9 +59,8 @@ fun InfografikScreen(
 @Preview(showBackground = true)
 @Composable
 fun InfografikScreenPreview() {
-
     InfografikScreen(
-        viewModel = viewModel(), // <-- Tambahkan ini
+        viewModel = viewModel(),
         onNavigateToAllNews = {}
     )
 }

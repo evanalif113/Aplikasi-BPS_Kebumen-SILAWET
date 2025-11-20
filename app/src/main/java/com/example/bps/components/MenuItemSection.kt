@@ -25,7 +25,7 @@ import com.example.bps.R
 
 
 // Warna-warna custom
-val Blue400 = Color(0xFF42A5F5)
+val Blue400 = Color(0xFF90CAF9)
 val Orange400 = Color(0xFFFFA726)
 val Red400 = Color(0xFFEF5350)
 val Green400 = Color(0xFF66BB6A)

@@ -2,30 +2,13 @@ package com.example.bps.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class PublicationItem(
-    val id: Int,
-    val title: String,
+data class BpsPublicationResponse(
+    @SerializedName("success")
+    val success: Boolean,
 
-    // Sesuai JSON: "release_date": "2025-10-29T17:00:00..."
-    @SerializedName("release_date")
-    val releaseDate: String,
+    @SerializedName("message")
+    val message: String,
 
-    // Sesuai JSON: "cover_url"
-    @SerializedName("cover_url")
-    val coverUrl: String,
-
-    // Sesuai JSON: "pdf_url"
-    @SerializedName("pdf_url")
-    val pdfUrl: String,
-
-    // Sesuai JSON: "abstract"
-    val abstract: String? = null
-
-
+    @SerializedName("data")
+    val data: List<PublicationItem> // <-- List buku ada di sini
 )
-{
-    // --- PASTIKAN FUNGSI INI JUGA ADA DI SINI ---
-    fun getSimpleDate(): String {
-        return if (releaseDate.length >= 10) releaseDate.substring(0, 10) else releaseDate
-    }
-}

@@ -22,12 +22,17 @@ import com.example.bps.components.BottomNavWithMoreMenu
 import com.example.bps.theme.*
 import com.example.bps.ui.beranda.BerandaScreen
 import com.example.bps.ui.datasetdetail.DatasetDetailScreen
+import com.example.bps.ui.common.GeneralListScreen
+import com.example.bps.ui.common.ContentType
 import com.example.bps.ui.infografik.InfografikScreen
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.maps.MapsScreen
 import com.example.bps.ui.statistik.DatasetListScreen
 import com.example.bps.ui.statistik.StatistikScreen
 import com.example.bps.ui.statistik.SubjectList.SubjectListScreen
+import androidx.navigation.navArgument
+import com.example.bps.ui.common.GeneralDetailScreen
+import com.example.bps.ui.common.GeneralListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +127,11 @@ fun MainScreen() {
                 BerandaScreen(
                     viewModel = newsViewModel,
                     onSeeAllNews = {
-                        navController.navigate("infografik") }
+                        navController.navigate("all_news")
+                    },
+                    onNavigateToDetail = { id, type ->
+                        navController.navigate("detail_content/$id/$type")
+                    }
                 )
             }
             composable("statistik") {
@@ -164,6 +173,74 @@ fun MainScreen() {
             ) { backStackEntry ->
                 val datasetId = backStackEntry.arguments?.getString("datasetId") ?: ""
                 DatasetDetailScreen(datasetId = datasetId, navController = navController)
+            }
+            //Route Menu Lainnya
+            // 1. PUBLIKASI (BUKU)
+            composable("all_publications") {
+                GeneralListScreen(
+                    navController = navController,
+                    viewModel = newsViewModel,
+                    contentType = ContentType.PUBLIKASI,
+                    title = "Semua Publikasi"
+                )
+            }
+
+            // 2. BRS (BERITA RESMI)
+            composable("all_brs") {
+                GeneralListScreen(
+                    navController = navController,
+                    viewModel = newsViewModel,
+                    contentType = ContentType.BRS,
+                    title = "Berita Resmi Statistik"
+                )
+            }
+
+            // 3. INFOGRAFIS
+            composable("all_infografis") {
+                GeneralListScreen(
+                    navController = navController,
+                    viewModel = newsViewModel,
+                    contentType = ContentType.INFOGRAFIS,
+                    title = "Galeri Infografis"
+                )
+            }
+
+            // 4. BERITA KEGIATAN
+            composable("all_news") {
+                GeneralListScreen(
+                    navController = navController,
+                    viewModel = newsViewModel,
+                    contentType = ContentType.NEWS,
+                    title = "Berita Kegiatan"
+                )
+            }
+
+            // --- TAMBAHKAN INI: RUTE HALAMAN DETAIL ---
+            composable(
+                route = "detail_content/{itemId}/{type}",
+                arguments = listOf(
+                    navArgument("itemId") { type = NavType.IntType },
+                    navArgument("type") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                // 1. Ambil Argumen dari URL
+                val itemId = backStackEntry.arguments?.getInt("itemId") ?: 0
+                val typeString = backStackEntry.arguments?.getString("type") ?: "NEWS"
+
+                // 2. Konversi String ke Enum ContentType
+                val typeEnum = try {
+                    com.example.bps.ui.common.ContentType.valueOf(typeString)
+                } catch (e: Exception) {
+                    com.example.bps.ui.common.ContentType.NEWS
+                }
+
+                // 3. Panggil Layar Detail
+                com.example.bps.ui.common.GeneralDetailScreen(
+                    navController = navController,
+                    viewModel = newsViewModel,
+                    id = itemId,
+                    contentType = typeEnum
+                )
             }
         }
     }
