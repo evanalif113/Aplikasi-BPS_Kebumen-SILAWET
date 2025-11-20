@@ -1,4 +1,4 @@
-package com.example.bps.ui.maps
+package com.example.bps.ui.peta
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

@@ -26,13 +26,10 @@ import com.example.bps.ui.common.GeneralListScreen
 import com.example.bps.ui.common.ContentType
 import com.example.bps.ui.infografik.InfografikScreen
 import com.example.bps.ui.infografik.news.NewsViewModel
-import com.example.bps.ui.maps.MapsScreen
+import com.example.bps.ui.peta.MapsScreen
 import com.example.bps.ui.statistik.DatasetListScreen
 import com.example.bps.ui.statistik.StatistikScreen
 import com.example.bps.ui.statistik.SubjectList.SubjectListScreen
-import androidx.navigation.navArgument
-import com.example.bps.ui.common.GeneralDetailScreen
-import com.example.bps.ui.common.GeneralListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

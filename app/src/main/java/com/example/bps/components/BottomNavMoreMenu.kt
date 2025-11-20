@@ -91,7 +91,7 @@ fun BottomNavWithMoreMenu(
 
                 SheetMenuItem(
                     iconRes = R.drawable.ic_open_book_24dp, // GANTI dengan nama file icon buku Anda
-                    title = "Publikasi / Buku",
+                    title = "Publikasi dan Buku",
                     onClick = {
                         showSheet = false
                         navController.navigate("all_publications")
@@ -135,13 +135,13 @@ fun BottomNavWithMoreMenu(
 
                 SheetMenuItem(
                     iconRes = R.drawable.ic_feedback, // GANTI dengan icon info
-                    title = "Tentang Aplikasi",
+                    title = "Tentang Aplikasi SILAWET",
                     onClick = { /* Navigasi About */ }
                 )
 
                 SheetMenuItem(
                     iconRes = R.drawable.ic_internet_filled, // GANTI dengan icon web/globe
-                    title = "Website Resmi",
+                    title = "Website Resmi BPS Kebumen",
                     onClick = {
                         showSheet = false
                         uriHandler.openUri("https://kebumenkab.bps.go.id")
@@ -150,7 +150,7 @@ fun BottomNavWithMoreMenu(
 
                 SheetMenuItem(
                     iconRes = R.drawable.ic_info_24dp, // GANTI dengan icon WA/Telepon
-                    title = "Hubungi Kami (WA)",
+                    title = "Hubungi Kami Via WhatsApp",
                     onClick = {
                         showSheet = false
                         uriHandler.openUri("https://wa.me/6285179763305")
