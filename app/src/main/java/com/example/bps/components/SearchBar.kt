@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.bps.theme.Gray300
 import com.example.bps.theme.Gray200
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +37,7 @@ fun SearchBar() {
         trailingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon") },
         shape = RoundedCornerShape(16.dp),
         colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = Gray200,
+            unfocusedContainerColor = Gray300,
             focusedContainerColor = Gray200,
             // Menghilangkan garis indikator di bawah
             unfocusedIndicatorColor = Color.Transparent,

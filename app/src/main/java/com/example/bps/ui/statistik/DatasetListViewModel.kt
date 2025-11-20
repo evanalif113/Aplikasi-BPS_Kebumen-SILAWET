@@ -36,8 +36,8 @@ class DatasetListViewModel : ViewModel() {
             } catch (e: Exception) {
                 _uiState.value =
                         DatasetListUiState(
-                                isLoading = false,
-                                error = e.message ?: "Terjadi kesalahan"
+                            isLoading = false,
+                            error = e.message ?: "Terjadi kesalahan"
                         )
             }
         }

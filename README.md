@@ -3,9 +3,9 @@
 SILAWET adalah aplikasi Android internal untuk BPS Kabupaten Kebumen yang ditujukan untuk menampilkan data survei, statistik, peta, serta konten infografik dan utilitas pendukung. Aplikasi dibangun menggunakan Kotlin dan Jetpack Compose.
 
 ## Fitur Utama
-- Tampilan modern berbasis Jetpack Compose
+- Tampilan modern berbasis Jetpack Compose Material 3
 - Tema gelap/terang (palette terpusat di theme/Color.kt dan Theme.kt)
-- Navigation antar layar: Beranda, Statistik, Maps, Infografik, Lainnya
+- Navigation antar layar: Beranda, Statistik, Peta, Infografik, Lainnya
 - Komponen modular untuk kemudahan pengembangan
 - Placeholder untuk integrasi backend / sinkronisasi data
 
@@ -17,9 +17,11 @@ SILAWET adalah aplikasi Android internal untuk BPS Kabupaten Kebumen yang dituju
 
 ## Struktur Proyek (singkat)
 - app/src/main/java/com/example/bps
-  - theme/         : Color.kt, Theme.kt, Typography
+  - components/     : 
+  - theme/          : Color.kt, Theme.kt, Typography.kt
   - ui/            : screen Compose (Beranda, Statistik, Maps, Infografik, Lainnya)
   - ui/*           : subpackage layar dan komponen UI
+  - MainActivity.kt : MainActivity sebagai entry point aplikasi
 - app/src/main/res  : resource Android (drawable, string, layout jika ada)
 - build.gradle      : konfigurasi modul/app
 
@@ -54,7 +56,7 @@ Catatan: Jika mengalami error terkait tema/status bar, periksa `theme/Theme.kt` 
 - Ikuti konvensi kode Kotlin dan praktik Jetpack Compose.
 
 ## Lisensi
-Tambahkan file LICENSE di root repository. Jika belum ada, tentukan lisensi yang diinginkan (mis. MIT atau Apache-2.0).
+License All Rights Reserved 2025
 
 ## Kontak / Maintainer
 Sertakan nama tim atau email maintainer di sini untuk pertanyaan dan akses repository.

@@ -18,12 +18,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bps.data.remote.responses.TableData
-import com.example.bps.theme.*
+import com.example.bps.theme.Gray300
+import com.example.bps.theme.Gray200
+import com.example.bps.theme.Blue600
+
 
 val TableBorderColor = Gray300 // Abu-abu border
 val TableHeaderBg = Blue600 // Biru tua BPS
 val TableHeaderColor = White // Teks header putih
-
 val TableRowEvenBg = White // Baris genap
 val TableRowOddBg = Gray200 // Baris ganjil (abu-abu sangat muda)
 // ------------------------------------------
