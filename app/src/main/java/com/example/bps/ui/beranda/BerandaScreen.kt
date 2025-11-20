@@ -13,16 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-
-// --- IMPORT KOMPONEN ---
 import com.example.bps.components.MenuItemSection
 import com.example.bps.components.SearchBar
 import com.example.bps.components.CarouselInsight
 import com.example.bps.components.NewsSection
 import com.example.bps.components.InfoSensusSection
 import com.example.bps.components.TabbedContentSection
-
-// --- IMPORT STATE & VIEWMODEL ---
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.infografik.news.NewsUiState
 import com.example.bps.ui.infografik.news.PublicationUiState
@@ -55,9 +51,7 @@ fun BerandaScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         InfoSensusSection()
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(48.dp))
 
         TabbedContentSection(
             publicationList = if (publicationState is PublicationUiState.Success)
@@ -72,8 +66,6 @@ fun BerandaScreen(
                 (infografikState as NewsUiState.Success).news
             else emptyList(),
 
-            // --- INI OBATNYA ---
-            // Tangkap klik dari Tab, lalu oper ke MainActivity lewat onNavigateToDetail
             onItemClick = { id, type ->
                 onNavigateToDetail(id, type)
             }

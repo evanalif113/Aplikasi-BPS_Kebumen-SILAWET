@@ -162,12 +162,12 @@ fun GeneralDetailScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            Divider(color = Color.LightGray.copy(alpha = 0.5f))
+            HorizontalDivider(color = Color.LightGray.copy(alpha = 0.5f))
             Spacer(modifier = Modifier.height(16.dp))
 
             // DESKRIPSI / ABSTRAK
             Text(
-                text = "Deskripsi / Abstrak:",
+                text = "Deskripsi:",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary

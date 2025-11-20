@@ -31,19 +31,26 @@ import com.example.bps.R
 import com.example.bps.theme.*
 import kotlinx.coroutines.delay
 
+// 1. Membuat Data Class untuk menggantikan Triple
+data class InsightData(
+    val color: Color,
+    val iconRes: Int,
+    val title: String
+)
+
 /**
  * Composable yang menampilkan daftar item secara horizontal (Carousel)
  * dengan animasi auto-scroll yang berhenti di tengah dan berulang (unlimited scroll).
  */
 @Composable
 fun CarouselInsight() {
-    // Data untuk setiap item carousel dengan warna yang lebih kontras
+    // 2. Menggunakan InsightData untuk daftar item
     val carouselData = listOf(
-        Triple(Blue400, R.drawable.ic_grafik_24dp, "Statistik Pertanian"),
-        Triple(Green400, R.drawable.ic_perangkat_24dp, "Produk Domestik"),
-        Triple(Orange400, R.drawable.ic_server_24dp, "Inflasi Bulanan"),
-        Triple(Red400, R.drawable.ic_house_24dp, "Indeks Kemahalan"),
-        Triple(Purple400, R.drawable.ic_info_24dp, "Info Lainnya")
+        InsightData(Blue500, R.drawable.ic_lingkungan, "Statistik Pertanian"),
+        InsightData(Green400, R.drawable.ic_perangkat_24dp, "Produk Domestik"),
+        InsightData(Orange400, R.drawable.ic_statistik, "Inflasi Bulanan"),
+        InsightData(Red400, R.drawable.ic_house_24dp, "Indeks Kemiskinan"),
+        InsightData(Purple400, R.drawable.ic_info_24dp, "Info Lainnya")
     )
 
     val lazyListState = rememberLazyListState()
@@ -54,7 +61,6 @@ fun CarouselInsight() {
 
     // Efek untuk auto-scroll setiap 5 detik dengan logika unlimited scroll
     LaunchedEffect(Unit) {
-        // Mulai dari tengah list "tak terbatas" agar bisa scroll ke kiri dan kanan
         val startIndex = Int.MAX_VALUE / 2
         lazyListState.scrollToItem(startIndex - (startIndex % dataSize))
 
@@ -70,15 +76,15 @@ fun CarouselInsight() {
         contentPadding = PaddingValues(horizontal = contentPadding),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Gunakan Int.MAX_VALUE untuk membuat list seolah-olah tak terbatas
         items(Int.MAX_VALUE) { index ->
-            // Gunakan modulo untuk memetakan indeks tak terbatas ke indeks data asli
             val itemIndex = index % dataSize
-            val (color, iconRes, title) = carouselData[itemIndex]
+            // 3. Mengambil data object dan mengakses propertinya
+            val item = carouselData[itemIndex]
+
             CarouselItem(
-                color = color,
-                iconRes = iconRes,
-                title = title
+                color = item.color,
+                iconRes = item.iconRes,
+                title = item.title
             )
         }
     }
@@ -119,14 +125,14 @@ fun CarouselItem(
                 painter = painterResource(id = iconRes),
                 contentDescription = title,
                 modifier = Modifier.size(48.dp),
-                tint = White // Warna ikon menjadi putih
+                tint = White
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = White // Warna teks menjadi putih
+                color = White
             )
         }
     }
