@@ -59,7 +59,7 @@ fun MainScreen() {
     val title = when {
         currentRoute == "beranda" -> "Beranda"
         currentRoute == "statistik" -> "Statistik"
-        currentRoute == "maps" -> "Peta"
+        currentRoute == "peta" -> "Peta"
         currentRoute == "infografik" -> "Infografik"
         currentRoute?.startsWith("dataset_list/") == true -> "Daftar Statistik"
         currentRoute?.startsWith("detail_screen/") == true -> "Detail Dataset"
@@ -100,7 +100,7 @@ fun MainScreen() {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Orange300,
+                    containerColor = Orange400,
                     titleContentColor = Black,
                     actionIconContentColor = Gray800
                 ),

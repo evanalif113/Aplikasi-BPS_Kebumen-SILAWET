@@ -6,13 +6,13 @@ data class PublicationItem(
     val id: Int,
     val title: String,
 
-    @SerializedName("release_date") // Beda dengan NewsItem (date)
+    @SerializedName("release_date") // Tanggal Rilis
     val releaseDate: String,
 
-    @SerializedName("cover_url")    // Beda dengan NewsItem (thumbnail_url)
+    @SerializedName("cover_url")    // URL untuk cover
     val coverUrl: String,
 
-    @SerializedName("pdf_url")      // Khas buku
+    @SerializedName("pdf_url")      // URL untuk Unduh PDF
     val pdfUrl: String,
 
     val abstract: String? = null
