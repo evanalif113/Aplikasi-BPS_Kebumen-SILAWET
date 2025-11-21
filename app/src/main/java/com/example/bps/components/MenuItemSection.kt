@@ -22,14 +22,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.draw.clip
 import com.example.bps.R
+import com.example.bps.theme.*
 
-
-// Warna-warna custom
-val Blue400 = Color(0xFF90CAF9)
-val Orange400 = Color(0xFFFFA726)
-val Red400 = Color(0xFFEF5350)
-val Green400 = Color(0xFF66BB6A)
-val White = Color(0xFFFFFFFF)
 
 @Composable
 fun MenuItemSection() {
@@ -48,10 +42,10 @@ fun MenuItemSection() {
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            MenuItem(iconRes = R.drawable.ic_maps_24dp, title = "Peta", colorCard = Blue400)
+            MenuItem(iconRes = R.drawable.ic_open_book_24dp, title = "Publikasi", colorCard = Blue400)
             MenuItem(iconRes = R.drawable.ic_grafik_24dp, title = "Statistik", colorCard = Orange400)
             MenuItem(iconRes = R.drawable.ic_open_book_24dp, title = "Infografik", colorCard = Red400)
-            MenuItem(iconRes = R.drawable.ic_menu_24dp, title = "Lainnya", colorCard = Green400)
+            MenuItem(iconRes = R.drawable.ic_menu_24dp, title = "Berita", colorCard = Green400)
         }
     }
 }

@@ -21,6 +21,7 @@ import com.example.bps.data.remote.responses.TableData
 import com.example.bps.theme.Gray300
 import com.example.bps.theme.Gray200
 import com.example.bps.theme.Blue600
+import com.example.bps.theme.White
 
 
 val TableBorderColor = Gray300 // Abu-abu border

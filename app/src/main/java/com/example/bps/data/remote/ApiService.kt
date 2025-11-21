@@ -15,7 +15,9 @@ interface ApiService {
 
     // --- ENDPOINT DATASET (Tetap) ---
     @GET("datasets/{dataset}")
-    suspend fun getDatasetDetail(@Path("dataset") datasetId: String): BpsDatasetResponse
+    suspend fun getDatasetDetail(
+        @Path("dataset") datasetId: String
+    ): BpsDatasetResponse
 
     @GET("datasets")
     suspend fun getDatasetList(
@@ -28,20 +30,19 @@ interface ApiService {
 
     // --- ENDPOINT KONTEN BERANDA (SUDAH DIPERBAIKI) ---
 
-    // 1. Berita Kegiatan (News) -> SUDAH BENAR
+    // 1. Berita Kegiatan (News)
     @GET("content/news")
     suspend fun getNews(): BpsNewsResponse
 
-    // 2. Berita Resmi Statistik (BRS) -> SUDAH BENAR
+    // 2. Berita Resmi Statistik (BRS)
     @GET("content/press-releases")
     suspend fun getPressReleases(): BpsNewsResponse
 
-    // 3. Infografis -> SUDAH BENAR
+    // 3. Infografis
     @GET("content/infographics")
     suspend fun getInfographics(): BpsInfografisResponse
 
-    // 4. Publikasi -> PERBAIKAN DI SINI
-    // Ganti PublicationItem menjadi BpsPublicationResponse
+    // 4. Publikasi
     @GET("content/publications")
     suspend fun getPublications(): BpsPublicationResponse
 }

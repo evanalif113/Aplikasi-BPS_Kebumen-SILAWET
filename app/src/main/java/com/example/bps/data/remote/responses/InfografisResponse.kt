@@ -9,7 +9,6 @@ data class BpsInfografisResponse(
     @SerializedName("message")
     val message: String,
 
-    // --- INI YANG HILANG SEBELUMNYA ---
     @SerializedName("data")
-    val data: List<NewsItem> // Pastikan ini ada!
+    val data: List<NewsItem>
 )

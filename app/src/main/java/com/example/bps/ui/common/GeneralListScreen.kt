@@ -33,7 +33,10 @@ import com.example.bps.data.remote.responses.PublicationItem
 
 // Enum untuk menentukan Tipe Konten
 enum class ContentType {
-    NEWS, BRS, INFOGRAFIS, PUBLIKASI
+    NEWS,
+    BRS,
+    INFOGRAFIS,
+    PUBLIKASI
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -198,14 +201,18 @@ fun NewsListItem(item: NewsItem, navController: NavController, type: ContentType
 // --- LOADING & ERROR VIEWS ---
 @Composable
 fun LoadingView() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
 }
 
 @Composable
 fun ErrorView(msg: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center) {
         Text("Error: $msg", color = Color.Red)
     }
 }

@@ -101,6 +101,7 @@ fun MainScreen() {
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Orange400,
+                    scrolledContainerColor = Orange400,
                     titleContentColor = Black,
                     actionIconContentColor = Gray800
                 ),
@@ -134,7 +135,7 @@ fun MainScreen() {
             composable("statistik") {
                 StatistikScreen(navController)
             }
-            composable("maps") {
+            composable("peta") {
                 MapsScreen()
             }
             composable("infografik") {
