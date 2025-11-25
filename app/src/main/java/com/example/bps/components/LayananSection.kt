@@ -33,11 +33,13 @@ import com.example.bps.R
 /**
  * Composable untuk Kartu Layanan CANTIK (Konsultasi via WA)
  */
+// --- 3. DEFINISIKAN WARNA-WARNA ---
+val WaColor = Color(0xFF25D366)
+val WebColor = Color(0xFF4285F4)
+val MailColor = Color(0xFFEA4335)
 @Composable
 fun CantikCard(modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    // Definisikan warna hijau WhatsApp
-    val waGreen = Color(0xFF4CAF50)
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -81,7 +83,7 @@ fun CantikCard(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 // --- 2. UBAH WARNA TOMBOL DI SINI ---
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = waGreen
+                    containerColor = WaColor
                 )
             ) {
                 Icon(
@@ -107,11 +109,6 @@ fun CantikCard(modifier: Modifier = Modifier) {
 fun LaporKakandaCard(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
-
-    // --- 3. DEFINISIKAN WARNA-WARNA ---
-    val WaColor = Color(0xFF4CAF50)
-    val WebColor = Color(0xFF4285F4)
-    val MailColor = Color(0xFFEA4335)
 
     Card(
         modifier = modifier.fillMaxWidth(),

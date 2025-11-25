@@ -42,9 +42,9 @@ fun MenuItemSection() {
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            MenuItem(iconRes = R.drawable.ic_open_book_24dp, title = "Publikasi", colorCard = Blue400)
+            MenuItem(iconRes = R.drawable.ic_book_marked_24dp, title = "Publikasi", colorCard = Blue400)
             MenuItem(iconRes = R.drawable.ic_grafik_24dp, title = "Statistik", colorCard = Orange400)
-            MenuItem(iconRes = R.drawable.ic_open_book_24dp, title = "Infografik", colorCard = Red400)
+            MenuItem(iconRes = R.drawable.ic_pie_chart_24dp, title = "Infografik", colorCard = Red400)
             MenuItem(iconRes = R.drawable.ic_menu_24dp, title = "Berita", colorCard = Green400)
         }
     }
