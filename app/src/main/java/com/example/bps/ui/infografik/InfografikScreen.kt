@@ -39,12 +39,12 @@ fun InfografikScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
         SearchBar()
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         // Infografik Section (Mungkin ini statis atau perlu viewModel juga nanti)
         InfografikSection()
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         // Menampilkan Berita Kegiatan
         NewsSection(

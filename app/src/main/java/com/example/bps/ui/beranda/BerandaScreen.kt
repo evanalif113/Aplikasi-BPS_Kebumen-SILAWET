@@ -51,7 +51,7 @@ fun BerandaScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         InfoSensusSection()
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
         TabbedContentSection(
             publicationList = if (publicationState is PublicationUiState.Success)
