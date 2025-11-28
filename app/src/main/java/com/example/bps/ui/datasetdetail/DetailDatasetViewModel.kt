@@ -20,25 +20,27 @@ class DetailDatasetViewModel : ViewModel() {
     private val _uiState = mutableStateOf(DetailUiState())
     val uiState: State<DetailUiState> = _uiState
 
-    fun getDatasetDetail(datasetId: String) {
+    fun getDatasetDetail(id: String, year: Int? = null, mode: String? = null) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-
+            _uiState.value = _uiState.value.copy(isLoading = true) // Jangan reset data lama biar smooth
             try {
-                val response =
-                        withContext(Dispatchers.IO) {
-                            ApiClient.apiService.getDatasetDetail(datasetId)
-                        }
-                _uiState.value =
-                        _uiState.value.copy(isLoading = false, dataset = response, error = null)
-            }
-            catch (e: Exception) {
-                _uiState.value =
-                        _uiState.value.copy(
-                                isLoading = false,
-                                dataset = null,
-                                error = e.message ?: "Unknown error"
-                        )
+                // Kirim mode ke API
+                val response = ApiClient.apiService.getDatasetDetail(id, year, mode)
+
+                if (response.isSuccessful && response.body() != null) {
+                    val newData = response.body()!!
+
+                    // PENTING: Jika user cuma ganti MODE, jangan reset available_years
+                    // Kita gabungkan data lama & baru
+                    _uiState.value = DetailUiState(
+                        isLoading = false,
+                        dataset = newData
+                    )
+                } else {
+                    _uiState.value = _uiState.value.copy(isLoading = false, error = "Gagal")
+                }
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(isLoading = false, error = e.message)
             }
         }
     }

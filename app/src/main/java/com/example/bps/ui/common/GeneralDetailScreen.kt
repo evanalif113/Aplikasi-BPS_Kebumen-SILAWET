@@ -66,7 +66,6 @@ fun GeneralDetailScreen(
     }
 
     // 2. Ekstrak Data agar UI-nya generik
-    // Kita ambil properti yang sama dari PublicationItem atau NewsItem
     val title = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItem).title else (itemData as com.example.bps.data.remote.responses.NewsItem).title
 
     val date = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItem).getSimpleDate() else (itemData as com.example.bps.data.remote.responses.NewsItem).getSimpleDate()
@@ -136,7 +135,6 @@ fun GeneralDetailScreen(
                 AsyncImage(
                     model = ImageRequest.Builder(context).data(imageUrl).crossfade(true).build(),
                     contentDescription = null,
-                    // --- PERUBAHAN UTAMA: GUNAKAN ContentScale.Fit UNTUK SEMUA ---
                     contentScale = ContentScale.Fit, // <--- Semua akan Fit
                     modifier = Modifier.fillMaxSize() // Pastikan gambar mengisi Box secara utuh
                 )

@@ -5,6 +5,7 @@ import com.example.bps.data.remote.responses.* // Import data class dari folder 
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.Response
 import com.example.bps.data.remote.responses.BpsDatasetResponse
 import com.example.bps.data.remote.responses.SimpleDatasetResponse
 import com.example.bps.data.remote.responses.BpsPublicationResponse
@@ -14,10 +15,12 @@ import com.example.bps.data.remote.responses.NewsItem
 interface ApiService {
 
     // --- ENDPOINT DATASET (Tetap) ---
-    @GET("datasets/{dataset}")
+    @GET("datasets/{id}")
     suspend fun getDatasetDetail(
-        @Path("dataset") datasetId: String
-    ): BpsDatasetResponse
+        @Path("id") id: String,
+        @Query("year") year: Int? = null,
+        @Query("mode") mode: String? = null
+    ): Response<BpsDatasetResponse>
 
     @GET("datasets")
     suspend fun getDatasetList(
