@@ -59,7 +59,7 @@ fun MainScreen() {
     val title = when {
         currentRoute == "beranda" -> "Beranda"
         currentRoute == "statistik" -> "Statistik"
-        currentRoute == "peta" -> "Peta"
+        //currentRoute == "peta" -> "Peta"
         currentRoute == "infografik" -> "Infografik"
         currentRoute?.startsWith("dataset_list/") == true -> "Daftar Statistik"
         currentRoute?.startsWith("detail_screen/") == true -> "Detail Dataset"
@@ -135,9 +135,9 @@ fun MainScreen() {
             composable("statistik") {
                 StatistikScreen(navController)
             }
-            composable("peta") {
+            /*composable("peta") {
                 MapsScreen()
-            }
+            }*/
             composable("infografik") {
                 InfografikScreen(
                     viewModel = newsViewModel,
@@ -247,5 +247,7 @@ fun MainScreen() {
 @Preview
 @Composable
 fun MainActivityPreview() {
-    BpsTheme { MainScreen() }
+    BpsTheme {
+        MainScreen()
+    }
 }

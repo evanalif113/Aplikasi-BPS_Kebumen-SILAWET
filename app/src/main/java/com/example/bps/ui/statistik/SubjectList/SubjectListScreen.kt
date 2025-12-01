@@ -23,7 +23,6 @@ fun SubjectListScreen(
     viewModel: SubjectListViewModel = viewModel() // ViewModel baru
 ) {
     val uiState by viewModel.uiState
-
     // Cari daftar subject yang sesuai dengan categoryId
     val categoryInt = categoryId.toIntOrNull()
     val subjects = uiState.categoriesMap

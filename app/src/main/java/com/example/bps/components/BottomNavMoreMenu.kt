@@ -39,7 +39,7 @@ fun BottomNavWithMoreMenu(
     val items = listOf(
         "Beranda" to R.drawable.ic_house_24dp,
         "Statistik" to R.drawable.ic_grafik_24dp,
-        "Peta" to R.drawable.ic_geotag_24dp,
+        //"Peta" to R.drawable.ic_geotag_24dp,
         "Infografik" to R.drawable.ic_open_book_24dp,
         "Lainnya" to R.drawable.ic_menu_24dp
     )
