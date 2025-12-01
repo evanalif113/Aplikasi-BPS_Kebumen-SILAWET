@@ -73,7 +73,7 @@ fun SensusBanner(
                     painter = painterResource(id = imageRes),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(70.dp) // Ukuran logo utama
+                        .size(100.dp) // Ukuran logo utama
                     // Jika logo Anda warna putih/hitam dan mau diwarnai sesuai tema, pakai:
                     // colorFilter = ColorFilter.tint(textColor)
                 )
