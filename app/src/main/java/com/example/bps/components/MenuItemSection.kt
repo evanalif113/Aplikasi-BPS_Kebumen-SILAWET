@@ -39,15 +39,15 @@ data class MenuData(
 fun MenuItemSection() {
     // Daftar menu
     val menuList = listOf(
-        MenuData(R.drawable.ic_book_marked_24dp, "Publikasi", Blue400),
-        MenuData(R.drawable.ic_grafik_24dp, "Statistik", Orange400),
-        MenuData(R.drawable.ic_pie_chart_24dp, "Infografik", Red400),
-        MenuData(R.drawable.ic_menu_24dp, "Berita", Green400),
-        MenuData(R.drawable.ic_open_book_24dp, "Peta", Purple400),
-        MenuData(R.drawable.ic_grafik_24dp, "Profil", Teal400),
-        MenuData(R.drawable.ic_pie_chart_24dp, "Agenda", Yellow400),
-        MenuData(R.drawable.ic_grafik_24dp, "Unduhan", Indigo400),
-        MenuData(R.drawable.ic_settings_24dp, "Lainnya", Lime400)
+        MenuData(R.drawable.ic_book_marked_24dp, "Penduduk", Blue400),
+        MenuData(R.drawable.ic_grafik_24dp, "Tenaga Kerja", Orange400),
+        MenuData(R.drawable.ic_pie_chart_24dp, "Pengangguran", Red400),
+        MenuData(R.drawable.ic_menu_24dp, "Kemiskinan", Green400),
+        MenuData(R.drawable.ic_open_book_24dp, "Rasio GINI", Purple400),
+        MenuData(R.drawable.ic_grafik_24dp, "IPM", Teal400),
+        MenuData(R.drawable.ic_pie_chart_24dp, "Pendidikan", Yellow400),
+        MenuData(R.drawable.ic_grafik_24dp, "Perumahan", Indigo400),
+        MenuData(R.drawable.ic_settings_24dp, "Pertanian", Lime400),
     )
 
     Card(

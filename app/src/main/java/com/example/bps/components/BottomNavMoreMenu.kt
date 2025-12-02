@@ -149,7 +149,7 @@ fun BottomNavWithMoreMenu(
                 )
 
                 SheetMenuItem(
-                    iconRes = R.drawable.ic_info_24dp, // GANTI dengan icon WA/Telepon
+                    iconRes = R.drawable.ic_whatsapp_fill, // GANTI dengan icon WA/Telepon
                     title = "Hubungi Kami Via WhatsApp",
                     onClick = {
                         showSheet = false
