@@ -37,17 +37,20 @@ data class MenuData(
 
 @Composable
 fun MenuItemSection() {
-    // Daftar menu
+    // Daftar menu (Total 12 Item untuk 3x4)
     val menuList = listOf(
-        MenuData(R.drawable.ic_book_marked_24dp, "Penduduk", Blue400),
-        MenuData(R.drawable.ic_grafik_24dp, "Tenaga Kerja", Orange400),
+        MenuData(R.drawable.ic_people_24dp, "Penduduk", Blue400),
+        MenuData(R.drawable.ic_briefcase_24dp, "Tenaga Kerja", Orange400),
         MenuData(R.drawable.ic_pie_chart_24dp, "Pengangguran", Red400),
         MenuData(R.drawable.ic_menu_24dp, "Kemiskinan", Green400),
         MenuData(R.drawable.ic_open_book_24dp, "Rasio GINI", Purple400),
         MenuData(R.drawable.ic_grafik_24dp, "IPM", Teal400),
         MenuData(R.drawable.ic_pie_chart_24dp, "Pendidikan", Yellow400),
         MenuData(R.drawable.ic_grafik_24dp, "Perumahan", Indigo400),
-        MenuData(R.drawable.ic_settings_24dp, "Pertanian", Lime400),
+        MenuData(R.drawable.ic_sprout_24dp, "Pertanian", Lime400),
+        MenuData(R.drawable.ic_settings_24dp, "Konstruksi", Rose400),
+        MenuData(R.drawable.ic_info_24dp, "Transportasi", Cyan400),
+        MenuData(R.drawable.ic_settings_24dp, "Lainnya", Gray400)
     )
 
     Card(
@@ -62,11 +65,15 @@ fun MenuItemSection() {
             columns = GridCells.Fixed(3),
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 400.dp)
+                // Atur tinggi fix yang cukup untuk 4 baris agar tidak perlu scroll
+                // (Sekitar 100dp per baris + padding)
+                .height(460.dp)
                 .padding(vertical = 16.dp),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            // Matikan scroll internal grid agar semua item langsung tampil
+            userScrollEnabled = false
         ) {
             items(menuList) { menu ->
                 MenuItem(
