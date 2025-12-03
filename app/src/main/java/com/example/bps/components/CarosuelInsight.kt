@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,28 +37,53 @@ import com.example.bps.R
 import com.example.bps.theme.*
 import kotlinx.coroutines.delay
 
-// 1. Update Data Class: Tambahkan field 'value' (angka) dan 'unit' (satuan)
-data class InsightData(
-    val color: Color,
+// 1. Data Class untuk SATU variabel (Satu sisi)
+data class SingleMetric(
     val iconRes: Int,
     val title: String,
-    val value: String, // Contoh: "1.4 Juta"
-    val unit: String   // Contoh: "Jiwa"
+    val value: String,
+    val unit: String
+)
+
+// 2. Data Class untuk SATU KARTU (Berisi pasangan Kiri & Kanan)
+data class InsightPairData(
+    val color: Color,
+    val left: SingleMetric,
+    val right: SingleMetric
 )
 
 @Composable
 fun CarouselInsight() {
-    // 2. Isi data dengan angka dummy statistik
+    // 3. Mengelompokkan data per Kartu (Context yang sama)
     val carouselData = listOf(
-        InsightData(Blue500, R.drawable.ic_lingkungan, "Penduduk", "1.4", "Juta Jiwa"),
-        InsightData(Green400, R.drawable.ic_perangkat_24dp, "PDRB", "5.05", "% (Laju)"),
-        InsightData(Orange400, R.drawable.ic_statistik, "Inflasi", "2.61", "% (y-on-y)"),
-        InsightData(Red400, R.drawable.ic_house_24dp, "Kemiskinan", "16.3", "%"),
-        InsightData(Purple400, R.drawable.ic_info_24dp, "IPM", "73.2", "Poin")
+        // Kartu 1: Kependudukan & Kemiskinan (Sosial)
+        InsightPairData(
+            color = Blue500,
+            left = SingleMetric(R.drawable.ic_lingkungan, "Penduduk", "1.4", "Juta"),
+            right = SingleMetric(R.drawable.ic_house_24dp, "Kemiskinan", "16.3", "%")
+        ),
+        // Kartu 2: Ekonomi (PDRB & Inflasi)
+        InsightPairData(
+            color = Orange400,
+            left = SingleMetric(R.drawable.ic_perangkat_24dp, "Laju PDRB", "5.05", "%"),
+            right = SingleMetric(R.drawable.ic_statistik, "Inflasi", "2.61", "%")
+        ),
+        // Kartu 3: Pembangunan Manusia (IPM & Harapan Hidup)
+        InsightPairData(
+            color = Green400,
+            left = SingleMetric(R.drawable.ic_info_24dp, "IPM", "73.2", "Poin"),
+            right = SingleMetric(R.drawable.ic_info_24dp, "UHH", "74.5", "Tahun")
+        ),
+        // Kartu 4: Ketenagakerjaan (TPT & TPAK)
+        InsightPairData(
+            color = Red400,
+            left = SingleMetric(R.drawable.ic_perangkat_24dp, "TPT", "5.67", "%"),
+            right = SingleMetric(R.drawable.ic_perangkat_24dp, "TPAK", "68.2", "%")
+        )
     )
 
     val lazyListState = rememberLazyListState()
-    val itemWidth = 280.dp // Sedikit diperlebar agar muat 2 kolom
+    val itemWidth = 300.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val contentPadding = (screenWidth - itemWidth) / 2
     val dataSize = carouselData.size
@@ -67,7 +93,7 @@ fun CarouselInsight() {
         lazyListState.scrollToItem(startIndex - (startIndex % dataSize))
 
         while (true) {
-            delay(5000)
+            delay(6000) // Sedikit lebih lama karena data lebih banyak
             val nextIndex = lazyListState.firstVisibleItemIndex + 1
             lazyListState.animateScrollToItem(index = nextIndex)
         }
@@ -81,110 +107,115 @@ fun CarouselInsight() {
         items(Int.MAX_VALUE) { index ->
             val itemIndex = index % dataSize
             val item = carouselData[itemIndex]
-
             CarouselItem(data = item)
         }
     }
 }
 
 /**
- * Composable Kartu yang dibagi menjadi 2 bagian (Kiri: Info, Kanan: Data)
+ * Composable Kartu Utama
  */
 @Composable
-fun CarouselItem(data: InsightData) {
+fun CarouselItem(data: InsightPairData) {
     Card(
         modifier = Modifier
-            .width(280.dp) // Lebar kartu
-            .height(110.dp), // Tinggi kartu
+            .width(300.dp)
+            .height(130.dp), // Tinggi disesuaikan agar muat tumpukan vertikal
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = data.color
-        ),
+        colors = CardDefaults.cardColors(containerColor = data.color),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        // Row utama untuk membagi kartu menjadi Kiri dan Kanan
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp), // Padding dalam kartu
+                .padding(vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // --- BAGIAN KIRI (Ikon & Judul) ---
-            Column(
-                modifier = Modifier
-                    .weight(1f) // Mengambil 50% lebar
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
-            ) {
-                // Box putih transparan di belakang ikon agar ikon lebih menonjol
-                Box(
-                    modifier = Modifier
-                        .size(36.dp)
-                        .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = data.iconRes),
-                        contentDescription = data.title,
-                        modifier = Modifier.size(24.dp),
-                        tint = White
-                    )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = data.title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium,
-                    color = White.copy(alpha = 0.9f)
-                )
-            }
+            // --- SISI KIRI ---
+            MetricColumn(
+                metric = data.left,
+                modifier = Modifier.weight(1f)
+            )
 
-            // Garis Pemisah Vertikal Tipis (Opsional)
+            // Garis Pemisah Vertikal
             Box(
                 modifier = Modifier
                     .width(1.dp)
-                    .fillMaxHeight(0.8f)
-                    .background(White.copy(alpha = 0.3f))
+                    .fillMaxHeight(0.7f) // Garis tidak full sampai atas/bawah
+                    .background(White.copy(alpha = 0.4f))
             )
 
-            // --- BAGIAN KANAN (Angka Data) ---
-            Column(
-                modifier = Modifier
-                    .weight(1f) // Mengambil 50% lebar sisa
-                    .padding(start = 12.dp)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.End // Rata kanan agar rapi
-            ) {
-                Text(
-                    text = data.value,
-                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 32.sp), // Angka Besar
-                    fontWeight = FontWeight.Bold,
-                    color = White
-                )
-                Text(
-                    text = data.unit,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = White.copy(alpha = 0.8f),
-                    fontWeight = FontWeight.Medium
-                )
-            }
+            // --- SISI KANAN ---
+            MetricColumn(
+                metric = data.right,
+                modifier = Modifier.weight(1f)
+            )
         }
+    }
+}
+
+/**
+ * Fungsi reusable untuk menampilkan satu kolom variabel (Ikon/Judul/Nilai)
+ */
+@Composable
+fun MetricColumn(metric: SingleMetric, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        // Baris Atas: Ikon + Judul
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(horizontal = 4.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = metric.iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+                tint = White.copy(alpha = 0.9f)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = metric.title,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = White.copy(alpha = 0.9f),
+                maxLines = 1
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Angka Besar
+        Text(
+            text = metric.value,
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            color = White
+        )
+
+        // Satuan Kecil
+        Text(
+            text = metric.unit,
+            style = MaterialTheme.typography.labelSmall,
+            color = White.copy(alpha = 0.8f)
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CarouselItemPreview() {
-    val dummyData = InsightData(
+fun CarouselItemPairPreview() {
+    val dummyPair = InsightPairData(
         color = Blue500,
-        iconRes = R.drawable.ic_grafik_24dp,
-        title = "Pertumbuhan",
-        value = "5.05",
-        unit = "% (y-on-y)"
+        left = SingleMetric(R.drawable.ic_lingkungan, "Penduduk", "1.4", "Juta"),
+        right = SingleMetric(R.drawable.ic_house_24dp, "Kemiskinan", "16.3", "%")
     )
     Box(modifier = Modifier.padding(16.dp)) {
-        CarouselItem(data = dummyData)
+        CarouselItem(data = dummyPair)
     }
 }

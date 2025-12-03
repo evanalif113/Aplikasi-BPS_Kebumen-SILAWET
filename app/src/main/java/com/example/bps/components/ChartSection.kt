@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.bps.data.remote.responses.ChartData
@@ -24,11 +25,12 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.example.bps.data.remote.responses.ChartDataset
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.formatter.PercentFormatter
 
 
-// Warna BPS (Biru)
+// Warna BPS
 const val BPS_BLUE_HEX = "#0D47A1"
 const val BPS_ORANGE_HEX = "#FF9800"
 
@@ -68,6 +70,22 @@ fun ChartSection(
     }
 }
 
+@Preview
+@Composable
+fun ChartSectionPreview() {
+    val chartData = ChartData(
+        type = "bar",
+        title = "Sample Bar Chart",
+        labels = listOf("2020", "2021", "2022"),
+        datasets = listOf(
+            ChartDataset(
+                label = "Data",
+                data = listOf(10.0, 20.0, 15.0)
+            )
+        )
+    )
+    ChartSection(chartData)
+}
 // ==========================================
 // 1. RENDER LINE CHART (Untuk Tren/Time Series)
 // ==========================================
@@ -152,6 +170,22 @@ fun RenderLineChart(data: ChartData) {
     )
 }
 
+@Preview
+@Composable
+fun RenderLineChartPreview() {
+    val data = ChartData(
+        type = "line",
+        title = "Line Chart Preview",
+        labels = listOf("2020", "2021", "2022", "2023"),
+        datasets = listOf(
+            ChartDataset(
+                label = "Data",
+                data = listOf(120.0, 150.0, 130.0, 180.0)
+            )
+        )
+    )
+    RenderLineChart(data)
+}
 // ==========================================
 // 2. RENDER BAR CHART (Untuk Kategori)
 // ==========================================
@@ -209,6 +243,22 @@ fun RenderBarChart(data: ChartData) {
     )
 }
 
+@Preview
+@Composable
+fun RenderBarChartPreview() {
+    val data = ChartData(
+        type = "bar",
+        title = "Bar Chart Preview",
+        labels = listOf("Category A", "Category B", "Category C"),
+        datasets = listOf(
+            ChartDataset(
+                label = "Data",
+                data = listOf(50.0, 80.0, 65.0)
+            )
+        )
+    )
+    RenderBarChart(data)
+}
 @Composable
 fun RenderPieChart(data: ChartData) {
     AndroidView(
@@ -276,4 +326,19 @@ fun RenderPieChart(data: ChartData) {
             }
         }
     )
+}
+
+@Preview
+@Composable
+fun RenderPieChartPreview() {
+    val data = ChartData(
+        type = "pie",
+        title = "Pie Chart Preview",
+        labels = listOf("Red", "Blue", "Green"),
+        data = listOf(30.0, 50.0, 20.0),
+        datasets = listOf(
+            ChartDataset(label = "Data", data = listOf(30.0, 50.0, 20.0))
+        )
+    )
+    RenderPieChart(data)
 }
