@@ -1,9 +1,13 @@
 package com.example.bps.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,45 +31,43 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.bps.R
 import com.example.bps.theme.*
 import kotlinx.coroutines.delay
 
-// 1. Membuat Data Class untuk menggantikan Triple
+// 1. Update Data Class: Tambahkan field 'value' (angka) dan 'unit' (satuan)
 data class InsightData(
     val color: Color,
     val iconRes: Int,
-    val title: String
+    val title: String,
+    val value: String, // Contoh: "1.4 Juta"
+    val unit: String   // Contoh: "Jiwa"
 )
 
-/**
- * Composable yang menampilkan daftar item secara horizontal (Carousel)
- * dengan animasi auto-scroll yang berhenti di tengah dan berulang (unlimited scroll).
- */
 @Composable
 fun CarouselInsight() {
-    // 2. Menggunakan InsightData untuk daftar item
+    // 2. Isi data dengan angka dummy statistik
     val carouselData = listOf(
-        InsightData(Blue500, R.drawable.ic_lingkungan, "Statistik Pertanian"),
-        InsightData(Green400, R.drawable.ic_perangkat_24dp, "Produk Domestik"),
-        InsightData(Orange400, R.drawable.ic_statistik, "Inflasi Bulanan"),
-        InsightData(Red400, R.drawable.ic_house_24dp, "Indeks Kemiskinan"),
-        InsightData(Purple400, R.drawable.ic_info_24dp, "Info Lainnya")
+        InsightData(Blue500, R.drawable.ic_lingkungan, "Penduduk", "1.4", "Juta Jiwa"),
+        InsightData(Green400, R.drawable.ic_perangkat_24dp, "PDRB", "5.05", "% (Laju)"),
+        InsightData(Orange400, R.drawable.ic_statistik, "Inflasi", "2.61", "% (y-on-y)"),
+        InsightData(Red400, R.drawable.ic_house_24dp, "Kemiskinan", "16.3", "%"),
+        InsightData(Purple400, R.drawable.ic_info_24dp, "IPM", "73.2", "Poin")
     )
 
     val lazyListState = rememberLazyListState()
-    val itemWidth = 268.dp
+    val itemWidth = 280.dp // Sedikit diperlebar agar muat 2 kolom
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val contentPadding = (screenWidth - itemWidth) / 2
     val dataSize = carouselData.size
 
-    // Efek untuk auto-scroll setiap 5 detik dengan logika unlimited scroll
     LaunchedEffect(Unit) {
         val startIndex = Int.MAX_VALUE / 2
         lazyListState.scrollToItem(startIndex - (startIndex % dataSize))
 
         while (true) {
-            delay(5000) // Jeda 5 detik
+            delay(5000)
             val nextIndex = lazyListState.firstVisibleItemIndex + 1
             lazyListState.animateScrollToItem(index = nextIndex)
         }
@@ -78,62 +80,96 @@ fun CarouselInsight() {
     ) {
         items(Int.MAX_VALUE) { index ->
             val itemIndex = index % dataSize
-            // 3. Mengambil data object dan mengakses propertinya
             val item = carouselData[itemIndex]
 
-            CarouselItem(
-                color = item.color,
-                iconRes = item.iconRes,
-                title = item.title
-            )
+            CarouselItem(data = item)
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun CarouselInsightPreview() {
-    CarouselInsight()
-}
-
 /**
- * Composable untuk satu item kartu di dalam carousel dengan tampilan yang diperbaiki.
+ * Composable Kartu yang dibagi menjadi 2 bagian (Kiri: Info, Kanan: Data)
  */
 @Composable
-fun CarouselItem(
-    color: Color,
-    iconRes: Int,
-    title: String
-) {
+fun CarouselItem(data: InsightData) {
     Card(
         modifier = Modifier
-            .width(268.dp)
-            .height(100.dp),
+            .width(280.dp) // Lebar kartu
+            .height(110.dp), // Tinggi kartu
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = color
-        )
+            containerColor = data.color
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(
+        // Row utama untuk membagi kartu menjadi Kiri dan Kanan
+        Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(12.dp), // Padding dalam kartu
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(id = iconRes),
-                contentDescription = title,
-                modifier = Modifier.size(48.dp),
-                tint = White
+            // --- BAGIAN KIRI (Ikon & Judul) ---
+            Column(
+                modifier = Modifier
+                    .weight(1f) // Mengambil 50% lebar
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
+                // Box putih transparan di belakang ikon agar ikon lebih menonjol
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = data.iconRes),
+                        contentDescription = data.title,
+                        modifier = Modifier.size(24.dp),
+                        tint = White
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = data.title,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = White.copy(alpha = 0.9f)
+                )
+            }
+
+            // Garis Pemisah Vertikal Tipis (Opsional)
+            Box(
+                modifier = Modifier
+                    .width(1.dp)
+                    .fillMaxHeight(0.8f)
+                    .background(White.copy(alpha = 0.3f))
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                color = White
-            )
+
+            // --- BAGIAN KANAN (Angka Data) ---
+            Column(
+                modifier = Modifier
+                    .weight(1f) // Mengambil 50% lebar sisa
+                    .padding(start = 12.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.End // Rata kanan agar rapi
+            ) {
+                Text(
+                    text = data.value,
+                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 32.sp), // Angka Besar
+                    fontWeight = FontWeight.Bold,
+                    color = White
+                )
+                Text(
+                    text = data.unit,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = White.copy(alpha = 0.8f),
+                    fontWeight = FontWeight.Medium
+                )
+            }
         }
     }
 }
@@ -141,9 +177,14 @@ fun CarouselItem(
 @Preview(showBackground = true)
 @Composable
 fun CarouselItemPreview() {
-    CarouselItem(
-        color = Blue400,
+    val dummyData = InsightData(
+        color = Blue500,
         iconRes = R.drawable.ic_grafik_24dp,
-        title = "Statistik Pertanian"
+        title = "Pertumbuhan",
+        value = "5.05",
+        unit = "% (y-on-y)"
     )
+    Box(modifier = Modifier.padding(16.dp)) {
+        CarouselItem(data = dummyData)
+    }
 }
