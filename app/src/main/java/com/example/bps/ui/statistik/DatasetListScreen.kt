@@ -13,9 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 /**
  * Screen ini menampilkan DAFTAR dataset berdasarkan kategori/subject.
  *
@@ -127,3 +129,14 @@ fun DatasetListScreen(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun DatasetListScreenPreview() {
+    // Buat NavController palsu untuk Preview
+    val navController = rememberNavController()
+
+    // Panggil DatasetListScreen dengan data contoh
+    DatasetListScreen(subjectName = "Ekonomi dan Perdagangan", navController = navController)
+}
+

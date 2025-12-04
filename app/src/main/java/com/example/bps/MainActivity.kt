@@ -27,8 +27,8 @@ import com.example.bps.components.BottomNavWithMoreMenu
 import com.example.bps.theme.*
 import com.example.bps.ui.beranda.BerandaScreen
 import com.example.bps.ui.datasetdetail.DatasetDetailScreen
-import com.example.bps.ui.common.GeneralListScreen
-import com.example.bps.ui.common.ContentType
+import com.example.bps.ui.general.GeneralListScreen
+import com.example.bps.ui.general.ContentType
 import com.example.bps.ui.infografik.InfografikScreen
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.statistik.DatasetListScreen
@@ -204,8 +204,8 @@ fun MainScreen() {
                 composable("detail_content/{itemId}/{type}", arguments = listOf(navArgument("itemId") { type = NavType.IntType }, navArgument("type") { type = NavType.StringType })) { backStackEntry ->
                     val itemId = backStackEntry.arguments?.getInt("itemId") ?: 0
                     val typeString = backStackEntry.arguments?.getString("type") ?: "NEWS"
-                    val typeEnum = try { com.example.bps.ui.common.ContentType.valueOf(typeString) } catch (e: Exception) { com.example.bps.ui.common.ContentType.NEWS }
-                    com.example.bps.ui.common.GeneralDetailScreen(navController, newsViewModel, itemId, typeEnum)
+                    val typeEnum = try { com.example.bps.ui.general.ContentType.valueOf(typeString) } catch (e: Exception) { com.example.bps.ui.general.ContentType.NEWS }
+                    com.example.bps.ui.general.GeneralDetailScreen(navController, newsViewModel, itemId, typeEnum)
                 }
             }
         }

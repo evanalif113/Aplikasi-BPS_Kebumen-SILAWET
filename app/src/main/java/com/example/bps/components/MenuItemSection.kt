@@ -31,40 +31,28 @@ import com.example.bps.theme.*
 data class MenuData(
     val iconRes: Int,
     val title: String,
-    val colorCard: Color
+    val colorCard: Color,
+    val route: String
 )
 
 @Composable
-fun MenuItemSection() {
-    // Daftar menu (Total 12 Item untuk 3x4)
-    /*val menuList = listOf(
-        MenuData(R.drawable.penduduk, "Penduduk", Blue400),
-        MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", Orange400),
-        MenuData(R.drawable.pengangguran, "Pengangguran", Red400),
-        MenuData(R.drawable.kemiskinan, "Kemiskinan", Green400),
-        MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", Purple400),
-        MenuData(R.drawable.ipm_ipg_idg, "IPM", Teal400),
-        MenuData(R.drawable.pendidikan, "Pendidikan", Yellow400),
-        MenuData(R.drawable.perumahan, "Perumahan", Indigo400),
-        MenuData(R.drawable.pertanian, "Pertanian", Lime400),
-        MenuData(R.drawable.pertumbuhan_ekonomi, "Pertumbuhan Ekonomi", Rose400),
-        MenuData(R.drawable.pdrb, "PDRB", Cyan400),
-        MenuData(R.drawable.perumahan, "Perumahan", Gray400)
-    )*/
-
+fun MenuItemSection(
+    onItemClick: (String) -> Unit // 1. Added this parameter to handle clicks
+) {
     val menuList = listOf(
-    MenuData(R.drawable.penduduk, "Penduduk", White),
-    MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", White),
-    MenuData(R.drawable.pengangguran, "Pengangguran", White),
-    MenuData(R.drawable.kemiskinan, "Kemiskinan", White),
-    MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", White),
-    MenuData(R.drawable.ipm_ipg_idg, "IPM", White),
-    MenuData(R.drawable.pendidikan, "Pendidikan", White),
-    MenuData(R.drawable.perumahan, "Perumahan", White),
-    MenuData(R.drawable.pertanian, "Pertanian", White),
-    MenuData(R.drawable.pertumbuhan_ekonomi, "Pertumbuhan Ekonomi", White),
-    MenuData(R.drawable.pdrb, "PDRB", White),
-    MenuData(R.drawable.perumahan, "Perumahan", White)
+        // Note: Ensure these route IDs match what your SubjectListScreen expects (e.g., numeric IDs or slugs)
+        MenuData(R.drawable.penduduk, "Penduduk", White, "subject_list/1"),
+        MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", White, "subject_list/2"),
+        MenuData(R.drawable.pengangguran, "Pengangguran", White, "subject_list/3"),
+        MenuData(R.drawable.kemiskinan, "Kemiskinan", White, "subject_list/4"),
+        MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", White, "subject_list/5"),
+        MenuData(R.drawable.ipm_ipg_idg, "IPM", White, "subject_list/6"),
+        MenuData(R.drawable.inflasi, "Inflasi", White, "subject_list/7"),
+        MenuData(R.drawable.pertumbuhan_ekonomi, "Ekonomi", White, "subject_list/8"),
+        MenuData(R.drawable.pdrb, "PDRB", White, "subject_list/9"),
+        MenuData(R.drawable.pendidikan, "Pendidikan", White, "subject_list/10"),
+        MenuData(R.drawable.perumahan, "Perumahan", White, "subject_list/11"),
+        MenuData(R.drawable.pertanian, "Pertanian", White, "subject_list/12")
     )
 
     Card(
@@ -79,21 +67,19 @@ fun MenuItemSection() {
             columns = GridCells.Fixed(3),
             modifier = Modifier
                 .fillMaxWidth()
-                // Atur tinggi fix yang cukup untuk 4 baris agar tidak perlu scroll
-                // (Sekitar 100dp per baris + padding)
                 .height(460.dp)
                 .padding(vertical = 16.dp),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            // Matikan scroll internal grid agar semua item langsung tampil
             userScrollEnabled = false
         ) {
             items(menuList) { menu ->
                 MenuItem(
                     iconRes = menu.iconRes,
                     title = menu.title,
-                    colorCard = menu.colorCard
+                    colorCard = menu.colorCard,
+                    onClick = { onItemClick(menu.route) } // This now works because onClick is defined below
                 )
             }
         }
@@ -105,13 +91,14 @@ fun MenuItem(
     iconRes: Int,
     title: String,
     colorCard: Color,
+    onClick: () -> Unit, // 2. Added onClick parameter here
     iconSize: Dp = 32.dp,
     textSize: TextUnit = 12.sp
 ) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
-            .clickable { }
+            .clickable { onClick() } // 3. Use the onClick parameter here
             .padding(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -152,6 +139,7 @@ fun PreviewMenuItemSection() {
             .padding(vertical = 40.dp),
         contentAlignment = Alignment.TopCenter
     ) {
-        MenuItemSection()
+        // Pass an empty lambda for the preview to work
+        MenuItemSection(onItemClick = {})
     }
 }

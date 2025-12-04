@@ -39,7 +39,6 @@ fun SearchBar() {
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Gray300,
             focusedContainerColor = Gray200,
-            // Menghilangkan garis indikator di bawah
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent
         ),

@@ -1,4 +1,4 @@
-package com.example.bps.ui.common
+package com.example.bps.ui.general
 
 import android.content.Intent
 import android.net.Uri

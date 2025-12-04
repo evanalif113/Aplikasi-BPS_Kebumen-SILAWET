@@ -42,7 +42,9 @@ fun InfografikScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         // Infografik Section (Mungkin ini statis atau perlu viewModel juga nanti)
-        InfografikSection()
+        InfografikSection(
+
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 

@@ -25,7 +25,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bps.data.remote.responses.NewsItem
 import com.example.bps.data.remote.responses.PublicationItem
-import com.example.bps.ui.common.ContentType
+import com.example.bps.ui.general.ContentType
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

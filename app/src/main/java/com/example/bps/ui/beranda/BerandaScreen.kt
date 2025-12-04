@@ -22,7 +22,7 @@ import com.example.bps.components.TabbedContentSection
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.infografik.news.NewsUiState
 import com.example.bps.ui.infografik.news.PublicationUiState
-import com.example.bps.ui.common.ContentType
+import com.example.bps.ui.general.ContentType
 
 @Composable
 fun BerandaScreen(
