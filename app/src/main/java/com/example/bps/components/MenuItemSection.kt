@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,19 +37,34 @@ data class MenuData(
 @Composable
 fun MenuItemSection() {
     // Daftar menu (Total 12 Item untuk 3x4)
+    /*val menuList = listOf(
+        MenuData(R.drawable.penduduk, "Penduduk", Blue400),
+        MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", Orange400),
+        MenuData(R.drawable.pengangguran, "Pengangguran", Red400),
+        MenuData(R.drawable.kemiskinan, "Kemiskinan", Green400),
+        MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", Purple400),
+        MenuData(R.drawable.ipm_ipg_idg, "IPM", Teal400),
+        MenuData(R.drawable.pendidikan, "Pendidikan", Yellow400),
+        MenuData(R.drawable.perumahan, "Perumahan", Indigo400),
+        MenuData(R.drawable.pertanian, "Pertanian", Lime400),
+        MenuData(R.drawable.pertumbuhan_ekonomi, "Pertumbuhan Ekonomi", Rose400),
+        MenuData(R.drawable.pdrb, "PDRB", Cyan400),
+        MenuData(R.drawable.perumahan, "Perumahan", Gray400)
+    )*/
+
     val menuList = listOf(
-        MenuData(R.drawable.ic_people_24dp, "Penduduk", Blue400),
-        MenuData(R.drawable.ic_briefcase_24dp, "Tenaga Kerja", Orange400),
-        MenuData(R.drawable.ic_pie_chart_24dp, "Pengangguran", Red400),
-        MenuData(R.drawable.ic_menu_24dp, "Kemiskinan", Green400),
-        MenuData(R.drawable.ic_open_book_24dp, "Rasio GINI", Purple400),
-        MenuData(R.drawable.ic_grafik_24dp, "IPM", Teal400),
-        MenuData(R.drawable.ic_pie_chart_24dp, "Pendidikan", Yellow400),
-        MenuData(R.drawable.ic_grafik_24dp, "Perumahan", Indigo400),
-        MenuData(R.drawable.ic_sprout_24dp, "Pertanian", Lime400),
-        MenuData(R.drawable.ic_settings_24dp, "Konstruksi", Rose400),
-        MenuData(R.drawable.ic_info_24dp, "Transportasi", Cyan400),
-        MenuData(R.drawable.ic_settings_24dp, "Lainnya", Gray400)
+    MenuData(R.drawable.penduduk, "Penduduk", White),
+    MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", White),
+    MenuData(R.drawable.pengangguran, "Pengangguran", White),
+    MenuData(R.drawable.kemiskinan, "Kemiskinan", White),
+    MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", White),
+    MenuData(R.drawable.ipm_ipg_idg, "IPM", White),
+    MenuData(R.drawable.pendidikan, "Pendidikan", White),
+    MenuData(R.drawable.perumahan, "Perumahan", White),
+    MenuData(R.drawable.pertanian, "Pertanian", White),
+    MenuData(R.drawable.pertumbuhan_ekonomi, "Pertumbuhan Ekonomi", White),
+    MenuData(R.drawable.pdrb, "PDRB", White),
+    MenuData(R.drawable.perumahan, "Perumahan", White)
     )
 
     Card(
@@ -58,7 +72,7 @@ fun MenuItemSection() {
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
+        colors = CardDefaults.cardColors(containerColor = Orange300),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         LazyVerticalGrid(
@@ -113,7 +127,6 @@ fun MenuItem(
                 painter = painterResource(id = iconRes),
                 contentDescription = title,
                 modifier = Modifier.size(iconSize),
-                colorFilter = ColorFilter.tint(Color.White)
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
