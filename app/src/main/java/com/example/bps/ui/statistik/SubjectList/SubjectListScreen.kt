@@ -92,3 +92,10 @@ fun SubjectListScreen(
         }
     }
 }
+
+@Preview
+@Composable
+fun SubjectListScreenPreview() {
+    val navController = rememberNavController()
+    SubjectListScreen(categoryId = "2", navController = navController)
+}

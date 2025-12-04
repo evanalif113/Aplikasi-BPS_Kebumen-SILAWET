@@ -2,7 +2,6 @@ package com.example.bps.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -32,27 +31,25 @@ data class MenuData(
     val iconRes: Int,
     val title: String,
     val colorCard: Color,
-    val route: String
 )
 
 @Composable
 fun MenuItemSection(
-    onItemClick: (String) -> Unit // 1. Added this parameter to handle clicks
 ) {
     val menuList = listOf(
         // Note: Ensure these route IDs match what your SubjectListScreen expects (e.g., numeric IDs or slugs)
-        MenuData(R.drawable.penduduk, "Penduduk", White, "subject_list/1"),
-        MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", White, "subject_list/2"),
-        MenuData(R.drawable.pengangguran, "Pengangguran", White, "subject_list/3"),
-        MenuData(R.drawable.kemiskinan, "Kemiskinan", White, "subject_list/4"),
-        MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", White, "subject_list/5"),
-        MenuData(R.drawable.ipm_ipg_idg, "IPM", White, "subject_list/6"),
-        MenuData(R.drawable.inflasi, "Inflasi", White, "subject_list/7"),
-        MenuData(R.drawable.pertumbuhan_ekonomi, "Ekonomi", White, "subject_list/8"),
-        MenuData(R.drawable.pdrb, "PDRB", White, "subject_list/9"),
-        MenuData(R.drawable.pendidikan, "Pendidikan", White, "subject_list/10"),
-        MenuData(R.drawable.perumahan, "Perumahan", White, "subject_list/11"),
-        MenuData(R.drawable.pertanian, "Pertanian", White, "subject_list/12")
+        MenuData(R.drawable.penduduk, "Penduduk", White),
+        MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", White),
+        MenuData(R.drawable.pengangguran, "Pengangguran", White),
+        MenuData(R.drawable.kemiskinan, "Kemiskinan", White),
+        MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", White),
+        MenuData(R.drawable.ipm_ipg_idg, "IPM", White),
+        MenuData(R.drawable.inflasi, "Inflasi", White),
+        MenuData(R.drawable.pertumbuhan_ekonomi, "Ekonomi", White),
+        MenuData(R.drawable.pdrb, "PDRB", White),
+        MenuData(R.drawable.pendidikan, "Pendidikan", White),
+        MenuData(R.drawable.perumahan, "Perumahan", White),
+        MenuData(R.drawable.pertanian, "Pertanian", White)
     )
 
     Card(
@@ -79,7 +76,6 @@ fun MenuItemSection(
                     iconRes = menu.iconRes,
                     title = menu.title,
                     colorCard = menu.colorCard,
-                    onClick = { onItemClick(menu.route) } // This now works because onClick is defined below
                 )
             }
         }
@@ -91,14 +87,12 @@ fun MenuItem(
     iconRes: Int,
     title: String,
     colorCard: Color,
-    onClick: () -> Unit, // 2. Added onClick parameter here
     iconSize: Dp = 32.dp,
     textSize: TextUnit = 12.sp
 ) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
-            .clickable { onClick() } // 3. Use the onClick parameter here
             .padding(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -140,6 +134,6 @@ fun PreviewMenuItemSection() {
         contentAlignment = Alignment.TopCenter
     ) {
         // Pass an empty lambda for the preview to work
-        MenuItemSection(onItemClick = {})
+        MenuItemSection()
     }
 }

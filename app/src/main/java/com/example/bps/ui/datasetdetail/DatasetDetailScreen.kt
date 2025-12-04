@@ -278,7 +278,7 @@ fun YearDropdown(
 }
 
 @Composable
-fun InsightCard(insight: com.example.bps.data.remote.responses.Insight) {
+fun InsightCard(insight: Insight) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
