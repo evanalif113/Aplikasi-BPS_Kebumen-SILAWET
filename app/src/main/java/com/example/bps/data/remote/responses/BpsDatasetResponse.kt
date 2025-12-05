@@ -4,10 +4,8 @@ package com.example.bps.data.remote.responses
  */
 data class BpsDatasetResponse(
     val dataset: DatasetInfo,
-
     val available_years: List<Int> = emptyList(),
     val current_year: Int? = null,
-
     val table: TableData,
     val chart: ChartData,
     val insights: List<Insight> = emptyList()
@@ -47,12 +45,7 @@ data class ChartData(
     val type: String,
     val title: String,
     val labels: List<String>,
-
-    // Dibuat nullable (?), karena chart "pyramid" tidak punya "data",
-    // tapi chart "pie" dan "bar" punya.
     val data: List<Number>? = null,
-
-    // Dibuat nullable (?), karena hanya chart "pyramid" yang punya "datasets".
     val datasets: List<ChartDataset>? = null
 )
 

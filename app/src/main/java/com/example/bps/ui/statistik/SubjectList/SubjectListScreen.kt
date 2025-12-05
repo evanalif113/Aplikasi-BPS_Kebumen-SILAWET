@@ -97,5 +97,8 @@ fun SubjectListScreen(
 @Composable
 fun SubjectListScreenPreview() {
     val navController = rememberNavController()
-    SubjectListScreen(categoryId = "2", navController = navController)
+    SubjectListScreen(
+        categoryId = "2",
+        navController = navController
+    )
 }

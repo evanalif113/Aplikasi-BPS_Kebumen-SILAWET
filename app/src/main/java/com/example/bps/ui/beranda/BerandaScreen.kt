@@ -21,7 +21,7 @@ import com.example.bps.components.InfoSensusSection
 import com.example.bps.components.TabbedContentSection
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.infografik.news.NewsUiState
-import com.example.bps.ui.infografik.news.PublicationUiState
+import com.example.bps.ui.infografik.news.PublikasiUiState
 import com.example.bps.ui.general.ContentType
 
 @Composable
@@ -54,8 +54,8 @@ fun BerandaScreen(
         Spacer(modifier = Modifier.height(36.dp))
 
         TabbedContentSection(
-            publicationList = if (publicationState is PublicationUiState.Success)
-                (publicationState as PublicationUiState.Success).data
+            publicationList = if (publicationState is PublikasiUiState.Success)
+                (publicationState as PublikasiUiState.Success).data
             else emptyList(),
 
             brsList = if (brsState is NewsUiState.Success)

@@ -31,6 +31,7 @@ import com.example.bps.ui.general.GeneralListScreen
 import com.example.bps.ui.general.ContentType
 import com.example.bps.ui.infografik.InfografikScreen
 import com.example.bps.ui.infografik.news.NewsViewModel
+import com.example.bps.ui.statistik.statistikGraph
 import com.example.bps.ui.statistik.DatasetListScreen
 import com.example.bps.ui.statistik.StatistikScreen
 import com.example.bps.ui.statistik.SubjectList.SubjectListScreen
@@ -167,7 +168,10 @@ fun MainScreen() {
                         onNavigateToDetail = { id, type -> navController.navigate("detail_content/$id/$type") }
                     )
                 }
-                composable("statistik") { StatistikScreen(navController) }
+                composable("statistik") {
+                    StatistikScreen(navController)
+                }
+                statistikGraph(navController)
                 composable("infografik") {
                     InfografikScreen(
                         viewModel = newsViewModel,

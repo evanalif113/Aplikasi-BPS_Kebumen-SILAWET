@@ -18,10 +18,10 @@ sealed interface NewsUiState {
 }
 
 // State Khusus untuk Publikasi (Karena tipe datanya beda)
-sealed interface PublicationUiState {
-    object Loading : PublicationUiState
-    data class Success(val data: List<PublicationItem>) : PublicationUiState
-    data class Error(val message: String) : PublicationUiState
+sealed interface PublikasiUiState {
+    object Loading : PublikasiUiState
+    data class Success(val data: List<PublicationItem>) : PublikasiUiState
+    data class Error(val message: String) : PublikasiUiState
 }
 
 class NewsViewModel : ViewModel() {
@@ -31,8 +31,8 @@ class NewsViewModel : ViewModel() {
     val newsState: StateFlow<NewsUiState> = _newsState.asStateFlow()
 
     // 2. State untuk Publikasi (Tab 1)
-    private val _publicationState = MutableStateFlow<PublicationUiState>(PublicationUiState.Loading)
-    val publicationState: StateFlow<PublicationUiState> = _publicationState.asStateFlow()
+    private val _publicationState = MutableStateFlow<PublikasiUiState>(PublikasiUiState.Loading)
+    val publicationState: StateFlow<PublikasiUiState> = _publicationState.asStateFlow()
 
     // 3. State untuk BRS (Tab 2)
     private val _brsState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
@@ -67,9 +67,9 @@ class NewsViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = ApiClient.apiService.getPublications()
-                if (response.success) _publicationState.value = PublicationUiState.Success(response.data)
-                else _publicationState.value = PublicationUiState.Error(response.message)
-            } catch (e: Exception) { _publicationState.value = PublicationUiState.Error(e.message ?: "Error") }
+                if (response.success) _publicationState.value = PublikasiUiState.Success(response.data)
+                else _publicationState.value = PublikasiUiState.Error(response.message)
+            } catch (e: Exception) { _publicationState.value = PublikasiUiState.Error(e.message ?: "Error") }
         }
     }
 
@@ -99,7 +99,7 @@ class NewsViewModel : ViewModel() {
     fun getPublicationById(id: Int): PublicationItem? {
         val state = publicationState.value
         // Cek apakah state sedang Success
-        return if (state is PublicationUiState.Success) {
+        return if (state is PublikasiUiState.Success) {
             // Cari item yang ID-nya cocok
             state.data.find { it.id == id }
         } else null

@@ -35,13 +35,15 @@ fun GeneralDetailScreen(
     navController: NavController,
     viewModel: NewsViewModel,
     id: Int,
-    contentType: ContentType // PUBLIKASI atau NEWS/BRS/INFOGRAFIS
+    contentType: ContentType
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
     // 1. Cari Data berdasarkan ID & Tipe
-    val itemData = remember(id, contentType) {
+    val itemData = remember(
+        id,
+        contentType) {
         when (contentType) {
             ContentType.PUBLIKASI -> viewModel.getPublicationById(id)
 
@@ -85,7 +87,8 @@ fun GeneralDetailScreen(
                 title = { Text("Detail Konten", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Kembali")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)

@@ -26,7 +26,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.infografik.news.NewsUiState
-import com.example.bps.ui.infografik.news.PublicationUiState
+import com.example.bps.ui.infografik.news.PublikasiUiState
 import com.example.bps.data.remote.responses.NewsItem
 import com.example.bps.data.remote.responses.PublicationItem
 
@@ -73,7 +73,7 @@ fun GeneralListScreen(
             when (contentType) {
                 ContentType.PUBLIKASI -> {
                     // Kirim navController ke Helper
-                    HandlePublicationState(publicationState, navController)
+                    HandlePublikasiState(publicationState, navController)
                 }
                 ContentType.NEWS -> {
                     // Kirim navController dan Tipe ke Helper
@@ -92,18 +92,18 @@ fun GeneralListScreen(
 
 // --- HELPER: MENANGANI STATE PUBLIKASI ---
 @Composable
-fun HandlePublicationState(state: PublicationUiState, navController: NavController) {
+fun HandlePublikasiState(state: PublikasiUiState, navController: NavController) {
     when (state) {
-        is PublicationUiState.Loading -> LoadingView()
-        is PublicationUiState.Error -> ErrorView(state.message)
-        is PublicationUiState.Success -> {
+        is PublikasiUiState.Loading -> LoadingView()
+        is PublikasiUiState.Error -> ErrorView(state.message)
+        is PublikasiUiState.Success -> {
             LazyColumn(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(state.data) { item ->
                     // Kirim navController ke Item
-                    PublicationListItem(item, navController)
+                    PublikasiListItem(item, navController)
                 }
             }
         }
@@ -132,7 +132,7 @@ fun HandleNewsState(state: NewsUiState, navController: NavController, type: Cont
 
 // --- UI ITEM: BUKU (Row) ---
 @Composable
-fun PublicationListItem(item: PublicationItem, navController: NavController) {
+fun PublikasiListItem(item: PublicationItem, navController: NavController) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(2.dp),

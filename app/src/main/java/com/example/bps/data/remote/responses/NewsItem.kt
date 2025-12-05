@@ -2,7 +2,6 @@ package com.example.bps.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
 
-// INI ADALAH ISI YANG BENAR UNTUK NewsItem.kt
 data class NewsItem(
 
     @SerializedName("id")
