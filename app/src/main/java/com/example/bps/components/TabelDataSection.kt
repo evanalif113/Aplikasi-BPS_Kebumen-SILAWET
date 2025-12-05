@@ -131,25 +131,3 @@ fun TabelDataSectionPreview() {
     )
     TabelDataSection(tableData = tableData)
 }
-
-//@Preview
-//@Composable
-//fun TableCellHeaderPreview() {
-//    TableCell(
-//        text = "Header Cell",
-//        isHeader = true,
-//        modifier = Modifier.width(120.dp),
-//        textAlign = TextAlign.Center
-//    )
-//}
-//
-//@Preview
-//@Composable
-//fun TableCellDataPreview() {
-//    TableCell(
-//        text = "Data Cell",
-//        isHeader = false,
-//        modifier = Modifier.width(120.dp),
-//        textAlign = TextAlign.Start
-//    )
-//}
