@@ -9,8 +9,6 @@ import retrofit2.Response
 import com.example.bps.data.remote.responses.BpsDatasetResponse
 import com.example.bps.data.remote.responses.SimpleDatasetResponse
 import com.example.bps.data.remote.responses.BpsPublicationResponse
-import com.example.bps.data.remote.responses.NewsItem
-
 /** Interface ini berisi SEMUA definisi endpoint API yang akan dipanggil menggunakan Retrofit. */
 interface ApiService {
 
@@ -26,10 +24,10 @@ interface ApiService {
     suspend fun getDatasetList(
         @Query("subject") subject: String? = null,
         @Query("q") searchQuery: String? = null
-    ): List<SimpleDatasetResponse>
+    ): SimpleDatasetListResponse
 
     @GET("datasets/categories")
-    suspend fun getCategories(): List<CategorySubjectResponse>
+    suspend fun getCategories(): Map<String, CategorySubjectResponse>
 
     // --- ENDPOINT KONTEN BERANDA (SUDAH DIPERBAIKI) ---
 

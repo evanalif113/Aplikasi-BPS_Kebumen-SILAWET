@@ -30,9 +30,14 @@ class DatasetListViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = DatasetListUiState(isLoading = true)
             try {
-                // Pastikan memanggil API pakai 'subject'
+                // Panggil API (sekarang return Wrapper Object)
                 val response = ApiClient.apiService.getDatasetList(subject = subject)
-                _uiState.value = DatasetListUiState(isLoading = false, datasets = response)
+
+                // Ambil list dari properti '.data'
+                _uiState.value = DatasetListUiState(
+                    isLoading = false,
+                    datasets = response.data // <-- Ambil .data di sini
+                )
             } catch (e: Exception) {
                 _uiState.value =
                         DatasetListUiState(

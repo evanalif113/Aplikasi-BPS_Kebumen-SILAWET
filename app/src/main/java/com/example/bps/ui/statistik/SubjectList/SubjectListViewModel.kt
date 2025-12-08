@@ -9,7 +9,7 @@ import com.example.bps.data.remote.responses.CategorySubjectResponse
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-// State tidak perlu diubah
+// State tetap menggunakan List agar mudah dibaca UI
 data class SubjectUiState(
     val isLoading: Boolean = false,
     val categoriesMap: List<CategorySubjectResponse> = emptyList(),
@@ -19,23 +19,20 @@ data class SubjectUiState(
 class SubjectListViewModel : ViewModel() {
     private fun loadCategories() {
         viewModelScope.launch {
-            _uiState.value = SubjectUiState(
-                isLoading = true
-            )
+            _uiState.value = SubjectUiState(isLoading = true)
             try {
-                // Panggil API (Sekarang mengembalikan Wrapper Object)
-                val response = ApiClient.apiService.getCategories()
+                // Response sekarang berupa Map<String, CategorySubjectResponse>
+                val responseMap = ApiClient.apiService.getCategories()
 
-                // Ambil list dari properti .data
+                // Konversi Map values menjadi List
+                val categoriesList = responseMap.values.toList()
+
                 _uiState.value = SubjectUiState(
                     isLoading = false,
-                    //categoriesMap = response.data // <-- Ini sekarang valid!
+                    categoriesMap = categoriesList // Masukkan List hasil konversi
                 )
             } catch (e: Exception) {
-                _uiState.value = SubjectUiState(
-                    isLoading = false,
-                    error = e.message
-                )
+                _uiState.value = SubjectUiState(isLoading = false, error = e.message)
             }
         }
     }
