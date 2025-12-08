@@ -28,8 +28,8 @@ fun SubjectListScreen(
     // Cari daftar subject yang sesuai dengan categoryId
     val categoryInt = categoryId.toIntOrNull()
     val subjects = uiState.categoriesMap
-        .find { it.category == categoryInt } // Cari kategori (misal: 2)
-        ?.subjects ?: emptyList() // Ambil daftar subjects-nya (misal: ["Neraca Ekonomi"])
+        .find { it.category == categoryInt }
+        ?.subjects ?: emptyList()
 
     // Beri judul
     val title = when (categoryInt) { //Subjek Statistik

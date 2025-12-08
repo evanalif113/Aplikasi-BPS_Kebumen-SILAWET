@@ -45,13 +45,13 @@ fun BerandaScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         SearchBar()
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         MenuItemSection()
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         InfoSensusSection()
-        Spacer(modifier = Modifier.height(36.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         TabbedContentSection(
             publicationList = if (publicationState is PublikasiUiState.Success)
@@ -71,11 +71,11 @@ fun BerandaScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // 3. NEWS SECTION (Berita Kegiatan)
         NewsSection(
-            uiState = newsState, // <-- Gunakan 'newsState' yang baru
+            uiState = newsState,
             onSeeAllClicked = onSeeAllNews
         )
     }

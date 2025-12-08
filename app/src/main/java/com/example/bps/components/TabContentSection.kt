@@ -37,8 +37,16 @@ fun TabbedContentSection(
     infografikList: List<NewsItem> = emptyList(),
     onItemClick: (Int, ContentType) -> Unit
 ) {
-    val tabs = listOf("Publikasi", "BRS", "Infografis")
-    val pagerState = rememberPagerState(pageCount = { tabs.size })
+    val tabs = listOf(
+        "Publikasi",
+        "BRS",
+        "Infografis"
+    )
+    val pagerState = rememberPagerState(
+        pageCount = {
+            tabs.size
+        }
+    )
     val scope = rememberCoroutineScope()
 
     Column(modifier = modifier.fillMaxWidth()) {
@@ -74,7 +82,7 @@ fun TabbedContentSection(
                 divider = {},
                 indicator = { tabPositions ->
                     if (pagerState.currentPage < tabPositions.size) {
-                        TabRowDefaults.Indicator(
+                        TabRowDefaults.SecondaryIndicator(
                             modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                             height = 3.dp,
                             color = MaterialTheme.colorScheme.primary

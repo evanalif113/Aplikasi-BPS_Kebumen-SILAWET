@@ -9,7 +9,7 @@ import com.example.bps.data.remote.responses.CategorySubjectResponse
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-// State untuk menyimpan SEMUA kategori & subject
+// State tidak perlu diubah
 data class SubjectUiState(
     val isLoading: Boolean = false,
     val categoriesMap: List<CategorySubjectResponse> = emptyList(),
@@ -19,23 +19,31 @@ data class SubjectUiState(
 class SubjectListViewModel : ViewModel() {
     private fun loadCategories() {
         viewModelScope.launch {
-            _uiState.value = SubjectUiState(isLoading = true)
+            _uiState.value = SubjectUiState(
+                isLoading = true
+            )
             try {
+                // Panggil API (Sekarang mengembalikan Wrapper Object)
                 val response = ApiClient.apiService.getCategories()
-                _uiState.value = SubjectUiState(isLoading = false, categoriesMap = response)
+
+                // Ambil list dari properti .data
+                _uiState.value = SubjectUiState(
+                    isLoading = false,
+                    //categoriesMap = response.data // <-- Ini sekarang valid!
+                )
             } catch (e: Exception) {
-                _uiState.value = SubjectUiState(isLoading = false, error = e.message)
+                _uiState.value = SubjectUiState(
+                    isLoading = false,
+                    error = e.message
+                )
             }
         }
     }
+
     private val _uiState = mutableStateOf(SubjectUiState())
     val uiState: State<SubjectUiState> = _uiState
 
     init {
-        // Langsung panggil API 'getCategories' saat ViewModel ini dibuat
-        // agar datanya siap
         loadCategories()
     }
-
-
 }

@@ -5,7 +5,7 @@ package com.example.bps.data.remote.responses
 data class BpsDatasetResponse(
     val dataset: DatasetInfo,
     val available_years: List<Int> = emptyList(),
-    val current_year: Int? = null,
+    val current_year: Int,
     val table: TableData,
     val chart: ChartData,
     val insights: List<Insight> = emptyList()
