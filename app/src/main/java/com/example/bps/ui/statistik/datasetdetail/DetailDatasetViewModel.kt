@@ -1,19 +1,17 @@
-package com.example.bps.ui.datasetdetail
+package com.example.bps.ui.statistik.datasetdetail
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bps.data.remote.ApiClient
-import com.example.bps.data.remote.responses.BpsDatasetResponse
-import kotlinx.coroutines.Dispatchers
+import com.example.bps.data.remote.responses.BpsDatasetClass
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 data class DetailUiState(
-        val isLoading: Boolean = false,
-        val dataset: BpsDatasetResponse? = null,
-        val error: String? = null
+    val isLoading: Boolean = false,
+    val dataset: BpsDatasetClass? = null,
+    val error: String? = null
 )
 
 class DetailDatasetViewModel : ViewModel() {

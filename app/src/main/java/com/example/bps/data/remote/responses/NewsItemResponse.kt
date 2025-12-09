@@ -2,7 +2,7 @@ package com.example.bps.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class NewsItem(
+data class NewsItemResponse(
 
     @SerializedName("id")
     val id: Int,

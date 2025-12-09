@@ -43,7 +43,6 @@ fun InfografikScreen(
 
         // Infografik Section (Mungkin ini statis atau perlu viewModel juga nanti)
         InfografikSection(
-
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -53,8 +52,6 @@ fun InfografikScreen(
             uiState = newsUiState,
             onSeeAllClicked = onNavigateToAllNews
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 

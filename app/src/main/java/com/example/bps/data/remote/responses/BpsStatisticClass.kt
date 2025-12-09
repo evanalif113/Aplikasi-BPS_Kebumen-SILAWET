@@ -2,7 +2,7 @@ package com.example.bps.data.remote.responses
 /**
  * Ini adalah data class utama yang membungkus seluruh respons JSON.
  */
-data class BpsDatasetResponse(
+data class BpsDatasetClass(
     val dataset: DatasetInfo,
     val available_years: List<Int> = emptyList(),
     val current_year: Int,

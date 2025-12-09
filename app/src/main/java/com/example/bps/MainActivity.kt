@@ -10,11 +10,9 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,9 +22,10 @@ import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.example.bps.components.BottomNavWithMoreMenu
+import com.example.bps.components.BpsDrawerContent
 import com.example.bps.theme.*
 import com.example.bps.ui.beranda.BerandaScreen
-import com.example.bps.ui.datasetdetail.DatasetDetailScreen
+import com.example.bps.ui.statistik.datasetdetail.DatasetDetailScreen
 import com.example.bps.ui.general.GeneralListScreen
 import com.example.bps.ui.general.ContentType
 import com.example.bps.ui.infografik.InfografikScreen
@@ -225,175 +224,7 @@ fun MainScreen() {
  * Komponen Konten Drawer (Menu Samping)
  * Dipisah agar bisa dipreview dengan mudah.
  */
-@Composable
-fun BpsDrawerContent(
-    onNavigate: (String) -> Unit,
-    onOpenLink: (String) -> Unit,
-    onClose: () -> Unit
-) {
-    ModalDrawerSheet(
-        drawerContainerColor = Color.White,
-    ) {
-        // --- HEADER DRAWER ---
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Menu Lengkap",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Black
-        )
-        HorizontalDivider()
 
-        // --- KELOMPOK 1: ARSIP & DATA (Tetap Sama) ---
-        Text(
-            text = "Arsip & Data",
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            style = MaterialTheme.typography.labelLarge,
-            color = Color.Gray
-        )
-
-        NavigationDrawerItem(
-            label = { Text(text = "Publikasi dan Buku") },
-            icon = { Icon(painterResource(id = R.drawable.ic_book_marked_24dp), contentDescription = null) },
-            selected = false,
-            onClick = {
-                onClose()
-                onNavigate("all_publications")
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(text = "Berita Resmi Statistik") },
-            icon = { Icon(painterResource(id = R.drawable.ic_grafik_24dp), contentDescription = null) },
-            selected = false,
-            onClick = {
-                onClose()
-                onNavigate("all_brs")
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(text = "Galeri Infografis") },
-            icon = { Icon(painterResource(id = R.drawable.ic_pie_chart_24dp), contentDescription = null) },
-            selected = false,
-            onClick = {
-                onClose()
-                onNavigate("all_infografis")
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(text = "Berita Kegiatan") },
-            icon = { Icon(painterResource(id = R.drawable.ic_menu_24dp), contentDescription = null) },
-            selected = false,
-            onClick = {
-                onClose()
-                onNavigate("all_news")
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-        // --- KELOMPOK 2: LAYANAN & PROFIL ---
-        Text(
-            text = "Layanan & Profil",
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
-            style = MaterialTheme.typography.labelLarge,
-            color = Color.Gray
-        )
-
-        NavigationDrawerItem(
-            label = { Text(text = "Tentang Aplikasi SILAWET") },
-            icon = { Icon(painterResource(id = R.drawable.ic_feedback), contentDescription = null) },
-            selected = false,
-            onClick = {
-                onClose()
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(text = "Website Resmi BPS") },
-            icon = {
-                Icon(
-                    painterResource(id = R.drawable.ic_internet_filled),
-                    contentDescription = null,
-                    tint = Color(0xFF0D47A1) // Contoh: Warna Biru Tua untuk Website
-                )
-            },
-            selected = false,
-            onClick = {
-                onClose()
-                onOpenLink("https://kebumenkab.bps.go.id")
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        // --- BAGIAN SOSIAL MEDIA (DIBERI WARNA) ---
-
-        NavigationDrawerItem(
-            label = { Text(text = "Facebook BPS Kebumen") },
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_facebook_fill),
-                    contentDescription = null,
-                    // Warna Facebook Blue
-                    tint = Color(0xFF1877F2)
-                )
-            },
-            selected = false,
-            onClick = {
-                onClose()
-                onOpenLink("https://www.facebook.com/p/Bps-Kebumen-61556651832018/")
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(text = "Instagram BPS Kebumen") },
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_instagram_fill),
-                    contentDescription = null,
-                    // Jika icon Instagram Anda sudah berwarna (multi-color), gunakan Color.Unspecified
-                    // Jika icon Anda hitam putih, gunakan warna solid seperti Magenta: Color(0xFFE4405F)
-                    tint = Color.Unspecified
-                )
-            },
-            selected = false,
-            onClick = {
-                onClose()
-                onOpenLink("https://www.instagram.com/bpskebumen/")
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(text = "Hubungi Via WhatsApp") },
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_whatsapp_fill),
-                    contentDescription = null,
-                    // Warna WhatsApp Green
-                    tint = Color(0xFF25D366)
-                )
-            },
-            selected = false,
-            onClick = {
-                onClose()
-                onOpenLink("https://wa.me/6285179763305")
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-    }
-}
 
 // --- PREVIEW 1: TAMPILAN UTAMA APLIKASI ---
 @Preview(showBackground = true)

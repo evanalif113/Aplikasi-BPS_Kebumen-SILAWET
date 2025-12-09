@@ -54,7 +54,7 @@ fun GeneralDetailScreen(
             ContentType.INFOGRAFIS -> viewModel.getInfografikById(id)
 
             // Panggil fungsi KHUSUS Berita Kegiatan
-            ContentType.NEWS -> viewModel.getNewsActivityById(id)
+            ContentType.NEWS -> viewModel.getNewsById(id)
         }
     }
 
@@ -68,15 +68,15 @@ fun GeneralDetailScreen(
     }
 
     // 2. Ekstrak Data agar UI-nya generik
-    val title = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItem).title else (itemData as com.example.bps.data.remote.responses.NewsItem).title
+    val title = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).title else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).title
 
-    val date = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItem).getSimpleDate() else (itemData as com.example.bps.data.remote.responses.NewsItem).getSimpleDate()
+    val date = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).getSimpleDate() else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).getSimpleDate()
 
-    val imageUrl = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItem).coverUrl else (itemData as com.example.bps.data.remote.responses.NewsItem).getDisplayImage()
+    val imageUrl = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).coverUrl else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).getDisplayImage()
 
-    val descRaw = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItem).abstract else (itemData as com.example.bps.data.remote.responses.NewsItem).getSummary()
+    val descRaw = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).abstract else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).getSummary()
 
-    val linkUrl = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItem).pdfUrl else (itemData as com.example.bps.data.remote.responses.NewsItem).link
+    val linkUrl = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).pdfUrl else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).link
 
     // Helper bersihkan HTML tag dari deskripsi
     val cleanDesc = HtmlCompat.fromHtml(descRaw ?: "Tidak ada deskripsi", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()

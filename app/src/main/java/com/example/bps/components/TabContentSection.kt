@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.bps.data.remote.responses.NewsItem
-import com.example.bps.data.remote.responses.PublicationItem
+import com.example.bps.data.remote.responses.NewsItemResponse
+import com.example.bps.data.remote.responses.PublicationItemResponse
 import com.example.bps.ui.general.ContentType
 import kotlinx.coroutines.launch
 
@@ -32,9 +32,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun TabbedContentSection(
     modifier: Modifier = Modifier,
-    publicationList: List<PublicationItem> = emptyList(),
-    brsList: List<NewsItem> = emptyList(),
-    infografikList: List<NewsItem> = emptyList(),
+    publicationList: List<PublicationItemResponse> = emptyList(),
+    brsList: List<NewsItemResponse> = emptyList(),
+    infografikList: List<NewsItemResponse> = emptyList(),
     onItemClick: (Int, ContentType) -> Unit
 ) {
     val tabs = listOf(
@@ -124,7 +124,7 @@ fun TabbedContentSection(
 
 // --- LIST VERTIKAL (PUBLIKASI) ---
 @Composable
-fun VerticalPublicationList(items: List<PublicationItem>, onClick: (Int, ContentType) -> Unit) {
+fun VerticalPublicationList(items: List<PublicationItemResponse>, onClick: (Int, ContentType) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         items.take(3).forEach { item ->
             // Panggil onClick dengan Tipe PUBLIKASI
@@ -134,7 +134,7 @@ fun VerticalPublicationList(items: List<PublicationItem>, onClick: (Int, Content
 }
 
 @Composable
-fun VerticalNewsList(items: List<NewsItem>, type: ContentType, onClick: (Int, ContentType) -> Unit) {
+fun VerticalNewsList(items: List<NewsItemResponse>, type: ContentType, onClick: (Int, ContentType) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         items.take(3).forEach { item ->
             // Panggil onClick dengan Tipe yang sesuai (BRS/INFOGRAFIS)
@@ -146,7 +146,7 @@ fun VerticalNewsList(items: List<NewsItem>, type: ContentType, onClick: (Int, Co
 // --- DESAIN BARU: LIST ITEM (GAMBAR KIRI, TEKS KANAN) ---
 
 @Composable
-fun PublicationRowItem(item: PublicationItem, onClick: () -> Unit) {
+fun PublicationRowItem(item: PublicationItemResponse, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -169,7 +169,7 @@ fun PublicationRowItem(item: PublicationItem, onClick: () -> Unit) {
 }
 
 @Composable
-fun NewsRowItem(item: NewsItem, onClick: () -> Unit) {
+fun NewsRowItem(item: NewsItemResponse, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

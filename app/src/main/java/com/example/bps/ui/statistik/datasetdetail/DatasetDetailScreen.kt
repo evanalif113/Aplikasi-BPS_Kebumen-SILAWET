@@ -1,5 +1,7 @@
-package com.example.bps.ui.datasetdetail
+package com.example.bps.ui.statistik.datasetdetail
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background // <-- Untuk error 'background'
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,11 +27,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MenuAnchorType
+import androidx.compose.ui.text.font.FontStyle
 import com.example.bps.data.remote.responses.Insight
 
 // Warna Biru BPS untuk Tab Aktif
@@ -214,7 +217,7 @@ fun DatasetDetailScreen(
                                             "Geser tabel ke samping jika kolom terpotong.",
                                             fontSize = 12.sp,
                                             color = Color.Gray,
-                                            fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                                            fontStyle = FontStyle.Italic
                                         )
                                     }
                                 }
@@ -284,8 +287,8 @@ fun InsightCard(insight: Insight) {
             .fillMaxWidth()
             .padding(bottom = 12.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F9FF)), // Biru sangat muda
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
-        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFBBDEFB))
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, Color(0xFFBBDEFB))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(insight.title, fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
@@ -333,7 +336,7 @@ fun ModeDropdown(onModeSelected: (String) -> Unit) {
             )
 
             // Canvas transparan di atas TextField (agar bisa diklik di semua area)
-            androidx.compose.foundation.Canvas(
+            Canvas(
                 modifier = Modifier
                     .matchParentSize() // Gunakan matchParentSize agar pas dengan TextField
                     .clickable { expanded = !expanded }
@@ -365,5 +368,6 @@ fun DatasetDetailScreenPreview() {
     val navController = rememberNavController()
     DatasetDetailScreen(
         datasetId = "1",
-        navController = navController)
+        navController = navController
+    )
 }

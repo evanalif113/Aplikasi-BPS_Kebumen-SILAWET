@@ -27,8 +27,8 @@ import coil.request.ImageRequest
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.infografik.news.NewsUiState
 import com.example.bps.ui.infografik.news.PublikasiUiState
-import com.example.bps.data.remote.responses.NewsItem
-import com.example.bps.data.remote.responses.PublicationItem
+import com.example.bps.data.remote.responses.NewsItemResponse
+import com.example.bps.data.remote.responses.PublicationItemResponse
 
 // Enum untuk menentukan Tipe Konten
 enum class ContentType {
@@ -132,7 +132,7 @@ fun HandleNewsState(state: NewsUiState, navController: NavController, type: Cont
 
 // --- UI ITEM: BUKU (Row) ---
 @Composable
-fun PublikasiListItem(item: PublicationItem, navController: NavController) {
+fun PublikasiListItem(item: PublicationItemResponse, navController: NavController) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(2.dp),
@@ -165,7 +165,7 @@ fun PublikasiListItem(item: PublicationItem, navController: NavController) {
 
 // --- UI ITEM: BERITA/INFOGRAFIS (Row) ---
 @Composable
-fun NewsListItem(item: NewsItem, navController: NavController, type: ContentType) {
+fun NewsListItem(item: NewsItemResponse, navController: NavController, type: ContentType) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(2.dp),

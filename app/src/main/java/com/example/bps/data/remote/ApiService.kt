@@ -6,8 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.Response
-import com.example.bps.data.remote.responses.BpsDatasetResponse
-import com.example.bps.data.remote.responses.SimpleDatasetResponse
+import com.example.bps.data.remote.responses.BpsDatasetClass
 import com.example.bps.data.remote.responses.BpsPublicationResponse
 /** Interface ini berisi SEMUA definisi endpoint API yang akan dipanggil menggunakan Retrofit. */
 interface ApiService {
@@ -18,7 +17,7 @@ interface ApiService {
         @Path("id") id: String,
         @Query("year") year: Int? = null,
         @Query("mode") mode: String? = null
-    ): Response<BpsDatasetResponse>
+    ): Response<BpsDatasetClass>
 
     @GET("datasets")
     suspend fun getDatasetList(
@@ -29,7 +28,7 @@ interface ApiService {
     @GET("datasets/categories")
     suspend fun getCategories(): Map<String, CategorySubjectResponse>
 
-    // --- ENDPOINT KONTEN BERANDA (SUDAH DIPERBAIKI) ---
+    // --- ENDPOINT KONTEN BERANDA ---
 
     // 1. Berita Kegiatan (News)
     @GET("content/news")

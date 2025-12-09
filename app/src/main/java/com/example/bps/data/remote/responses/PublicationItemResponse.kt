@@ -2,7 +2,7 @@ package com.example.bps.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class PublicationItem(
+data class PublicationItemResponse(
     val id: Int,
     val title: String,
 

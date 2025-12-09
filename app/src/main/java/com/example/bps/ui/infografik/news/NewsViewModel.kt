@@ -3,8 +3,8 @@ package com.example.bps.ui.infografik.news
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bps.data.remote.ApiClient
-import com.example.bps.data.remote.responses.NewsItem
-import com.example.bps.data.remote.responses.PublicationItem
+import com.example.bps.data.remote.responses.NewsItemResponse
+import com.example.bps.data.remote.responses.PublicationItemResponse
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,14 +15,14 @@ import kotlinx.coroutines.launch
 // State Umum untuk News (Berita, BRS, Infografik)
 sealed interface NewsUiState {
     object Loading : NewsUiState
-    data class Success(val news: List<NewsItem>) : NewsUiState
+    data class Success(val news: List<NewsItemResponse>) : NewsUiState
     data class Error(val message: String) : NewsUiState
 }
 
 // State Khusus untuk Publikasi (Karena tipe datanya beda)
 sealed interface PublikasiUiState {
     object Loading : PublikasiUiState
-    data class Success(val data: List<PublicationItem>) : PublikasiUiState
+    data class Success(val data: List<PublicationItemResponse>) : PublikasiUiState
     data class Error(val message: String) : PublikasiUiState
 }
 
@@ -135,28 +135,28 @@ class NewsViewModel : ViewModel() {
 
     // --- HELPER UNTUK DETAIL SCREEN ---
 
-    fun getPublicationById(id: Int): PublicationItem? {
+    fun getPublicationById(id: Int): PublicationItemResponse? {
         val state = publicationState.value
         return if (state is PublikasiUiState.Success) {
             state.data.find { it.id == id }
         } else null
     }
 
-    fun getNewsActivityById(id: Int): NewsItem? {
+    fun getNewsById(id: Int): NewsItemResponse? {
         val state = newsState.value
         return if (state is NewsUiState.Success) {
             state.news.find { it.id == id }
         } else null
     }
 
-    fun getBrsById(id: Int): NewsItem? {
+    fun getBrsById(id: Int): NewsItemResponse? {
         val state = brsState.value
         return if (state is NewsUiState.Success) {
             state.news.find { it.id == id }
         } else null
     }
 
-    fun getInfografikById(id: Int): NewsItem? {
+    fun getInfografikById(id: Int): NewsItemResponse? {
         val state = infografikState.value
         return if (state is NewsUiState.Success) {
             state.news.find { it.id == id }

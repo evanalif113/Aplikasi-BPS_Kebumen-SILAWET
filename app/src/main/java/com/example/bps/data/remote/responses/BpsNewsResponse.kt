@@ -10,5 +10,5 @@ data class BpsNewsResponse(
     val message: String,
 
     @SerializedName("data")
-    val data: List<NewsItem>
+    val data: List<NewsItemResponse>
 )

@@ -29,17 +29,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.bps.R
-import com.example.bps.data.remote.responses.NewsItem
+import com.example.bps.data.remote.responses.NewsItemResponse
 import com.example.bps.ui.infografik.news.NewsUiState
 import com.example.bps.theme.Gray200
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.clickable
 
 
 @Composable
-fun NewsCard(newsItem: NewsItem) { // <-- Diperbaiki: Menerima NewsItem dari API
+fun NewsCard(newsItem: NewsItemResponse) { // <-- Diperbaiki: Menerima NewsItemResponse dari API
     Card(
         modifier = Modifier.width(150.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -54,8 +53,8 @@ fun NewsCard(newsItem: NewsItem) { // <-- Diperbaiki: Menerima NewsItem dari API
                     .background(Gray200)
             ) {
                 AsyncImage(
-                    model = newsItem.thumbnailUrl, // <-- Diperbaiki: Data dari NewsItem
-                    contentDescription = newsItem.title, // <-- Diperbaiki: Data dari NewsItem
+                    model = newsItem.thumbnailUrl, // <-- Diperbaiki: Data dari NewsItemResponse
+                    contentDescription = newsItem.title, // <-- Diperbaiki: Data dari NewsItemResponse
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp),
@@ -69,13 +68,13 @@ fun NewsCard(newsItem: NewsItem) { // <-- Diperbaiki: Menerima NewsItem dari API
             // Konten teks di bawah gambar
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    text = newsItem.date, // <-- Diperbaiki: Data dari NewsItem
+                    text = newsItem.date, // <-- Diperbaiki: Data dari NewsItemResponse
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = newsItem.title, // <-- Diperbaiki: Data dari NewsItem
+                    text = newsItem.title, // <-- Diperbaiki: Data dari NewsItemResponse
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 3,
@@ -164,9 +163,9 @@ fun NewsSection(
 @Preview(showBackground = true)
 @Composable
 fun NewsSectionPreview() {
-    // Buat data dummy NewsItem untuk preview
+    // Buat data dummy NewsItemResponse untuk preview
     val dummyNewsList = listOf(
-        NewsItem(
+        NewsItemResponse(
             id = 1,
             date = "9 Oktober 2025",
             category = "Kegiatan",
@@ -176,7 +175,7 @@ fun NewsSectionPreview() {
             link = "",
 
         ),
-        NewsItem(
+        NewsItemResponse(
             id = 2,
             date = "29 Oktober 2025",
             category = "Kegiatan",
