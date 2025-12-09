@@ -36,6 +36,8 @@ import com.example.bps.ui.statistik.StatistikScreen
 import com.example.bps.ui.statistik.SubjectList.SubjectListScreen
 import com.example.bps.ui.statistik.datasetdetail.DatasetDetailScreen
 import com.example.bps.ui.statistik.statistikGraph
+import androidx.compose.ui.platform.LocalContext
+import com.example.bps.utils.launchInAppBrowser
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -93,12 +95,15 @@ fun MainScreen() {
     val isRootScreen = currentRoute in listOf("beranda", "statistik", "infografik")
 
     // --- STRUKTUR UTAMA ---
+    val context = LocalContext.current
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             BpsDrawerContent(
                 onNavigate = { route -> navController.navigate(route) },
-                onOpenLink = { url -> uriHandler.openUri(url) },
+                onOpenLink = { url ->
+                    launchInAppBrowser(context, url)
+                },
                 onClose = { scope.launch { drawerState.close() } }
             )
         }

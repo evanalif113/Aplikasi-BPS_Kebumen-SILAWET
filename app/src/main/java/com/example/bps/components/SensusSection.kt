@@ -13,76 +13,77 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext // <-- Ganti UriHandler dengan ini
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bps.R // Pastikan import R sesuai package Anda
+import com.example.bps.R
+import com.example.bps.utils.launchInAppBrowser // <-- Import fungsi helper tadi
 
 @Composable
 fun SensusBanner(
     imageRes: Int,
     backgroundColor: Color,
-    textColor: Color, // Tambahan: Warna teks agar kontras
-    title: String,    // Judul banner (misal: "Sensus Penduduk 2020")
+    textColor: Color,
+    title: String,
     url: String
 ) {
-    val uriHandler = LocalUriHandler.current
+    // 1. Ambil Context saat ini
+    val context = LocalContext.current
 
     Card(
-        onClick = { uriHandler.openUri(url) },
+        // 2. Ubah onClick untuk memanggil In-App Browser
+        onClick = {
+            launchInAppBrowser(context, url)
+        },
         modifier = Modifier
             .fillMaxWidth()
-            .height(110.dp), // Sedikit lebih tinggi biar lega
-        shape = RoundedCornerShape(16.dp), // Sudut lebih membulat
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp), // Flat design (modern)
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent) // Warna dihandle di Box
+            .height(110.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(backgroundColor)
         ) {
-            // --- 1. DEKORASI LATAR BELAKANG (Efek Watermark) ---
-            // Ini membuat banner tidak terlihat "polos"
+            // --- 1. DEKORASI LATAR BELAKANG ---
             Image(
                 painter = painterResource(id = imageRes),
                 contentDescription = null,
-                alpha = 0.35f, // Transparan (samar-samar)
+                alpha = 0.35f,
                 modifier = Modifier
-                    .size(180.dp) // Perbesar gambar
-                    .align(Alignment.BottomEnd) // Taruh di pojok kanan bawah
-                    .offset(x = 30.dp, y = 30.dp) // Geser sedikit keluar
-                    .rotate(-15f) // Miringkan sedikit
+                    .size(180.dp)
+                    .align(Alignment.BottomEnd)
+                    .offset(x = 30.dp, y = 30.dp)
+                    .rotate(-15f)
             )
 
-            // --- 2. KONTEN UTAMA (Row: Ikon + Teks) ---
+            // --- 2. KONTEN UTAMA ---
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp), // Jarak kiri-kanan
+                    .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // IKON UTAMA (Kiri)
+                // IKON UTAMA
                 Image(
                     painter = painterResource(id = imageRes),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(100.dp) // Ukuran logo utama
-                    // Jika logo Anda warna putih/hitam dan mau diwarnai sesuai tema, pakai:
-                    // colorFilter = ColorFilter.tint(textColor)
+                    modifier = Modifier.size(100.dp)
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // TEKS JUDUL (Kanan)
+                // TEKS JUDUL
                 Text(
                     text = title,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = textColor, // Warna teks disesuaikan (misal Biru Tua di atas Biru Muda)
+                    color = textColor,
                     lineHeight = 24.sp
                 )
             }
@@ -92,7 +93,7 @@ fun SensusBanner(
 
 @Composable
 fun InfoSensusSection() {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) { // Padding disesuaikan agar rapi
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
             text = "Info Sensus",
             style = MaterialTheme.typography.titleMedium,
@@ -100,40 +101,40 @@ fun InfoSensusSection() {
             modifier = Modifier.padding(bottom = 12.dp, start = 8.dp)
         )
 
-        // 1. SENSUS PENDUDUK (Nuansa Biru)
+        // 1. SENSUS PENDUDUK
         SensusBanner(
-            imageRes = R.drawable.banner_sp2020, // Pastikan ini logo SP2020
-            backgroundColor = Color(0xFFD6F3FF), // Biru Pastel Muda
-            textColor = Color(0xFF006898),       // Biru Tua untuk Teks
+            imageRes = R.drawable.banner_sp2020,
+            backgroundColor = Color(0xFFD6F3FF),
+            textColor = Color(0xFF006898),
             title = "SENSUS\nPENDUDUK 2020",
             url = "https://sensus.bps.go.id/main/index/sp2020"
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 2. SENSUS PERTANIAN (Nuansa Hijau)
+        // 2. SENSUS PERTANIAN
         SensusBanner(
-            imageRes = R.drawable.banner_st2023, // Pastikan ini logo ST2023
-            backgroundColor = Color(0xFFD8F5CD), // Hijau Pastel Muda
-            textColor = Color(0xFF2E7D32),       // Hijau Tua untuk Teks
+            imageRes = R.drawable.banner_st2023,
+            backgroundColor = Color(0xFFD8F5CD),
+            textColor = Color(0xFF2E7D32),
             title = "SENSUS\nPERTANIAN 2023",
             url = "https://sensus.bps.go.id/main/index/st2023"
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 3. SENSUS EKONOMI (Nuansa Oranye/Kuning)
+        // 3. SENSUS EKONOMI
         SensusBanner(
-            imageRes = R.drawable.banner_se2026_2, // Pastikan ini logo SE2026
-            backgroundColor = Color(0xFFFFEAB6), // Oranye/Kuning Pastel
-            textColor = Color(0xFFB56C00),       // Coklat/Oranye Tua untuk Teks
+            imageRes = R.drawable.banner_se2026_2,
+            backgroundColor = Color(0xFFFFEAB6),
+            textColor = Color(0xFFB56C00),
             title = "SENSUS\nEKONOMI 2026",
             url = "https://sensus.bps.go.id/main/index/se2026"
         )
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun InfoSensusSectionPreview() {
     InfoSensusSection()

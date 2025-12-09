@@ -13,7 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bps.R
-import com.example.bps.theme.Black // Pastikan tema Black diimport dari theme Anda
+import com.example.bps.theme.Black
+import com.example.bps.theme.White
+import com.example.bps.theme.Gray500
 
 @Composable
 fun BpsDrawerContent(
@@ -22,7 +24,7 @@ fun BpsDrawerContent(
     onClose: () -> Unit
 ) {
     ModalDrawerSheet(
-        drawerContainerColor = Color.White,
+        drawerContainerColor = White,
     ) {
         // --- HEADER DRAWER ---
         Spacer(modifier = Modifier.height(16.dp))
@@ -94,7 +96,7 @@ fun BpsDrawerContent(
             text = "Layanan & Profil",
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             style = MaterialTheme.typography.labelLarge,
-            color = Color.Gray
+            color = Gray500
         )
 
         NavigationDrawerItem(

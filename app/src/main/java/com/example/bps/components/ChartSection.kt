@@ -50,7 +50,7 @@ fun ChartSection(
         Column(modifier = Modifier.padding(16.dp)) {
             // Judul Grafik
             Text(
-                text = chartData.title ?: "Grafik Data",
+                text = chartData.title,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
@@ -159,7 +159,7 @@ fun RenderLineChart(data: ChartData) {
 
                 // Pasang Label Sumbu X (2020, 2021, dst)
                 // Pastikan label dikonversi ke String
-                val labels = data.labels.map { it.toString() }
+                val labels = data.labels.map { it }
                 chart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
 
                 // Refresh agar muncul
@@ -233,7 +233,7 @@ fun RenderBarChart(data: ChartData) {
                 chart.data = BarData(barDataSet)
 
                 // Label Sumbu X
-                val labels = data.labels.map { it.toString() }
+                val labels = data.labels.map { it }
                 chart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
 
                 chart.notifyDataSetChanged()
@@ -292,7 +292,7 @@ fun RenderPieChart(data: ChartData) {
             if (rawValues.isNotEmpty()) {
                 val entries = rawValues.mapIndexed { index, value ->
                     // Ambil label kategori dari data.labels
-                    val label = data.labels.getOrNull(index)?.toString() ?: ""
+                    val label = data.labels.getOrNull(index) ?: ""
                     PieEntry(value.toFloat(), label)
                 }
 

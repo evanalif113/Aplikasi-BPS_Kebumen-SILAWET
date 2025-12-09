@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.bps.R
-import com.example.bps.theme.*
+import com.example.bps.theme.Sky500
+import com.example.bps.theme.White
+import com.example.bps.theme.Gray800
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

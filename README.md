@@ -5,7 +5,7 @@ SILAWET adalah aplikasi Android internal untuk BPS Kabupaten Kebumen yang dituju
 ## Fitur Utama
 - Tampilan modern berbasis Jetpack Compose Material 3
 - Tema gelap/terang (palette terpusat di theme/Color.kt dan Theme.kt)
-- Navigation antar layar: Beranda, Statistik, Peta, Infografik, Lainnya
+- Navigation antar layar: Beranda, Statistik, Infografik
 - Komponen modular untuk kemudahan pengembangan
 - Placeholder untuk integrasi backend / sinkronisasi data
 
@@ -15,9 +15,10 @@ SILAWET adalah aplikasi Android internal untuk BPS Kabupaten Kebumen yang dituju
 - AndroidX Navigation Compose
 - Gradle / Android Studio
 
-## Struktur Proyek (singkat)
+## Struktur Proyek
 - app/src/main/java/com/example/bps
-  - components/     : 
+  - components/     : Komponen UI yang digunakan dalam aplikasi
+  - data/           : Klien Untuk Mengakses API dan Database
   - theme/          : Color.kt, Theme.kt, Typography.kt
   - ui/            : screen Compose (Beranda, Statistik, Maps, Infografik, Lainnya)
   - ui/*           : subpackage layar dan komponen UI
@@ -30,7 +31,7 @@ SILAWET adalah aplikasi Android internal untuk BPS Kabupaten Kebumen yang dituju
 - JDK 11+
 - Android SDK sesuai konfigurasi module (periksa build.gradle)
 
-## Cara Menjalankan (pengembang)
+## Cara Menjalankan (pengembangan)
 1. Clone repository:
    git clone "https://github.com/evanalif113/Aplikasi-BPS_Kebumen-SILAWET.git"
 2. Buka proyek di Android Studio.
@@ -62,4 +63,5 @@ License All Rights Reserved 2025
 Sertakan nama tim atau email maintainer di sini untuk pertanyaan dan akses repository.
 
 ---
-Dokumentasi ini ringkas dan ditujukan untuk pengembang yang ingin menjalankan atau mengembangkan SILAWET. Tambahkan bagian lebih detail (API, database, CI) bila fitur tersebut diimplementasikan.
+Dokumentasi ini ringkas dan ditujukan untuk pengembang yang ingin menjalankan atau mengembangkan SILAWET. 
+Tambahkan bagian lebih detail (API, database, CI) bila fitur tersebut diimplementasikan.
