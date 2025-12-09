@@ -1,6 +1,5 @@
 package com.example.bps.ui.beranda
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +23,7 @@ import com.example.bps.components.NewsSection
 import com.example.bps.components.SearchBar
 import com.example.bps.components.TabbedContentSection
 import com.example.bps.ui.general.ContentType
+import com.example.bps.ui.infografik.news.GridMenuUiState
 import com.example.bps.ui.infografik.news.NewsUiState
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.infografik.news.PublikasiUiState
@@ -34,28 +34,23 @@ fun BerandaScreen(
     viewModel: NewsViewModel,
     onSeeAllNews: () -> Unit,
     onNavigateToDetail: (Int, ContentType) -> Unit,
-    onMenuClick: (String) -> Unit // Tambahan: Callback untuk navigasi menu
+    onMenuClick: (String) -> Unit
 ) {
-    // 1. Ambil State Data
+    // 1. Ambil State Data (GridMenuState tidak perlu diambil lagi)
     val newsState by viewModel.newsState.collectAsState()
     val publicationState by viewModel.publicationState.collectAsState()
     val brsState by viewModel.brsState.collectAsState()
     val infografikState by viewModel.infografikState.collectAsState()
-
-    // 2. Ambil State Refreshing (Loading saat ditarik)
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
-    // 3. Bungkus seluruh konten dengan PullToRefreshBox
     PullToRefreshBox(
         isRefreshing = isRefreshing,
-        onRefresh = {
-            viewModel.refreshAllData() // Panggil fungsi refresh di ViewModel
-        },
+        onRefresh = { viewModel.refreshAllData() },
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize() // Penting agar bisa discroll/ditarik meskipun konten sedikit
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(top = 16.dp, bottom = 16.dp)
         ) {
@@ -65,8 +60,10 @@ fun BerandaScreen(
             SearchBar()
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Hubungkan callback navigasi ke MenuItemSection
+            // --- MENU ITEM SECTION (HARDCODE) ---
+            // Cukup panggil begini saja, data sudah ada di dalam komponen
             MenuItemSection(
+                onItemClick = onMenuClick
             )
 
             Spacer(modifier = Modifier.height(20.dp))

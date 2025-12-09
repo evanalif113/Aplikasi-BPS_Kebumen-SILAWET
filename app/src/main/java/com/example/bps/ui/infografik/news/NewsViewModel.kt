@@ -3,6 +3,7 @@ package com.example.bps.ui.infografik.news
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bps.data.remote.ApiClient
+import com.example.bps.data.remote.responses.GridMenuItem // Pastikan class ini sudah dibuat
 import com.example.bps.data.remote.responses.NewsItemResponse
 import com.example.bps.data.remote.responses.PublicationItemResponse
 import kotlinx.coroutines.async
@@ -19,11 +20,18 @@ sealed interface NewsUiState {
     data class Error(val message: String) : NewsUiState
 }
 
-// State Khusus untuk Publikasi (Karena tipe datanya beda)
+// State Khusus untuk Publikasi
 sealed interface PublikasiUiState {
     object Loading : PublikasiUiState
     data class Success(val data: List<PublicationItemResponse>) : PublikasiUiState
     data class Error(val message: String) : PublikasiUiState
+}
+
+// --- STATE BARU: Grid Menu (Ikon Menu) ---
+sealed interface GridMenuUiState {
+    object Loading : GridMenuUiState
+    data class Success(val data: List<GridMenuItem>) : GridMenuUiState
+    data class Error(val message: String) : GridMenuUiState
 }
 
 class NewsViewModel : ViewModel() {
@@ -44,7 +52,11 @@ class NewsViewModel : ViewModel() {
     private val _infografikState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
     val infografikState: StateFlow<NewsUiState> = _infografikState.asStateFlow()
 
-    // 5. State untuk Refreshing (Pull-to-Refresh) --> BARU
+    // 5. State untuk Grid Menu (Ikon Beranda) --> BARU
+    private val _gridMenuState = MutableStateFlow<GridMenuUiState>(GridMenuUiState.Loading)
+    val gridMenuState: StateFlow<GridMenuUiState> = _gridMenuState.asStateFlow()
+
+    // 6. State untuk Refreshing (Pull-to-Refresh)
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
@@ -52,43 +64,43 @@ class NewsViewModel : ViewModel() {
         fetchAllData()
     }
 
-    // Fungsi fetch awal (dijalankan otomatis saat buka aplikasi)
+    // Fungsi fetch awal
     private fun fetchAllData() {
         viewModelScope.launch {
-            // Jalankan request
             fetchNews()
             fetchPublications()
             fetchBrs()
             fetchInfografik()
+            fetchGridMenu() // <-- Panggil fungsi baru ini
         }
     }
 
-    // Fungsi Refresh (dijalankan saat user tarik layar) --> BARU
+    // Fungsi Refresh (dijalankan saat user tarik layar)
     fun refreshAllData() {
         viewModelScope.launch {
-            _isRefreshing.value = true // Nyalakan animasi loading
+            _isRefreshing.value = true
             try {
-                // Gunakan async/awaitAll agar request jalan BERSAMAAN (Paralel) -> Lebih Cepat
+                // Jalankan SEMUA request secara paralel
                 val job1 = async { fetchNews() }
                 val job2 = async { fetchPublications() }
                 val job3 = async { fetchBrs() }
                 val job4 = async { fetchInfografik() }
+                val job5 = async { fetchGridMenu() } // <-- Refresh menu juga
 
-                // Tunggu keempatnya selesai
-                awaitAll(job1, job2, job3, job4)
+                // Tunggu kelimanya selesai
+                awaitAll(job1, job2, job3, job4, job5)
             } finally {
-                _isRefreshing.value = false // Matikan animasi loading
+                _isRefreshing.value = false
             }
         }
     }
 
-    // --- FUNGSI FETCH DATA (Diubah jadi suspend) ---
+    // --- FUNGSI FETCH DATA ---
 
+    // 1. Fetch Berita
     private suspend fun fetchNews() {
         try {
-            // Set Loading state jika bukan sedang refresh (agar UI tidak kedip hitam putih jika refresh)
             if (!_isRefreshing.value) _newsState.value = NewsUiState.Loading
-
             val response = ApiClient.apiService.getNews()
             if (response.success) _newsState.value = NewsUiState.Success(response.data)
             else _newsState.value = NewsUiState.Error(response.message)
@@ -97,10 +109,10 @@ class NewsViewModel : ViewModel() {
         }
     }
 
+    // 2. Fetch Publikasi
     private suspend fun fetchPublications() {
         try {
             if (!_isRefreshing.value) _publicationState.value = PublikasiUiState.Loading
-
             val response = ApiClient.apiService.getPublications()
             if (response.success) _publicationState.value = PublikasiUiState.Success(response.data)
             else _publicationState.value = PublikasiUiState.Error(response.message)
@@ -109,10 +121,10 @@ class NewsViewModel : ViewModel() {
         }
     }
 
+    // 3. Fetch BRS
     private suspend fun fetchBrs() {
         try {
             if (!_isRefreshing.value) _brsState.value = NewsUiState.Loading
-
             val response = ApiClient.apiService.getPressReleases()
             if (response.success) _brsState.value = NewsUiState.Success(response.data)
             else _brsState.value = NewsUiState.Error(response.message)
@@ -121,15 +133,32 @@ class NewsViewModel : ViewModel() {
         }
     }
 
+    // 4. Fetch Infografik
     private suspend fun fetchInfografik() {
         try {
             if (!_isRefreshing.value) _infografikState.value = NewsUiState.Loading
-
             val response = ApiClient.apiService.getInfographics()
             if (response.success) _infografikState.value = NewsUiState.Success(response.data)
             else _infografikState.value = NewsUiState.Error(response.message)
         } catch (e: Exception) {
             _infografikState.value = NewsUiState.Error(e.message ?: "Error")
+        }
+    }
+
+    // 5. Fetch Grid Menu (BARU)
+    private suspend fun fetchGridMenu() {
+        try {
+            if (!_isRefreshing.value) _gridMenuState.value = GridMenuUiState.Loading
+
+            // Panggil API endpoint grid menu
+            val response = ApiClient.apiService.getGridMenu()
+
+            // Asumsi response sukses jika data tidak null/empty (sesuai JSON Anda)
+            // JSON: {"status":"success","data":[...]}
+            _gridMenuState.value = GridMenuUiState.Success(response.data)
+
+        } catch (e: Exception) {
+            _gridMenuState.value = GridMenuUiState.Error(e.message ?: "Gagal memuat menu")
         }
     }
 

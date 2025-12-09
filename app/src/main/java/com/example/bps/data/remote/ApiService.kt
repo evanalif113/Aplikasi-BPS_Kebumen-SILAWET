@@ -45,4 +45,8 @@ interface ApiService {
     // 4. Publikasi
     @GET("content/publications")
     suspend fun getPublications(): BpsPublicationResponse
+
+    // Endpoint baru untuk Menu Grid Beranda
+    @GET("homepage/grid")
+    suspend fun getGridMenu(): GridMenuResponse
 }

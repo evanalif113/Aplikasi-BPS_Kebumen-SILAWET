@@ -2,6 +2,7 @@ package com.example.bps.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,35 +19,39 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.bps.R
 import com.example.bps.theme.*
 
-// Data Class
+// 1. Update Data Class: Tambahkan 'apiSubject'
 data class MenuData(
     val iconRes: Int,
-    val title: String,
+    val title: String, // Teks pendek untuk UI
     val colorCard: Color,
+    val apiSubject: String // Teks asli untuk request API
 )
 
 @Composable
 fun MenuItemSection(
+    onItemClick: (String) -> Unit
 ) {
+    // 2. Isi Data dengan Subject yang sesuai API
     val menuList = listOf(
-        // Note: Ensure these route IDs match what your SubjectListScreen expects (e.g., numeric IDs or slugs)
-        MenuData(R.drawable.penduduk, "Penduduk", White),
-        MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", White),
-        MenuData(R.drawable.pengangguran, "Pengangguran", White),
-        MenuData(R.drawable.kemiskinan, "Kemiskinan", White),
-        MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", White),
-        MenuData(R.drawable.ipm_ipg_idg, "IPM", White),
-        MenuData(R.drawable.inflasi, "Inflasi", White),
-        MenuData(R.drawable.pertumbuhan_ekonomi, "Ekonomi", White),
-        MenuData(R.drawable.pdrb, "PDRB", White),
-        MenuData(R.drawable.pendidikan, "Pendidikan", White),
-        MenuData(R.drawable.perumahan, "Perumahan", White),
-        MenuData(R.drawable.pertanian, "Pertanian", White)
+        MenuData(R.drawable.penduduk, "Penduduk", White, "Kependudukan dan Migrasi"),
+        MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", White, "Tenaga Kerja"),
+        MenuData(R.drawable.pengangguran, "Pengangguran", White, "Tenaga Kerja"),
+        MenuData(R.drawable.kemiskinan, "Kemiskinan", White, "Kondisi Tempat Tinggal, Kemiskinan, dan Permasalahan Sosial Lintas Sektor"),
+        MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", White, "Kondisi Tempat Tinggal, Kemiskinan, dan Permasalahan Sosial Lintas Sektor"),
+        MenuData(R.drawable.ipm_ipg_idg, "IPM", White, "Kondisi Tempat Tinggal, Kemiskinan, dan Permasalahan Sosial Lintas Sektor"),
+        MenuData(R.drawable.inflasi, "Inflasi", White, "Neraca Ekonomi"),
+        MenuData(R.drawable.pertumbuhan_ekonomi, "Ekonomi", White, "Neraca Ekonomi"),
+        MenuData(R.drawable.pdrb, "PDRB", White, "Neraca Ekonomi"),
+        MenuData(R.drawable.pendidikan, "Pendidikan", White, "Pendidikan"),
+        MenuData(R.drawable.perumahan, "Perumahan", White, "Perumahan"),
+        MenuData(R.drawable.pertanian, "Pertanian", White, "Pertanian")
     )
 
     Card(
@@ -73,23 +78,28 @@ fun MenuItemSection(
                     iconRes = menu.iconRes,
                     title = menu.title,
                     colorCard = menu.colorCard,
+                    // 3. Saat diklik, kirim rute dinamis: "dataset_list/NamaSubjectAsli"
+                    onClick = { onItemClick("dataset_list/${menu.apiSubject}") }
                 )
             }
         }
     }
 }
 
+// ... (Fungsi MenuItem di bawahnya biarkan saja, tidak berubah) ...
 @Composable
 fun MenuItem(
     iconRes: Int,
     title: String,
     colorCard: Color,
+    onClick: () -> Unit,
     iconSize: Dp = 32.dp,
     textSize: TextUnit = 12.sp
 ) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
+            .clickable { onClick() }
             .padding(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -117,20 +127,5 @@ fun MenuItem(
             ),
             maxLines = 1
         )
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = false)
-@Composable
-fun PreviewMenuItemSection() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF0F0F0))
-            .padding(vertical = 40.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        // Pass an empty lambda for the preview to work
-        MenuItemSection()
     }
 }
