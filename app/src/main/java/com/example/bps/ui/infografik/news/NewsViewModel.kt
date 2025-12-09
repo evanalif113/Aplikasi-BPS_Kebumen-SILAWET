@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.bps.data.remote.ApiClient
 import com.example.bps.data.remote.responses.NewsItem
 import com.example.bps.data.remote.responses.PublicationItem
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +28,7 @@ sealed interface PublikasiUiState {
 
 class NewsViewModel : ViewModel() {
 
-    // 1. State untuk Berita Kegiatan (Yang sudah ada)
+    // 1. State untuk Berita Kegiatan
     private val _newsState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
     val newsState: StateFlow<NewsUiState> = _newsState.asStateFlow()
 
@@ -42,72 +44,104 @@ class NewsViewModel : ViewModel() {
     private val _infografikState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
     val infografikState: StateFlow<NewsUiState> = _infografikState.asStateFlow()
 
+    // 5. State untuk Refreshing (Pull-to-Refresh) --> BARU
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     init {
         fetchAllData()
     }
 
+    // Fungsi fetch awal (dijalankan otomatis saat buka aplikasi)
     private fun fetchAllData() {
-        fetchNews()        // Berita Kegiatan
-        fetchPublications() // Tab 1
-        fetchBrs()         // Tab 2
-        fetchInfografik()  // Tab 3
-    }
-
-    private fun fetchNews() {
         viewModelScope.launch {
-            try {
-                val response = ApiClient.apiService.getNews()
-                if (response.success) _newsState.value = NewsUiState.Success(response.data)
-                else _newsState.value = NewsUiState.Error(response.message)
-            } catch (e: Exception) { _newsState.value = NewsUiState.Error(e.message ?: "Error") }
+            // Jalankan request
+            fetchNews()
+            fetchPublications()
+            fetchBrs()
+            fetchInfografik()
         }
     }
 
-    private fun fetchPublications() {
+    // Fungsi Refresh (dijalankan saat user tarik layar) --> BARU
+    fun refreshAllData() {
         viewModelScope.launch {
+            _isRefreshing.value = true // Nyalakan animasi loading
             try {
-                val response = ApiClient.apiService.getPublications()
-                if (response.success) _publicationState.value = PublikasiUiState.Success(response.data)
-                else _publicationState.value = PublikasiUiState.Error(response.message)
-            } catch (e: Exception) { _publicationState.value = PublikasiUiState.Error(e.message ?: "Error") }
+                // Gunakan async/awaitAll agar request jalan BERSAMAAN (Paralel) -> Lebih Cepat
+                val job1 = async { fetchNews() }
+                val job2 = async { fetchPublications() }
+                val job3 = async { fetchBrs() }
+                val job4 = async { fetchInfografik() }
+
+                // Tunggu keempatnya selesai
+                awaitAll(job1, job2, job3, job4)
+            } finally {
+                _isRefreshing.value = false // Matikan animasi loading
+            }
         }
     }
 
-    private fun fetchBrs() {
-        viewModelScope.launch {
-            try {
-                val response = ApiClient.apiService.getPressReleases()
-                if (response.success) _brsState.value = NewsUiState.Success(response.data)
-                else _brsState.value = NewsUiState.Error(response.message)
-            } catch (e: Exception) { _brsState.value = NewsUiState.Error(e.message ?: "Error") }
+    // --- FUNGSI FETCH DATA (Diubah jadi suspend) ---
+
+    private suspend fun fetchNews() {
+        try {
+            // Set Loading state jika bukan sedang refresh (agar UI tidak kedip hitam putih jika refresh)
+            if (!_isRefreshing.value) _newsState.value = NewsUiState.Loading
+
+            val response = ApiClient.apiService.getNews()
+            if (response.success) _newsState.value = NewsUiState.Success(response.data)
+            else _newsState.value = NewsUiState.Error(response.message)
+        } catch (e: Exception) {
+            _newsState.value = NewsUiState.Error(e.message ?: "Error")
         }
     }
 
-    private fun fetchInfografik() {
-        viewModelScope.launch {
-            try {
-                val response = ApiClient.apiService.getInfographics()
-                if (response.success) _infografikState.value = NewsUiState.Success(response.data)
-                else _infografikState.value = NewsUiState.Error(response.message)
-            } catch (e: Exception) { _infografikState.value = NewsUiState.Error(e.message ?: "Error") }
+    private suspend fun fetchPublications() {
+        try {
+            if (!_isRefreshing.value) _publicationState.value = PublikasiUiState.Loading
+
+            val response = ApiClient.apiService.getPublications()
+            if (response.success) _publicationState.value = PublikasiUiState.Success(response.data)
+            else _publicationState.value = PublikasiUiState.Error(response.message)
+        } catch (e: Exception) {
+            _publicationState.value = PublikasiUiState.Error(e.message ?: "Error")
         }
     }
 
-    // --- TAMBAHAN PENTING UNTUK DETAIL SCREEN ---
+    private suspend fun fetchBrs() {
+        try {
+            if (!_isRefreshing.value) _brsState.value = NewsUiState.Loading
 
-    // 1. Cari Publikasi (Buku) berdasarkan ID
+            val response = ApiClient.apiService.getPressReleases()
+            if (response.success) _brsState.value = NewsUiState.Success(response.data)
+            else _brsState.value = NewsUiState.Error(response.message)
+        } catch (e: Exception) {
+            _brsState.value = NewsUiState.Error(e.message ?: "Error")
+        }
+    }
+
+    private suspend fun fetchInfografik() {
+        try {
+            if (!_isRefreshing.value) _infografikState.value = NewsUiState.Loading
+
+            val response = ApiClient.apiService.getInfographics()
+            if (response.success) _infografikState.value = NewsUiState.Success(response.data)
+            else _infografikState.value = NewsUiState.Error(response.message)
+        } catch (e: Exception) {
+            _infografikState.value = NewsUiState.Error(e.message ?: "Error")
+        }
+    }
+
+    // --- HELPER UNTUK DETAIL SCREEN ---
+
     fun getPublicationById(id: Int): PublicationItem? {
         val state = publicationState.value
-        // Cek apakah state sedang Success
         return if (state is PublikasiUiState.Success) {
-            // Cari item yang ID-nya cocok
             state.data.find { it.id == id }
         } else null
     }
 
-    // 2. Cari Berita / BRS / Infografik berdasarkan ID
-    // Karena model datanya sama (NewsItem), kita cari di ketiga list sekaligus
-    // 1. Khusus cari di list Berita Kegiatan
     fun getNewsActivityById(id: Int): NewsItem? {
         val state = newsState.value
         return if (state is NewsUiState.Success) {
@@ -115,7 +149,6 @@ class NewsViewModel : ViewModel() {
         } else null
     }
 
-    // 2. Khusus cari di list BRS
     fun getBrsById(id: Int): NewsItem? {
         val state = brsState.value
         return if (state is NewsUiState.Success) {
@@ -123,7 +156,6 @@ class NewsViewModel : ViewModel() {
         } else null
     }
 
-    // 3. Khusus cari di list Infografik
     fun getInfografikById(id: Int): NewsItem? {
         val state = infografikState.value
         return if (state is NewsUiState.Success) {

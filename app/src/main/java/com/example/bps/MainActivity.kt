@@ -165,7 +165,8 @@ fun MainScreen() {
                     BerandaScreen(
                         viewModel = newsViewModel,
                         onSeeAllNews = { navController.navigate("all_news") },
-                        onNavigateToDetail = { id, type -> navController.navigate("detail_content/$id/$type") }
+                        onNavigateToDetail = { id, type -> navController.navigate("detail_content/$id/$type") },
+                        onMenuClick = { route -> navController.navigate(route) }
                     )
                 }
                 composable("statistik") {

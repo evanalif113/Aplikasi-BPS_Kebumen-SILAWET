@@ -1,11 +1,15 @@
 package com.example.bps.ui.beranda
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox // Wajib Material3 ver 1.3.0+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,71 +17,89 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.bps.components.MenuItemSection
-import com.example.bps.components.SearchBar
 import com.example.bps.components.CarouselInsight
-import com.example.bps.components.NewsSection
 import com.example.bps.components.InfoSensusSection
+import com.example.bps.components.MenuItemSection
+import com.example.bps.components.NewsSection
+import com.example.bps.components.SearchBar
 import com.example.bps.components.TabbedContentSection
-import com.example.bps.ui.infografik.news.NewsViewModel
-import com.example.bps.ui.infografik.news.NewsUiState
-import com.example.bps.ui.infografik.news.PublikasiUiState
 import com.example.bps.ui.general.ContentType
+import com.example.bps.ui.infografik.news.NewsUiState
+import com.example.bps.ui.infografik.news.NewsViewModel
+import com.example.bps.ui.infografik.news.PublikasiUiState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BerandaScreen(
     viewModel: NewsViewModel,
     onSeeAllNews: () -> Unit,
-    onNavigateToDetail: (Int, ContentType) -> Unit
+    onNavigateToDetail: (Int, ContentType) -> Unit,
+    onMenuClick: (String) -> Unit // Tambahan: Callback untuk navigasi menu
 ) {
-    // 1. AMBIL SEMUA STATE DARI VIEWMODEL (Update Baru)
+    // 1. Ambil State Data
     val newsState by viewModel.newsState.collectAsState()
     val publicationState by viewModel.publicationState.collectAsState()
     val brsState by viewModel.brsState.collectAsState()
     val infografikState by viewModel.infografikState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(top = 16.dp, bottom = 16.dp)
+    // 2. Ambil State Refreshing (Loading saat ditarik)
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+
+    // 3. Bungkus seluruh konten dengan PullToRefreshBox
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = {
+            viewModel.refreshAllData() // Panggil fungsi refresh di ViewModel
+        },
+        modifier = Modifier.fillMaxSize()
     ) {
-        CarouselInsight()
-        Spacer(modifier = Modifier.height(24.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize() // Penting agar bisa discroll/ditarik meskipun konten sedikit
+                .verticalScroll(rememberScrollState())
+                .padding(top = 16.dp, bottom = 16.dp)
+        ) {
+            CarouselInsight()
+            Spacer(modifier = Modifier.height(24.dp))
 
-        SearchBar()
-        Spacer(modifier = Modifier.height(20.dp))
+            SearchBar()
+            Spacer(modifier = Modifier.height(20.dp))
 
-        MenuItemSection()
-        Spacer(modifier = Modifier.height(20.dp))
+            // Hubungkan callback navigasi ke MenuItemSection
+            MenuItemSection(
+            )
 
-        InfoSensusSection()
-        Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-        TabbedContentSection(
-            publicationList = if (publicationState is PublikasiUiState.Success)
-                (publicationState as PublikasiUiState.Success).data
-            else emptyList(),
+            InfoSensusSection()
+            Spacer(modifier = Modifier.height(30.dp))
 
-            brsList = if (brsState is NewsUiState.Success)
-                (brsState as NewsUiState.Success).news
-            else emptyList(),
+            TabbedContentSection(
+                publicationList = if (publicationState is PublikasiUiState.Success)
+                    (publicationState as PublikasiUiState.Success).data
+                else emptyList(),
 
-            infografikList = if (infografikState is NewsUiState.Success)
-                (infografikState as NewsUiState.Success).news
-            else emptyList(),
+                brsList = if (brsState is NewsUiState.Success)
+                    (brsState as NewsUiState.Success).news
+                else emptyList(),
 
-            onItemClick = { id, type ->
-                onNavigateToDetail(id, type)
-            }
-        )
+                infografikList = if (infografikState is NewsUiState.Success)
+                    (infografikState as NewsUiState.Success).news
+                else emptyList(),
 
-        Spacer(modifier = Modifier.height(20.dp))
+                onItemClick = { id, type ->
+                    onNavigateToDetail(id, type)
+                }
+            )
 
-        // 3. NEWS SECTION (Berita Kegiatan)
-        NewsSection(
-            uiState = newsState,
-            onSeeAllClicked = onSeeAllNews
-        )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // News Section (Berita Kegiatan)
+            NewsSection(
+                uiState = newsState,
+                onSeeAllClicked = onSeeAllNews
+            )
+        }
     }
 }
 
@@ -87,6 +109,7 @@ fun BerandaScreenPreview() {
     BerandaScreen(
         viewModel = viewModel(),
         onSeeAllNews = {},
-        onNavigateToDetail = { _, _ -> }
+        onNavigateToDetail = { _, _ -> },
+        onMenuClick = {}
     )
 }
