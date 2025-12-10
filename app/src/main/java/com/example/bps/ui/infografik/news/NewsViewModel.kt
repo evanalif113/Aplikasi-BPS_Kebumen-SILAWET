@@ -85,7 +85,7 @@ class NewsViewModel : ViewModel() {
                 val job2 = async { fetchPublications() }
                 val job3 = async { fetchBrs() }
                 val job4 = async { fetchInfografik() }
-                val job5 = async { fetchGridMenu() } // <-- Refresh menu juga
+                val job5 = async { fetchGridMenu() }
 
                 // Tunggu kelimanya selesai
                 awaitAll(job1, job2, job3, job4, job5)

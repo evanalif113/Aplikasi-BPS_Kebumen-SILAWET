@@ -104,7 +104,7 @@ fun NewsSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Berita & Rilis Pers",
+                text = "Berita dan Siaran Pers",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )

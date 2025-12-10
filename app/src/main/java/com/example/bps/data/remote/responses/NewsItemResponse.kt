@@ -50,6 +50,6 @@ data class NewsItemResponse(
         return abstract ?: description ?: ""
     }
     fun getSimpleDate(): String {
-        return if (date.length >= 10) date.substring(0, 10) else date
+        return if (date.length >= 10) date.take(10) else date
     }
 }

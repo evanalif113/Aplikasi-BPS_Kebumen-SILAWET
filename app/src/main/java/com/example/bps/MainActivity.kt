@@ -24,7 +24,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.example.bps.components.BottomNavWithMoreMenu
-import com.example.bps.components.BpsDrawerContent // Pastikan file ini sudah ada di folder components
+import com.example.bps.components.BpsDrawerContent
 import com.example.bps.theme.*
 import com.example.bps.ui.beranda.BerandaScreen
 import com.example.bps.ui.general.ContentType
@@ -33,6 +33,7 @@ import com.example.bps.ui.infografik.InfografikScreen
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.statistik.DatasetListScreen
 import com.example.bps.ui.statistik.StatistikScreen
+import com.example.bps.ui.about.AboutScreen
 import com.example.bps.ui.statistik.SubjectList.SubjectListScreen
 import com.example.bps.ui.statistik.datasetdetail.DatasetDetailScreen
 import com.example.bps.ui.statistik.statistikGraph
@@ -194,6 +195,10 @@ fun MainScreen() {
                 ) { backStackEntry ->
                     val subject = backStackEntry.arguments?.getString("subjectName") ?: "Data"
                     DatasetListScreen(subjectName = subject, navController = navController)
+                }
+
+                composable("about_screen") {
+                    AboutScreen(navController = navController)
                 }
 
                 composable("subject_list/{categoryId}", arguments = listOf(navArgument("categoryId") { type = NavType.StringType })) {

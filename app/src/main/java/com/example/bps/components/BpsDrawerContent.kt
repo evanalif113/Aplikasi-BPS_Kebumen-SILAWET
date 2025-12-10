@@ -105,6 +105,7 @@ fun BpsDrawerContent(
             selected = false,
             onClick = {
                 onClose()
+                onNavigate("about_screen")
             },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
