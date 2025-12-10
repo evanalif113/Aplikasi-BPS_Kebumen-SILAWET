@@ -49,7 +49,10 @@ fun DatasetDetailScreen(
 
     // State untuk Tab yang dipilih (0 = Grafik, 1 = Tabel)
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabTitles = listOf("Grafik & Analisis", "Data Tabel")
+    val tabTitles = listOf(
+        "Chart",
+        "Tabel Data"
+    )
 
     // Load data awal
     LaunchedEffect(datasetId) {
@@ -198,7 +201,10 @@ fun DatasetDetailScreen(
 
                                         // Insight / Analisis
                                         if (data.insights.isNotEmpty()) {
-                                            Text("Analisis Data (Insight)", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
+                                            Text("Analisis Data (Insight)",
+                                                fontWeight = FontWeight.SemiBold,
+                                                modifier = Modifier.padding(bottom = 8.dp)
+                                            )
                                             data.insights.forEach { insight ->
                                                 InsightCard(insight)
                                             }

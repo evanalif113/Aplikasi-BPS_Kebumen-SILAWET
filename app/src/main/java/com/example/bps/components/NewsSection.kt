@@ -1,20 +1,14 @@
 package com.example.bps.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable // Import clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,20 +26,21 @@ import com.example.bps.R
 import com.example.bps.data.remote.responses.NewsItemResponse
 import com.example.bps.ui.infografik.news.NewsUiState
 import com.example.bps.theme.Gray200
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.foundation.clickable
-
 
 @Composable
-fun NewsCard(newsItem: NewsItemResponse) { // <-- Diperbaiki: Menerima NewsItemResponse dari API
+fun NewsCard(
+    newsItem: NewsItemResponse,
+    onClick: () -> Unit // 1. Tambahkan parameter onClick
+) {
     Card(
-        modifier = Modifier.width(150.dp),
+        modifier = Modifier
+            .width(150.dp)
+            .clickable(onClick = onClick), // 2. Pasang aksi klik di Card
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column {
-            // Gambar dari URL menggunakan Coil AsyncImage
+            // Gambar
             Box(
                 modifier = Modifier
                     .height(100.dp)
@@ -53,28 +48,27 @@ fun NewsCard(newsItem: NewsItemResponse) { // <-- Diperbaiki: Menerima NewsItemR
                     .background(Gray200)
             ) {
                 AsyncImage(
-                    model = newsItem.thumbnailUrl, // <-- Diperbaiki: Data dari NewsItemResponse
-                    contentDescription = newsItem.title, // <-- Diperbaiki: Data dari NewsItemResponse
+                    model = newsItem.thumbnailUrl,
+                    contentDescription = newsItem.title,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp),
                     contentScale = ContentScale.Crop,
-                    // Tambahkan placeholder jika gambar gagal dimuat
-                    placeholder = painterResource(id = R.drawable.ic_placeholder), // <-- GANTI dengan drawable Anda
-                    error = painterResource(id = R.drawable.ic_placeholder) // <-- GANTI dengan drawable Anda
+                    placeholder = painterResource(id = R.drawable.ic_placeholder),
+                    error = painterResource(id = R.drawable.ic_placeholder)
                 )
             }
 
-            // Konten teks di bawah gambar
+            // Konten Teks
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    text = newsItem.date, // <-- Diperbaiki: Data dari NewsItemResponse
+                    text = newsItem.date,
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = newsItem.title, // <-- Diperbaiki: Data dari NewsItemResponse
+                    text = newsItem.title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 3,
@@ -86,11 +80,11 @@ fun NewsCard(newsItem: NewsItemResponse) { // <-- Diperbaiki: Menerima NewsItemR
     }
 }
 
-// Composable untuk seluruh bagian "Berita dan Pers"
 @Composable
 fun NewsSection(
     uiState: NewsUiState,
     onSeeAllClicked: () -> Unit,
+    onItemClicked: (Int) -> Unit, // 3. Tambahkan parameter callback dengan ID
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.padding(vertical = 16.dp)) {
@@ -104,7 +98,7 @@ fun NewsSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Berita dan Siaran Pers",
+                text = "Berita Kegiatan",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -112,37 +106,37 @@ fun NewsSection(
                 text = "Lihat Semua",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.primary, // Warna tema
-                modifier = Modifier.clickable(onClick = onSeeAllClicked) // Aksi klik
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable(onClick = onSeeAllClicked)
             )
         }
 
-        // Tampilkan UI berdasarkan state
         when (uiState) {
             is NewsUiState.Loading -> {
-                // Tampilkan loading di tengah
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp), // Samakan tinggi dengan kartu
+                        .height(150.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
                 }
             }
             is NewsUiState.Success -> {
-                // Tampilkan daftar berita jika sukses
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(uiState.news.take(5)) { newsItem ->
-                        NewsCard(newsItem = newsItem)
+                        NewsCard(
+                            newsItem = newsItem,
+                            // 4. Panggil callback saat kartu diklik
+                            onClick = { onItemClicked(newsItem.id) }
+                        )
                     }
                 }
             }
             is NewsUiState.Error -> {
-                // Tampilkan pesan error
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -163,7 +157,6 @@ fun NewsSection(
 @Preview(showBackground = true)
 @Composable
 fun NewsSectionPreview() {
-    // Buat data dummy NewsItemResponse untuk preview
     val dummyNewsList = listOf(
         NewsItemResponse(
             id = 1,
@@ -171,45 +164,14 @@ fun NewsSectionPreview() {
             category = "Kegiatan",
             title = "Selamat Hari Pos Sedunia!",
             abstract = "...",
-            thumbnailUrl = "...", // Isi dengan URL gambar dummy jika ada
-            link = "",
-
-        ),
-        NewsItemResponse(
-            id = 2,
-            date = "29 Oktober 2025",
-            category = "Kegiatan",
-            title = "Forum Satu Data Kabupaten Kebumen",
-            abstract = "...",
-            thumbnailUrl = "...", // Isi dengan URL gambar dummy jika ada
-            link = "",
-
+            thumbnailUrl = "...",
+            link = ""
         )
     )
 
-    // Tampilkan NewsSection dengan state Success
     NewsSection(
         uiState = NewsUiState.Success(dummyNewsList),
-        onSeeAllClicked = {} // <-- TAMBAHKAN INI
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NewsSectionLoadingPreview() {
-    // Tampilkan NewsSection dengan state Loading
-    NewsSection(
-        uiState = NewsUiState.Loading,
-        onSeeAllClicked = {} // <-- TAMBAHKAN INI
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NewsSectionErrorPreview() {
-    // Tampilkan NewsSection dengan state Error
-    NewsSection(
-        uiState = NewsUiState.Error("Gagal memuat berita."),
-        onSeeAllClicked = {} // <-- TAMBAHKAN INI
+        onSeeAllClicked = {},
+        onItemClicked = {} // 5. Tambahkan lambda kosong untuk preview
     )
 }

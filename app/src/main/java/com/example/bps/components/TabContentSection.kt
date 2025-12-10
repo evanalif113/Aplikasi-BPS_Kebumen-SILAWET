@@ -59,7 +59,7 @@ fun TabbedContentSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Rilis Data Terbaru",
+                    text = "Rilis Terbaru",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )

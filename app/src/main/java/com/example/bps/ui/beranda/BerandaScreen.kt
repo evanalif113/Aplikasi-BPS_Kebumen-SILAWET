@@ -94,7 +94,10 @@ fun BerandaScreen(
             // News Section (Berita Kegiatan)
             NewsSection(
                 uiState = newsState,
-                onSeeAllClicked = onSeeAllNews
+                onSeeAllClicked = onSeeAllNews,
+                onItemClicked = { id ->
+                    onNavigateToDetail(id, ContentType.NEWS)
+                }
             )
         }
     }

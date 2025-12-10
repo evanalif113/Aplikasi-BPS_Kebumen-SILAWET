@@ -183,7 +183,13 @@ fun MainScreen() {
                 composable("infografik") {
                     InfografikScreen(
                         viewModel = newsViewModel,
-                        onNavigateToAllNews = { navController.navigate("all_news") }
+                        onNavigateToAllNews = { navController.navigate("all_news") },
+
+                        // --- TAMBAHKAN BAGIAN INI ---
+                        onNavigateToDetail = { id, type ->
+                            // Navigasi ke halaman detail
+                            navController.navigate("detail_content/$id/$type")
+                        }
                     )
                 }
 
