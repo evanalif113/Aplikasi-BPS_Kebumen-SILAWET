@@ -46,7 +46,7 @@ fun BpsDrawerContent(
         )
 
         NavigationDrawerItem(
-            label = { Text(text = "Publikasi dan Buku") },
+            label = { Text(text = "Publikasi") },
             icon = { Icon(painterResource(id = R.drawable.ic_book_marked_24dp), contentDescription = null) },
             selected = false,
             onClick = {

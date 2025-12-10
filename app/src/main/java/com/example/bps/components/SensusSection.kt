@@ -129,7 +129,7 @@ fun InfoSensusSection() {
             backgroundColor = Color(0xFFFFEAB6),
             textColor = Color(0xFFB56C00),
             title = "SENSUS\nEKONOMI 2026",
-            url = "https://sensus.bps.go.id/main/index/se2026"
+            url = "https://sensus.bps.go.id/se2026/"
         )
     }
 }
