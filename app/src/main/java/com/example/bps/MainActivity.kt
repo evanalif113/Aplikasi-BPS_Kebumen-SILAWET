@@ -172,9 +172,21 @@ fun MainScreen() {
                         viewModel = newsViewModel,
                         onSeeAllNews = { navController.navigate("all_news") },
                         onNavigateToDetail = { id, type -> navController.navigate("detail_content/$id/$type") },
-                        // INI KUNCINYA: Navigasi dinamis saat menu diklik
-                        onMenuClick = { route -> navController.navigate(route) }
+
+                        // PERBAIKAN DISINI: Tangkap slug, lalu navigasi ke menu_grid
+                        onMenuClick = { slug ->
+                            navController.navigate("menu_grid/$slug")
+                        }
                     )
+                }
+
+                composable(
+                    route = "menu_grid/{slug}",
+                    arguments = listOf(navArgument("slug") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val slug = backStackEntry.arguments?.getString("slug") ?: "others"
+                    // Panggil Screen Baru
+                    com.example.bps.ui.statistik.MenuGridScreen(slug = slug, navController = navController)
                 }
 
                 // 2. STATISTIK & INFOGRAFIK
@@ -201,6 +213,20 @@ fun MainScreen() {
                 ) { backStackEntry ->
                     val subject = backStackEntry.arguments?.getString("subjectName") ?: "Data"
                     DatasetListScreen(subjectName = subject, navController = navController)
+                }
+
+                composable(
+                    route = "detail_screen/{datasetId}", // {datasetId} adalah tempat id ditampung
+                    arguments = listOf(navArgument("datasetId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    // Ambil ID dari route (misal "6")
+                    val idYangDitangkap = backStackEntry.arguments?.getString("datasetId") ?: ""
+
+                    // Panggil Screen Detail sambil bawa ID-nya
+                    DatasetDetailScreen(
+                        datasetId = idYangDitangkap,
+                        navController = navController
+                    )
                 }
 
                 composable("about_screen") {

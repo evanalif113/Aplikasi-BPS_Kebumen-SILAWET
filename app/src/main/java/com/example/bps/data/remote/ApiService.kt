@@ -49,4 +49,10 @@ interface ApiService {
     // Endpoint baru untuk Menu Grid Beranda
     @GET("homepage/grid")
     suspend fun getGridMenu(): GridMenuResponse
+
+    // TAMBAHKAN INI DI BAWAH
+    @GET("homepage/grid/{slug}")
+    suspend fun getGridByCategory(
+        @Path("slug") slug: String
+    ): GridCategoryResponse
 }

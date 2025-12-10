@@ -2,37 +2,30 @@ package com.example.bps.ui.statistik.datasetdetail
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background // <-- Untuk error 'background'
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset // <-- Untuk error 'tabIndicatorOffset'
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.bps.components.ChartSection
 import com.example.bps.components.TabelDataSection
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.ui.text.font.FontStyle
 import com.example.bps.data.remote.responses.Insight
 
 // Warna Biru BPS untuk Tab Aktif
@@ -49,10 +42,7 @@ fun DatasetDetailScreen(
 
     // State untuk Tab yang dipilih (0 = Grafik, 1 = Tabel)
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabTitles = listOf(
-        "Chart",
-        "Tabel Data"
-    )
+    val tabTitles = listOf("Chart", "Tabel Data")
 
     // Load data awal
     LaunchedEffect(datasetId) {
@@ -93,9 +83,14 @@ fun DatasetDetailScreen(
                 uiState.dataset != null -> {
                     val data = uiState.dataset!!
 
-                    Column(modifier = Modifier.fillMaxSize()) {
+                    // Scrollable Parent Column
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
 
-                        // --- BAGIAN 1: HEADER & FILTER (Selalu Muncul) ---
+                        // --- BAGIAN 1: HEADER & FILTER ---
                         Column(modifier = Modifier.padding(16.dp)) {
                             // Judul
                             Text(
@@ -111,12 +106,12 @@ fun DatasetDetailScreen(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
 
-                            // Filter Tahun (Dropdown)
+                            // Filter Tahun & Mode
                             if (data.available_years.isNotEmpty()) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween // Biar dropdown kiri & kanan
+                                    horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     // 1. DROPDOWN TAHUN (Kiri)
                                     if (data.available_years.isNotEmpty()) {
@@ -126,7 +121,6 @@ fun DatasetDetailScreen(
                                                 years = data.available_years,
                                                 selectedYear = data.current_year ?: data.available_years.first(),
                                                 onYearSelected = { newYear ->
-                                                    // Saat tahun ganti, mode reset ke default atau pertahankan state mode saat ini
                                                     viewModel.getDatasetDetail(datasetId, newYear)
                                                 }
                                             )
@@ -134,15 +128,12 @@ fun DatasetDetailScreen(
                                     }
 
                                     // 2. DROPDOWN MODE TAMPILAN (Kanan)
-                                    // Kita deteksi: Kalau judulnya tentang "Penduduk" & "Kecamatan", munculkan opsi ini
                                     val isPopulationData = data.dataset.dataset_name.contains("Penduduk", ignoreCase = true) &&
                                             data.dataset.dataset_name.contains("Kecamatan", ignoreCase = true)
 
                                     if (isPopulationData) {
                                         ModeDropdown(
                                             onModeSelected = { selectedMode ->
-                                                // Panggil API dengan mode baru (gender/region)
-                                                // Tahun tetap pertahankan tahun yang sedang aktif
                                                 viewModel.getDatasetDetail(datasetId, data.current_year, selectedMode)
                                             }
                                         )
@@ -159,7 +150,7 @@ fun DatasetDetailScreen(
                             indicator = { tabPositions ->
                                 TabRowDefaults.SecondaryIndicator(
                                     Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                                    color = BpsBlue // Garis bawah biru
+                                    color = BpsBlue
                                 )
                             }
                         ) {
@@ -179,11 +170,9 @@ fun DatasetDetailScreen(
                         }
 
                         // --- BAGIAN 3: KONTEN SESUAI TAB ---
-                        // Menggunakan Box + VerticalScroll agar konten bisa di-scroll
                         Box(
                             modifier = Modifier
-                                .weight(1f) // Mengisi sisa layar ke bawah
-                                .verticalScroll(rememberScrollState()) // Scrollable
+                                .fillMaxWidth()
                                 .padding(16.dp)
                         ) {
                             when (selectedTabIndex) {
@@ -217,7 +206,6 @@ fun DatasetDetailScreen(
                                         Text("Rincian Data Tabel", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
                                         TabelDataSection(tableData = data.table)
 
-                                        // Catatan kaki (optional)
                                         Spacer(modifier = Modifier.height(16.dp))
                                         Text(
                                             "Geser tabel ke samping jika kolom terpotong.",
@@ -258,7 +246,8 @@ fun YearDropdown(
             onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier.menuAnchor(),
+            // PERBAIKAN: Gunakan Modifier.menuAnchor() dengan MenuAnchorType.PrimaryEditable
+            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = BpsBlue,
                 unfocusedBorderColor = Color.LightGray
@@ -292,7 +281,7 @@ fun InsightCard(insight: Insight) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F9FF)), // Biru sangat muda
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F9FF)),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, Color(0xFFBBDEFB))
     ) {
@@ -320,18 +309,21 @@ fun ModeDropdown(onModeSelected: (String) -> Unit) {
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = Modifier.width(140.dp) // Lebar Dropdown
+        modifier = Modifier.width(140.dp)
     ) {
         // --- BUNGKUS DALAM BOX AGAR RAPI ---
         Box(
-            modifier = Modifier.fillMaxWidth() // Box mengikuti lebar container
+            modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedTextField(
                 value = displayText,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.fillMaxWidth(), // TextField penuhi Box
+                // PERBAIKAN: Gunakan Modifier.menuAnchor()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(MenuAnchorType.PrimaryEditable, true),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = BpsBlue,
                     unfocusedBorderColor = Color.LightGray
@@ -344,7 +336,7 @@ fun ModeDropdown(onModeSelected: (String) -> Unit) {
             // Canvas transparan di atas TextField (agar bisa diklik di semua area)
             Canvas(
                 modifier = Modifier
-                    .matchParentSize() // Gunakan matchParentSize agar pas dengan TextField
+                    .matchParentSize()
                     .clickable { expanded = !expanded }
             ) {}
         }

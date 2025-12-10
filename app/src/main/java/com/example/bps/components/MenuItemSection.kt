@@ -29,29 +29,29 @@ import com.example.bps.theme.*
 // 1. Update Data Class: Tambahkan 'apiSubject'
 data class MenuData(
     val iconRes: Int,
-    val title: String, // Teks pendek untuk UI
+    val title: String,
     val colorCard: Color,
-    val apiSubject: String // Teks asli untuk request API
+    val slug: String // <-- Ganti apiSubject jadi slug
 )
 
 @Composable
 fun MenuItemSection(
     onItemClick: (String) -> Unit
 ) {
-    // 2. Isi Data dengan Subject yang sesuai API
+    // ISI DATA DENGAN SLUG YANG BENAR (Sesuai JSON API)
     val menuList = listOf(
-        MenuData(R.drawable.penduduk, "Penduduk", White, "Kependudukan dan Migrasi"),
-        MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", White, "Tenaga Kerja"),
-        MenuData(R.drawable.pengangguran, "Pengangguran", White, "Tenaga Kerja"),
-        MenuData(R.drawable.kemiskinan, "Kemiskinan", White, "Kondisi Tempat Tinggal, Kemiskinan, dan Permasalahan Sosial Lintas Sektor"),
-        MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", White, "Kondisi Tempat Tinggal, Kemiskinan, dan Permasalahan Sosial Lintas Sektor"),
-        MenuData(R.drawable.ipm_ipg_idg, "IPM", White, "Kondisi Tempat Tinggal, Kemiskinan, dan Permasalahan Sosial Lintas Sektor"),
-        MenuData(R.drawable.inflasi, "Inflasi", White, "Neraca Ekonomi"),
-        MenuData(R.drawable.pertumbuhan_ekonomi, "Ekonomi", White, "Neraca Ekonomi"),
-        MenuData(R.drawable.pdrb, "PDRB", White, "Neraca Ekonomi"),
-        MenuData(R.drawable.pendidikan, "Pendidikan", White, "Pendidikan"),
-        MenuData(R.drawable.perumahan, "Perumahan", White, "Perumahan"),
-        MenuData(R.drawable.pertanian, "Pertanian", White, "Pertanian")
+        MenuData(R.drawable.penduduk, "Penduduk", White, "kependudukan"),
+        MenuData(R.drawable.tenaga_kerja, "Tenaga Kerja", White, "tenaga-kerja"),
+        MenuData(R.drawable.pengangguran, "Pengangguran", White, "pengangguran"),
+        MenuData(R.drawable.kemiskinan, "Kemiskinan", White, "kemiskinan"),
+        MenuData(R.drawable.gini_rasio_dan_ketimpangan, "Rasio GINI", White, "rasio-gini"),
+        MenuData(R.drawable.ipm_ipg_idg, "IPM", White, "ipm"),
+        MenuData(R.drawable.inflasi, "Inflasi", White, "inflasi"),
+        MenuData(R.drawable.pertumbuhan_ekonomi, "Ekonomi", White, "ekonomi"),
+        MenuData(R.drawable.pdrb, "PDRB", White, "pdrb"),
+        MenuData(R.drawable.pendidikan, "Pendidikan", White, "pendidikan"),
+        MenuData(R.drawable.perumahan, "Perumahan", White, "perumahan"),
+        MenuData(R.drawable.pertanian, "Pertanian", White, "pertanian")
     )
 
     Card(
@@ -79,7 +79,7 @@ fun MenuItemSection(
                     title = menu.title,
                     colorCard = menu.colorCard,
                     // 3. Saat diklik, kirim rute dinamis: "dataset_list/NamaSubjectAsli"
-                    onClick = { onItemClick("dataset_list/${menu.apiSubject}") }
+                    onClick = { onItemClick(menu.slug) }
                 )
             }
         }
