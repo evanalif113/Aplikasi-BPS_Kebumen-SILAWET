@@ -1,6 +1,7 @@
 package com.example.bps.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,10 +11,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -23,11 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bps.data.remote.responses.TableData
 
-// --- WARNA (Tetap Sama) ---
+// --- WARNA ---
 val BpsHeaderBg = Color(0xFF1565C0)
 val BpsSurface = Color.White
 val BpsRowAlt = Color(0xFFF5F7FA)
 val BpsBorderLine = Color(0xFFE0E0E0)
+val BpsDividerHover = Color(0xFFFF9800) // Warna indikator saat digeser (Opsional)
 
 @Composable
 fun TabelDataSection(
@@ -37,13 +41,20 @@ fun TabelDataSection(
     val headers = tableData.headers
     val rows = tableData.rows
     val scrollState = rememberScrollState()
+    val density = LocalDensity.current
 
-    // --- PENGATURAN LEBAR KOLOM (LEBIH RAMPING) ---
-    fun getColWidth(index: Int): Dp {
-        return if (index == 0) {
-            130.dp // Kolom Label (Wilayah/Uraian) -> Dirampingkan dari 180dp
-        } else {
-            75.dp  // Kolom Angka -> Dirampingkan dari 110dp (Cukup untuk 7-8 digit)
+    // --- STATE LEBAR KOLOM ---
+    // Kita simpan lebar setiap kolom di sini.
+    // Key: Index Kolom, Value: Lebar dalam Dp
+    val columnWidths = remember { mutableStateMapOf<Int, Dp>() }
+
+    // Inisialisasi Lebar Awal (Hanya sekali saat pertama render)
+    LaunchedEffect(Unit) {
+        headers.forEachIndexed { index, _ ->
+            if (!columnWidths.containsKey(index)) {
+                // Default: Kolom pertama 140dp, sisanya 65dp
+                columnWidths[index] = if (index == 0) 140.dp else 65.dp
+            }
         }
     }
 
@@ -57,7 +68,7 @@ fun TabelDataSection(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
 
-            // 1. HEADER
+            // 1. HEADER ROW
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -66,25 +77,33 @@ fun TabelDataSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 headers.forEachIndexed { index, header ->
+                    val cleanHeader = header.substringBefore(".")
+                    val currentWidth = columnWidths[index] ?: 65.dp
+
+                    // Sel Header
                     TableCell(
-                        text = header.uppercase(),
+                        text = cleanHeader.uppercase(),
                         isHeader = true,
-                        width = getColWidth(index),
-                        // Header angka rata tengah agar terlihat seimbang di kolom sempit
+                        width = currentWidth,
                         align = if (index == 0) TextAlign.Start else TextAlign.Center
                     )
 
+                    // Pembatas yang bisa digeser (Resizer)
                     if (index < headers.size - 1) {
-                        VerticalDivider(
-                            modifier = Modifier.height(24.dp),
-                            color = Color.White.copy(alpha = 0.3f),
-                            thickness = 1.dp
+                        DraggableDivider(
+                            onResize = { dragAmountPx ->
+                                // Konversi pixel geseran ke Dp
+                                val deltaDp = with(density) { dragAmountPx.toDp() }
+                                val oldWidth = columnWidths[index] ?: 65.dp
+                                // Update lebar kolom, batasi minimal 40.dp agar tidak hilang
+                                columnWidths[index] = (oldWidth + deltaDp).coerceAtLeast(40.dp)
+                            }
                         )
                     }
                 }
             }
 
-            // 2. DATA BODY
+            // 2. DATA BODY ROWS
             Column {
                 rows.forEachIndexed { rowIndex, rowMap ->
                     val bgColor = if (rowIndex % 2 == 0) BpsSurface else BpsRowAlt
@@ -93,26 +112,36 @@ fun TabelDataSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(bgColor)
-                            .horizontalScroll(scrollState), // State scroll sama dengan header
+                            .horizontalScroll(scrollState), // Sinkron scroll dengan header
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         headers.forEachIndexed { colIndex, headerKey ->
                             val cellValue = rowMap[headerKey]?.toString() ?: "-"
+                            val currentWidth = columnWidths[colIndex] ?: 65.dp
 
+                            // Sel Data
                             TableCell(
                                 text = cellValue,
                                 isHeader = false,
-                                width = getColWidth(colIndex),
-                                // Angka rata kanan agar urutan satuan/puluhan lurus
+                                width = currentWidth,
                                 align = if (colIndex == 0) TextAlign.Start else TextAlign.End
                             )
 
+                            // Pembatas (Hanya visual di baris data, agar lurus dengan header)
                             if (colIndex < headers.size - 1) {
-                                VerticalDivider(
-                                    modifier = Modifier.height(40.dp),
-                                    color = BpsBorderLine,
-                                    thickness = 1.dp
-                                )
+                                // Kita gunakan Box transparan selebar area drag header (10.dp)
+                                // agar garisnya lurus vertikal
+                                Box(
+                                    modifier = Modifier
+                                        .width(10.dp) // Samakan dengan lebar area sentuh DraggableDivider
+                                        .height(40.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    VerticalDivider(
+                                        color = BpsBorderLine,
+                                        thickness = 1.dp
+                                    )
+                                }
                             }
                         }
                     }
@@ -126,6 +155,35 @@ fun TabelDataSection(
     }
 }
 
+/**
+ * Komponen Pembatas yang Bisa Digeser
+ */
+@Composable
+fun DraggableDivider(
+    onResize: (Float) -> Unit
+) {
+    // Box pembungkus untuk area sentuh yang lebih luas (Hitbox)
+    Box(
+        modifier = Modifier
+            .width(10.dp) // Lebar area sentuh jari (bukan lebar garis visual)
+            .fillMaxHeight()
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures { change, dragAmount ->
+                    change.consume() // Konsumsi event agar tidak dianggap scroll
+                    onResize(dragAmount)
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        // Garis Visual (Tipis)
+        VerticalDivider(
+            modifier = Modifier.height(24.dp),
+            color = Color.White.copy(alpha = 0.5f), // Warna garis header
+            thickness = 2.dp // Sedikit dipertebal agar terlihat bisa digeser
+        )
+    }
+}
+
 @Composable
 fun TableCell(
     text: String,
@@ -136,8 +194,7 @@ fun TableCell(
     Box(
         modifier = Modifier
             .width(width)
-            // Padding Horizontal diperkecil (12dp -> 6dp) agar muat di kolom sempit
-            .padding(horizontal = 6.dp, vertical = 10.dp),
+            .padding(horizontal = 4.dp, vertical = 8.dp),
         contentAlignment = when (align) {
             TextAlign.End -> Alignment.CenterEnd
             TextAlign.Center -> Alignment.Center
@@ -148,10 +205,9 @@ fun TableCell(
             text = text,
             color = if (isHeader) Color.White else Color(0xFF333333),
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Medium,
-            // Font sedikit diperkecil agar aman
-            fontSize = if (isHeader) 11.sp else 12.sp,
+            fontSize = if (isHeader) 10.sp else 12.sp,
             textAlign = align,
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             lineHeight = 16.sp
         )
@@ -161,7 +217,7 @@ fun TableCell(
 // --- PREVIEW ---
 @Preview(showBackground = true)
 @Composable
-fun PreviewCompactTable() {
+fun PreviewResizableTable() {
     val dummyData = TableData(
         headers = listOf("Wilayah", "2021", "2022", "2023", "Ket."),
         rows = listOf(

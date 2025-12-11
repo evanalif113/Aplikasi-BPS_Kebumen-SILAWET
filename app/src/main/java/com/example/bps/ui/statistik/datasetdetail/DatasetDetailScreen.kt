@@ -40,9 +40,11 @@ fun DatasetDetailScreen(
 ) {
     val uiState by viewModel.uiState
 
-    // State untuk Tab yang dipilih (0 = Grafik, 1 = Tabel)
+    // State untuk Tab yang dipilih
+    // 0 = Tabel Data, 1 = Chart
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabTitles = listOf("Chart", "Tabel Data")
+
+    val tabTitles = listOf("Tabel Data", "Chart")
 
     // Load data awal
     LaunchedEffect(datasetId) {
@@ -66,60 +68,53 @@ fun DatasetDetailScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             when {
-                uiState.isLoading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
+                uiState.isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 uiState.error != null -> {
                     Column(
                         modifier = Modifier.align(Alignment.Center),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text("Error: ${uiState.error}", color = Color.Red)
-                        Button(onClick = { viewModel.getDatasetDetail(datasetId) }) {
-                            Text("Coba Lagi")
-                        }
+                        Button(onClick = { viewModel.getDatasetDetail(datasetId) }) { Text("Coba Lagi") }
                     }
                 }
                 uiState.dataset != null -> {
                     val data = uiState.dataset!!
 
-                    // Scrollable Parent Column
+                    // --- LOGIKA DEFAULT TAHUN TERBARU ---
+                    // 1. Urutkan tahun dari Besar ke Kecil (Descending) agar user melihat tahun terbaru di atas
+                    val sortedYears = remember(data.available_years) {
+                        data.available_years.sortedDescending()
+                    }
+
+                    // 2. Tentukan tahun aktif.
+                    // Jika data.current_year null (belum dipilih), gunakan tahun terbesar (maxOrNull).
+                    val activeYear = data.current_year ?: data.available_years.maxOrNull() ?: 0
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
                     ) {
-
-                        // --- BAGIAN 1: HEADER & FILTER ---
+                        // --- HEADER & FILTER ---
                         Column(modifier = Modifier.padding(16.dp)) {
-                            // Judul
-                            Text(
-                                text = data.dataset.dataset_name,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                lineHeight = 24.sp
-                            )
-                            Text(
-                                text = "Sumber: ${data.dataset.source}",
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
+                            Text(data.dataset.dataset_name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Text("Sumber: ${data.dataset.source}", fontSize = 12.sp, color = Color.Gray)
                             Spacer(modifier = Modifier.height(16.dp))
 
-                            // Filter Tahun & Mode
                             if (data.available_years.isNotEmpty()) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    // 1. DROPDOWN TAHUN (Kiri)
+                                    // 1. DROPDOWN TAHUN
                                     if (data.available_years.isNotEmpty()) {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Text("Tahun: ", fontWeight = FontWeight.Medium, fontSize = 13.sp)
                                             YearDropdown(
-                                                years = data.available_years,
-                                                selectedYear = data.current_year ?: data.available_years.first(),
+                                                years = sortedYears, // Gunakan list yang sudah diurutkan
+                                                selectedYear = activeYear, // Gunakan logic tahun terbaru
                                                 onYearSelected = { newYear ->
                                                     viewModel.getDatasetDetail(datasetId, newYear)
                                                 }
@@ -127,22 +122,19 @@ fun DatasetDetailScreen(
                                         }
                                     }
 
-                                    // 2. DROPDOWN MODE TAMPILAN (Kanan)
+                                    // 2. DROPDOWN MODE
                                     val isPopulationData = data.dataset.dataset_name.contains("Penduduk", ignoreCase = true) &&
                                             data.dataset.dataset_name.contains("Kecamatan", ignoreCase = true)
-
                                     if (isPopulationData) {
-                                        ModeDropdown(
-                                            onModeSelected = { selectedMode ->
-                                                viewModel.getDatasetDetail(datasetId, data.current_year, selectedMode)
-                                            }
-                                        )
+                                        ModeDropdown(onModeSelected = { selectedMode ->
+                                            viewModel.getDatasetDetail(datasetId, activeYear, selectedMode)
+                                        })
                                     }
                                 }
                             }
                         }
 
-                        // --- BAGIAN 2: TAB SWITCHER ---
+                        // --- TABS ---
                         TabRow(
                             selectedTabIndex = selectedTabIndex,
                             containerColor = Color.White,
@@ -158,61 +150,52 @@ fun DatasetDetailScreen(
                                 Tab(
                                     selected = selectedTabIndex == index,
                                     onClick = { selectedTabIndex = index },
-                                    text = {
-                                        Text(
-                                            title,
-                                            fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal,
-                                            color = if (selectedTabIndex == index) BpsBlue else Color.Gray
-                                        )
-                                    }
+                                    text = { Text(title, color = if (selectedTabIndex == index) BpsBlue else Color.Gray) }
                                 )
                             }
                         }
 
-                        // --- BAGIAN 3: KONTEN SESUAI TAB ---
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
+                        // --- CONTENT ---
+                        Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                             when (selectedTabIndex) {
-                                0 -> {
-                                    // === ISI TAB 1: GRAFIK & INSIGHT ===
+                                0 -> { // TABEL DATA
                                     Column {
-                                        // Grafik
+                                        Text("Rincian Data Tabel", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
+
+                                        // --- FILTER TABEL SESUAI TAHUN AKTIF ---
+                                        val currentYearStr = activeYear.toString()
+
+                                        val filteredHeaders = data.table.headers.filterIndexed { index, header ->
+                                            // Ambil kolom pertama (Wilayah) ATAU kolom yang sesuai tahun aktif (hilangkan .0)
+                                            index == 0 || header.substringBefore(".") == currentYearStr
+                                        }
+
+                                        val filteredTableData = data.table.copy(headers = filteredHeaders)
+
+                                        // Render Tabel
+                                        if (filteredHeaders.size >= 2) {
+                                            TabelDataSection(tableData = filteredTableData)
+                                        } else {
+                                            TabelDataSection(tableData = data.table)
+                                        }
+
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                        Text("Menampilkan data tahun $activeYear.", fontSize = 12.sp, color = Color.Gray, fontStyle = FontStyle.Italic)
+                                    }
+                                }
+                                1 -> { // CHART
+                                    Column {
                                         if (data.chart != null) {
                                             Text("Visualisasi Data", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
                                             ChartSection(chartData = data.chart)
                                             Spacer(modifier = Modifier.height(24.dp))
                                         } else {
-                                            Text("Grafik tidak tersedia untuk data ini.", color = Color.Gray)
+                                            Text("Grafik tidak tersedia.", color = Color.Gray)
                                         }
-
-                                        // Insight / Analisis
                                         if (data.insights.isNotEmpty()) {
-                                            Text("Analisis Data (Insight)",
-                                                fontWeight = FontWeight.SemiBold,
-                                                modifier = Modifier.padding(bottom = 8.dp)
-                                            )
-                                            data.insights.forEach { insight ->
-                                                InsightCard(insight)
-                                            }
+                                            Text("Analisis Data (Insight)", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
+                                            data.insights.forEach { InsightCard(it) }
                                         }
-                                    }
-                                }
-                                1 -> {
-                                    // === ISI TAB 2: DATA TABEL ===
-                                    Column {
-                                        Text("Rincian Data Tabel", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
-                                        TabelDataSection(tableData = data.table)
-
-                                        Spacer(modifier = Modifier.height(16.dp))
-                                        Text(
-                                            "Geser tabel ke samping jika kolom terpotong.",
-                                            fontSize = 12.sp,
-                                            color = Color.Gray,
-                                            fontStyle = FontStyle.Italic
-                                        )
                                     }
                                 }
                             }
@@ -224,7 +207,7 @@ fun DatasetDetailScreen(
     }
 }
 
-// --- KOMPONEN PENDUKUNG ---
+// --- KOMPONEN PENDUKUNG (TETAP SAMA) ---
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -246,7 +229,6 @@ fun YearDropdown(
             onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            // PERBAIKAN: Gunakan Modifier.menuAnchor() dengan MenuAnchorType.PrimaryEditable
             modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = BpsBlue,
@@ -278,9 +260,7 @@ fun YearDropdown(
 @Composable
 fun InsightCard(insight: Insight) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 12.dp),
+        modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F9FF)),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, Color(0xFFBBDEFB))
@@ -300,30 +280,20 @@ fun InsightCard(insight: Insight) {
 fun ModeDropdown(onModeSelected: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var displayText by remember { mutableStateOf("Gender") }
-
-    val options = listOf(
-        "Gender" to "gender",
-        "Kecamatan" to "region"
-    )
+    val options = listOf("Gender" to "gender", "Kecamatan" to "region")
 
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
         modifier = Modifier.width(140.dp)
     ) {
-        // --- BUNGKUS DALAM BOX AGAR RAPI ---
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Box(modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 value = displayText,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                // PERBAIKAN: Gunakan Modifier.menuAnchor()
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(MenuAnchorType.PrimaryEditable, true),
+                modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryEditable, true),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = BpsBlue,
                     unfocusedBorderColor = Color.LightGray
@@ -332,15 +302,8 @@ fun ModeDropdown(onModeSelected: (String) -> Unit) {
                 textStyle = LocalTextStyle.current.copy(fontSize = 13.sp),
                 label = { Text("Tampilan", fontSize = 11.sp) }
             )
-
-            // Canvas transparan di atas TextField (agar bisa diklik di semua area)
-            Canvas(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clickable { expanded = !expanded }
-            ) {}
+            Canvas(modifier = Modifier.matchParentSize().clickable { expanded = !expanded }) {}
         }
-
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
@@ -358,14 +321,4 @@ fun ModeDropdown(onModeSelected: (String) -> Unit) {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun DatasetDetailScreenPreview() {
-    val navController = rememberNavController()
-    DatasetDetailScreen(
-        datasetId = "1",
-        navController = navController
-    )
 }
