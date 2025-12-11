@@ -18,6 +18,7 @@ import com.example.bps.R
 import com.example.bps.theme.Gray800
 import com.example.bps.theme.Sky500
 import com.example.bps.theme.White
+import androidx.core.net.toUri
 
 @Composable
 fun BottomNavWithMoreMenu(
@@ -31,7 +32,6 @@ fun BottomNavWithMoreMenu(
         Triple("Beranda", R.drawable.ic_house_24dp, "beranda"),
         Triple("Statistik", R.drawable.ic_grafik_24dp, "statistik"),
         Triple("Infografik", R.drawable.ic_open_book_24dp, "infografik"),
-        // Ubah menu "Lainnya" menjadi "WhatsApp"
         Triple("Layanan", R.drawable.ic_whatsapp_fill, "whatsapp")
     )
 
@@ -53,7 +53,7 @@ fun BottomNavWithMoreMenu(
 
                             val url = "https://wa.me/$phoneNumber?text=${Uri.encode(message)}"
                             val intent = Intent(Intent.ACTION_VIEW).apply {
-                                data = Uri.parse(url)
+                                data = url.toUri()
                             }
                             context.startActivity(intent)
                         } catch (e: Exception) {
