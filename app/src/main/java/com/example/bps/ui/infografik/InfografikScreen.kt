@@ -42,13 +42,6 @@ fun InfografikScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-            Text(
-                text = "Galeri Infografis",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
             when (val state = uiState) {
                 is NewsUiState.Loading -> {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -97,7 +90,7 @@ fun InfografikScreen(
                                                 .background(Color.LightGray) // Warna dasar biar kelihatan kotaknya
                                         ) {
                                             AsyncImage(
-                                                model = item.thumbnailUrl,
+                                                model = item.imageUrl,
                                                 contentDescription = item.title,
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentScale = ContentScale.Crop,

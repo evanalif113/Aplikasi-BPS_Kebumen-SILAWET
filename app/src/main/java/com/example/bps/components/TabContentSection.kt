@@ -64,12 +64,12 @@ fun TabbedContentSection(
                     fontWeight = FontWeight.Bold
                 )
                 // Tombol Lihat Semua (Opsional)
-                Text(
+                /*Text(
                     text = "Lihat Semua",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable { /* Aksi navigasi */ }
-                )
+                )*/
             }
 
             Spacer(modifier = Modifier.height(12.dp))

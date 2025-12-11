@@ -1,7 +1,5 @@
 package com.example.bps.ui.general
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -27,7 +25,19 @@ import androidx.core.text.HtmlCompat
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.bps.data.remote.responses.NewsItemResponse
+import com.example.bps.data.remote.responses.PublicationItemResponse
 import com.example.bps.ui.infografik.news.NewsViewModel
+import com.example.bps.utils.launchInAppBrowser // Import fungsi browser internal
+
+// 1. Data Class Penampung (Wrapper) agar kode UI bersih
+private data class ContentDisplay(
+    val title: String,
+    val date: String,
+    val imageUrl: String,
+    val description: String?,
+    val linkUrl: String?
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,67 +50,86 @@ fun GeneralDetailScreen(
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
-    // 1. Cari Data berdasarkan ID & Tipe
-    val itemData = remember(
-        id,
-        contentType) {
+    // 2. Cari Data berdasarkan ID & Tipe
+    val itemData = remember(id, contentType) {
         when (contentType) {
             ContentType.PUBLIKASI -> viewModel.getPublicationById(id)
-
-            // Panggil fungsi KHUSUS BRS
             ContentType.BRS -> viewModel.getBrsById(id)
-
-            // Panggil fungsi KHUSUS Infografis
             ContentType.INFOGRAFIS -> viewModel.getInfografikById(id)
-
-            // Panggil fungsi KHUSUS Berita Kegiatan
             ContentType.NEWS -> viewModel.getNewsById(id)
         }
     }
 
-    // Jika data tidak ditemukan (misal refresh), kembali saja
+    // Jika data tidak ditemukan, tampilkan pesan error
     if (itemData == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Data tidak ditemukan")
-            Button(onClick = { navController.popBackStack() }) { Text("Kembali") }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Data tidak ditemukan")
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { navController.popBackStack() }) { Text("Kembali") }
+            }
         }
         return
     }
 
-    // 2. Ekstrak Data agar UI-nya generik
-    val title = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).title else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).title
+    // 3. Konversi Data ke ContentDisplay (Hanya 1x logika if-else)
+    val contentDisplay = remember(itemData) {
+        if (contentType == ContentType.PUBLIKASI) {
+            val item = itemData as PublicationItemResponse
+            ContentDisplay(
+                title = item.title,
+                date = item.getSimpleDate(),
+                imageUrl = item.coverUrl,
+                description = item.abstract,
+                linkUrl = item.pdfUrl
+            )
+        } else {
+            // Berlaku untuk BRS, INFOGRAFIS, dan NEWS (Strukturnya sama: NewsItemResponse)
+            val item = itemData as NewsItemResponse
+            ContentDisplay(
+                title = item.title,
+                date = item.getSimpleDate(),
+                imageUrl = item.getDisplayImage(),
+                description = item.getSummary(),
+                linkUrl = item.link
+            )
+        }
+    }
 
-    val date = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).getSimpleDate() else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).getSimpleDate()
-
-    val imageUrl = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).coverUrl else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).getDisplayImage()
-
-    val descRaw = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).abstract else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).getSummary()
-
-    val linkUrl = if (contentType == ContentType.PUBLIKASI) (itemData as com.example.bps.data.remote.responses.PublicationItemResponse).pdfUrl else (itemData as com.example.bps.data.remote.responses.NewsItemResponse).link
-
-    // Helper bersihkan HTML tag dari deskripsi
-    val cleanDesc = HtmlCompat.fromHtml(descRaw ?: "Tidak ada deskripsi", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+    // Helper: Bersihkan HTML tag dari deskripsi
+    val cleanDesc = remember(contentDisplay.description) {
+        HtmlCompat.fromHtml(
+            contentDisplay.description ?: "Tidak ada deskripsi",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        ).toString()
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detail Konten", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        "Detail Konten",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
         },
         bottomBar = {
-            // Tombol Download / Baca Selengkapnya
-            if (!linkUrl.isNullOrEmpty()) {
+            // Tombol Download / Baca Selengkapnya dengan In-App Browser
+            if (!contentDisplay.linkUrl.isNullOrEmpty()) {
                 Button(
                     onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(linkUrl))
-                        context.startActivity(intent)
+                        // MENGGUNAKAN IN-APP BROWSER
+                        launchInAppBrowser(context, contentDisplay.linkUrl)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -108,11 +137,11 @@ fun GeneralDetailScreen(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Icon(
-                        imageVector = if(contentType == ContentType.PUBLIKASI) Icons.Default.Download else Icons.Default.Link,
+                        imageVector = if (contentType == ContentType.PUBLIKASI) Icons.Default.Download else Icons.Default.Link,
                         contentDescription = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = if(contentType == ContentType.PUBLIKASI) "Unduh PDF" else "Baca Selengkapnya di Web")
+                    Text(text = if (contentType == ContentType.PUBLIKASI) "Unduh PDF" else "Baca Selengkapnya")
                 }
             }
         }
@@ -128,18 +157,19 @@ fun GeneralDetailScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    // Tinggi Box bisa disamakan atau disesuaikan
-                    // Jika Fit, tinggi bisa lebih fleksibel, misal 280.dp atau 300.dp untuk semua.
-                    .height(300.dp) // <-- Tinggi Box disamakan untuk semua
+                    .height(250.dp) // Sedikit disesuaikan agar proporsional
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.Gray.copy(alpha = 0.1f)),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
-                    model = ImageRequest.Builder(context).data(imageUrl).crossfade(true).build(),
+                    model = ImageRequest.Builder(context)
+                        .data(contentDisplay.imageUrl)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
-                    contentScale = ContentScale.Fit, // <--- Semua akan Fit
-                    modifier = Modifier.fillMaxSize() // Pastikan gambar mengisi Box secara utuh
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
@@ -147,19 +177,25 @@ fun GeneralDetailScreen(
 
             // JUDUL
             Text(
-                text = title,
+                text = contentDisplay.title,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.Black,
+                lineHeight = 28.sp
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             // TANGGAL
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.DateRange, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(16.dp))
+                Icon(
+                    Icons.Default.DateRange,
+                    contentDescription = null,
+                    tint = Color.Gray,
+                    modifier = Modifier.size(16.dp)
+                )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = date, fontSize = 12.sp, color = Color.Gray)
+                Text(text = contentDisplay.date, fontSize = 12.sp, color = Color.Gray)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -169,7 +205,7 @@ fun GeneralDetailScreen(
             // DESKRIPSI / ABSTRAK
             Text(
                 text = "Deskripsi:",
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -177,9 +213,12 @@ fun GeneralDetailScreen(
             Text(
                 text = cleanDesc,
                 fontSize = 14.sp,
-                lineHeight = 22.sp,
+                lineHeight = 24.sp, // Jarak antar baris supaya lebih enak dibaca
                 color = Color.DarkGray
             )
+
+            // Tambahan padding bawah agar teks tidak tertutup tombol floating (jika ada) atau bottom bar
+            Spacer(modifier = Modifier.height(80.dp))
         }
     }
 }

@@ -54,10 +54,19 @@ fun GeneralListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(title, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        title,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
+                        }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Kembali"
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

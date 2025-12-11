@@ -23,7 +23,6 @@ import com.example.bps.components.NewsSection
 import com.example.bps.components.SearchBar
 import com.example.bps.components.TabbedContentSection
 import com.example.bps.ui.general.ContentType
-import com.example.bps.ui.infografik.news.GridMenuUiState
 import com.example.bps.ui.infografik.news.NewsUiState
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.infografik.news.PublikasiUiState

@@ -91,12 +91,12 @@ fun AboutScreen(
                 color = Orange500
             )
             Text(
-                text = "Sistem Layanan Web & Statistik",
+                text = "Sistem Layanan Wawasan E-Statistik",
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )
             Text(
-                text = "Versi 1.0.0",
+                text = "Versi 1.5.4",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.LightGray,
                 modifier = Modifier.padding(top = 4.dp)
