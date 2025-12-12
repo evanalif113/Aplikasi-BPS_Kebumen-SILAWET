@@ -1,13 +1,18 @@
 package com.example.bps.data.remote
 
 // Import semua data class dari folder 'responses'
-import com.example.bps.data.remote.responses.* // Import data class dari folder 'responses'
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.Response
-import com.example.bps.data.remote.responses.BpsDatasetClass
+import com.example.bps.data.remote.responses.DatasetClass
 import com.example.bps.data.remote.responses.BpsPublicationResponse
+import com.example.bps.data.remote.responses.SimpleDatasetListResponse
+import com.example.bps.data.remote.responses.CategorySubjectResponse
+import com.example.bps.data.remote.responses.BpsNewsResponse
+import com.example.bps.data.remote.responses.BpsInfografisResponse
+import com.example.bps.data.remote.responses.GridCategoryResponse
+import com.example.bps.data.remote.responses.GridMenuResponse
 /** Interface ini berisi SEMUA definisi endpoint API yang akan dipanggil menggunakan Retrofit. */
 interface ApiService {
 
@@ -17,7 +22,7 @@ interface ApiService {
         @Path("id") id: String,
         @Query("year") year: Int? = null,
         @Query("mode") mode: String? = null
-    ): Response<BpsDatasetClass>
+    ): Response<DatasetClass>
 
     @GET("datasets")
     suspend fun getDatasetList(

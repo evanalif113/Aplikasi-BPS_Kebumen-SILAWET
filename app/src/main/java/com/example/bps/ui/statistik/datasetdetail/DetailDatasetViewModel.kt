@@ -5,12 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bps.data.remote.ApiClient
-import com.example.bps.data.remote.responses.BpsDatasetClass
+import com.example.bps.data.remote.responses.DatasetClass
 import kotlinx.coroutines.launch
 
 data class DetailUiState(
     val isLoading: Boolean = false,
-    val dataset: BpsDatasetClass? = null,
+    val dataset: DatasetClass? = null,
     val error: String? = null
 )
 
