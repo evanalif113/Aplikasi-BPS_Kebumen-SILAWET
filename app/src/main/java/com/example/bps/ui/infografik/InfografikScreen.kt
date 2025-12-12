@@ -15,12 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.example.bps.R
 import com.example.bps.ui.general.ContentType
 import com.example.bps.ui.infografik.news.NewsUiState
@@ -87,16 +90,23 @@ fun InfografikScreen(
                                             modifier = Modifier
                                                 .height(200.dp)
                                                 .fillMaxWidth()
-                                                .background(Color.LightGray) // Warna dasar biar kelihatan kotaknya
+                                                .background(Color.LightGray)
                                         ) {
+                                            // Ambil Context untuk ImageRequest
+                                            val context = LocalContext.current
+
                                             AsyncImage(
-                                                model = item.imageUrl,
+                                                // OPTIMASI: Gunakan ImageRequest.Builder untuk mengaktifkan Crossfade
+                                                model = ImageRequest.Builder(context)
+                                                    .data(item.imageUrl)
+                                                    .crossfade(true) // <--- Efek halus saat gambar muncul (Lazy Load Visual)
+                                                    .build(),
                                                 contentDescription = item.title,
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentScale = ContentScale.Crop,
-                                                // Tampilkan icon loading saat gambar belum muncul
+                                                // Placeholder muncul saat sedang loading (menunggu scroll)
                                                 placeholder = painterResource(R.drawable.ic_placeholder),
-                                                // Tampilkan icon error jika gagal load
+                                                // Error muncul jika gagal load
                                                 error = painterResource(R.drawable.ic_placeholder)
                                             )
                                         }

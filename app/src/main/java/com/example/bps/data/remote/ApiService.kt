@@ -13,6 +13,8 @@ import com.example.bps.data.remote.responses.BpsNewsResponse
 import com.example.bps.data.remote.responses.BpsInfografisResponse
 import com.example.bps.data.remote.responses.GridCategoryResponse
 import com.example.bps.data.remote.responses.GridMenuResponse
+import com.example.bps.data.remote.responses.BpsIndicatorResponse
+
 /** Interface ini berisi SEMUA definisi endpoint API yang akan dipanggil menggunakan Retrofit. */
 interface ApiService {
 
@@ -51,11 +53,13 @@ interface ApiService {
     @GET("content/publications")
     suspend fun getPublications(): BpsPublicationResponse
 
-    // Endpoint baru untuk Menu Grid Beranda
+    @GET("homepage/indicators")
+    suspend fun getStrategicIndicators(): BpsIndicatorResponse
+
     @GET("homepage/grid")
     suspend fun getGridMenu(): GridMenuResponse
 
-    // TAMBAHKAN INI DI BAWAH
+
     @GET("homepage/grid/{slug}")
     suspend fun getGridByCategory(
         @Path("slug") slug: String

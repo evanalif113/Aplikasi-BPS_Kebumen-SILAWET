@@ -11,7 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.*
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.bps.R
+import com.example.bps.components.MedsosFooter // Import komponen MedsosFooter
 import com.example.bps.theme.Orange500 // Sesuaikan dengan warna tema Anda
 import com.example.bps.utils.launchInAppBrowser // Pastikan helper ini ada
 
@@ -75,7 +75,7 @@ fun AboutScreen(
             ) {
                 // Ganti dengan Logo BPS atau Logo Aplikasi Anda
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // GANTI DENGAN LOGO ANDA
+                    painter = painterResource(id = R.drawable.logo), // GANTI DENGAN LOGO ANDA
                     contentDescription = "Logo SILAWET",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -163,28 +163,27 @@ fun AboutScreen(
                 }
             )
 
-            // Telepon
-            ContactRow(
-                icon = Icons.Default.Phone,
-                label = "(0287) 381228",
-                onClick = {
-                    val intent = Intent(Intent.ACTION_DIAL).apply {
-                        data = Uri.parse("tel:0287381228")
-                    }
-                    try { context.startActivity(intent) } catch (e: Exception) {}
-                }
+            // Telepon dan Website dihapus sesuai permintaan
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // --- MEDSOS SECTION ---
+            MedsosFooter()
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // --- LOGO BERAKHLAK ---
+            Image(
+                painter = painterResource(id = R.drawable.berakhlak), // Pastikan file gambar bernama 'berakhlak' ada di folder drawable
+                contentDescription = "Logo BerAKHLAK",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp) // Sesuaikan tinggi sesuai kebutuhan
+                    .padding(horizontal = 16.dp),
+                contentScale = ContentScale.Fit
             )
 
-            // Website (Buka In-App Browser)
-            ContactRow(
-                icon = Icons.Default.Info, // Atau icon Globe/Internet
-                label = "kebumenkab.bps.go.id",
-                onClick = {
-                    launchInAppBrowser(context, "https://kebumenkab.bps.go.id")
-                }
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // --- 4. FOOTER ---
             Text(

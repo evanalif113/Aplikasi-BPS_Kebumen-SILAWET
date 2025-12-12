@@ -93,8 +93,8 @@ fun MenuItem(
     title: String,
     colorCard: Color,
     onClick: () -> Unit,
-    iconSize: Dp = 32.dp,
-    textSize: TextUnit = 12.sp
+    iconSize: Dp = 48.dp,
+    textSize: TextUnit = 14.sp
 ) {
     Column(
         modifier = Modifier

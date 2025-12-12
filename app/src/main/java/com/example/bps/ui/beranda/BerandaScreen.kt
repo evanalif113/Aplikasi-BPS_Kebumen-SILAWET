@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox // Wajib Material3 ver 1.3.0+
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.getValue // PENTING: Import ini untuk kata kunci 'by'
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,21 +30,34 @@ import com.example.bps.ui.infografik.news.PublikasiUiState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BerandaScreen(
-    viewModel: NewsViewModel,
+    // Ubah nama parameter agar tidak bingung
+    newsViewModel: NewsViewModel,
+    // Tambahkan parameter ViewModel baru ini
+    indicatorViewModel: IndicatorViewModel = viewModel(),
     onSeeAllNews: () -> Unit,
     onNavigateToDetail: (Int, ContentType) -> Unit,
     onMenuClick: (String) -> Unit
 ) {
-    // 1. Ambil State Data (GridMenuState tidak perlu diambil lagi)
-    val newsState by viewModel.newsState.collectAsState()
-    val publicationState by viewModel.publicationState.collectAsState()
-    val brsState by viewModel.brsState.collectAsState()
-    val infografikState by viewModel.infografikState.collectAsState()
-    val isRefreshing by viewModel.isRefreshing.collectAsState()
+    // 1. Ambil State Indikator dari 'indicatorViewModel' (BUKAN newsViewModel)
+    val indicatorList by indicatorViewModel.indicatorState.collectAsState()
+
+    // 2. Ambil State Berita dari 'newsViewModel'
+    val newsState by newsViewModel.newsState.collectAsState()
+    val publicationState by newsViewModel.publicationState.collectAsState()
+    val brsState by newsViewModel.brsState.collectAsState()
+    val infografikState by newsViewModel.infografikState.collectAsState()
+
+    // Gabungkan status loading
+    val isNewsRefreshing by newsViewModel.isRefreshing.collectAsState()
+    val isIndicatorLoading by indicatorViewModel.isLoading.collectAsState()
+    val isRefreshing = isNewsRefreshing || isIndicatorLoading
 
     PullToRefreshBox(
         isRefreshing = isRefreshing,
-        onRefresh = { viewModel.refreshAllData() },
+        onRefresh = {
+            newsViewModel.refreshAllData()
+            indicatorViewModel.getIndicators() // Refresh data indikator juga
+        },
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
@@ -53,17 +66,18 @@ fun BerandaScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(top = 16.dp, bottom = 16.dp)
         ) {
-            CarouselInsight()
+            // Pasang Data Indikator ke Carousel
+            CarouselInsight(
+                indicators = indicatorList,
+                onItemClick = { /* Handle klik */ }
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
 
             SearchBar()
             Spacer(modifier = Modifier.height(20.dp))
 
-            // --- MENU ITEM SECTION (HARDCODE) ---
-            // Cukup panggil begini saja, data sudah ada di dalam komponen
-            MenuItemSection(
-                onItemClick = onMenuClick
-            )
+            MenuItemSection(onItemClick = onMenuClick)
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -71,44 +85,19 @@ fun BerandaScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             TabbedContentSection(
-                publicationList = if (publicationState is PublikasiUiState.Success)
-                    (publicationState as PublikasiUiState.Success).data
-                else emptyList(),
-
-                brsList = if (brsState is NewsUiState.Success)
-                    (brsState as NewsUiState.Success).news
-                else emptyList(),
-
-                infografikList = if (infografikState is NewsUiState.Success)
-                    (infografikState as NewsUiState.Success).news
-                else emptyList(),
-
-                onItemClick = { id, type ->
-                    onNavigateToDetail(id, type)
-                }
+                publicationList = if (publicationState is PublikasiUiState.Success) (publicationState as PublikasiUiState.Success).data else emptyList(),
+                brsList = if (brsState is NewsUiState.Success) (brsState as NewsUiState.Success).news else emptyList(),
+                infografikList = if (infografikState is NewsUiState.Success) (infografikState as NewsUiState.Success).news else emptyList(),
+                onItemClick = { id, type -> onNavigateToDetail(id, type) }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // News Section (Berita Kegiatan)
             NewsSection(
                 uiState = newsState,
                 onSeeAllClicked = onSeeAllNews,
-                onItemClicked = { id ->
-                    onNavigateToDetail(id, ContentType.NEWS)
-                }
+                onItemClicked = { id -> onNavigateToDetail(id, ContentType.NEWS) }
             )
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = false)
-@Composable
-fun BerandaScreenPreview() {
-    BerandaScreen(
-        viewModel = viewModel(),
-        onSeeAllNews = {},
-        onNavigateToDetail = { _, _ -> },
-        onMenuClick = {}
-    )
 }
