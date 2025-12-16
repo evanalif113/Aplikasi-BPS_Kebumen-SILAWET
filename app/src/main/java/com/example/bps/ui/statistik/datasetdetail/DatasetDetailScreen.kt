@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.bps.components.ChartSection
 import com.example.bps.components.TabelDataSection
 import com.example.bps.data.remote.responses.Insight
@@ -98,7 +97,11 @@ fun DatasetDetailScreen(
                     ) {
                         // --- HEADER & FILTER ---
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text(data.dataset.dataset_name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Text(
+                                data.dataset.dataset_name,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                             Text("Sumber: ${data.dataset.source}", fontSize = 12.sp, color = Color.Gray)
                             Spacer(modifier = Modifier.height(16.dp))
 
@@ -123,8 +126,11 @@ fun DatasetDetailScreen(
                                     }
 
                                     // 2. DROPDOWN MODE
-                                    val isPopulationData = data.dataset.dataset_name.contains("Penduduk", ignoreCase = true) &&
-                                            data.dataset.dataset_name.contains("Kecamatan", ignoreCase = true)
+                                    val isPopulationData = data.dataset.dataset_name.contains(
+                                        "Penduduk", ignoreCase = true) &&
+                                            data.dataset.dataset_name.contains(
+                                                "Kecamatan", ignoreCase = true
+                                            )
                                     if (isPopulationData) {
                                         ModeDropdown(onModeSelected = { selectedMode ->
                                             viewModel.getDatasetDetail(datasetId, activeYear, selectedMode)
@@ -217,7 +223,13 @@ fun YearDropdown(
     onYearSelected: (Int) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var displayText by remember(selectedYear) { mutableStateOf(selectedYear.toString()) }
+
+    // --- PERBAIKAN: Format Text Agar Tidak Ada .0 ---
+    // Pastikan tahun dikonversi ke Int lalu ke String.
+    // Jika inputnya 2024.0 (Double), toInt() akan membuang .0 nya.
+    var displayText by remember(selectedYear) {
+        mutableStateOf(selectedYear.toInt().toString())
+    }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -225,7 +237,7 @@ fun YearDropdown(
         modifier = Modifier.width(110.dp)
     ) {
         OutlinedTextField(
-            value = displayText,
+            value = displayText, // Gunakan teks yang sudah diformat
             onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -244,10 +256,13 @@ fun YearDropdown(
             modifier = Modifier.background(Color.White)
         ) {
             years.forEach { year ->
+                // Format juga tampilan di dalam menu dropdown
+                val yearLabel = year.toInt().toString()
+
                 DropdownMenuItem(
-                    text = { Text(year.toString()) },
+                    text = { Text(yearLabel) }, // Tampilkan "2024", bukan "2024.0"
                     onClick = {
-                        displayText = year.toString()
+                        displayText = yearLabel
                         expanded = false
                         onYearSelected(year)
                     }

@@ -31,7 +31,6 @@ val BpsHeaderBg = Color(0xFF1565C0)
 val BpsSurface = Color.White
 val BpsRowAlt = Color(0xFFF5F7FA)
 val BpsBorderLine = Color(0xFFE0E0E0)
-val BpsDividerHover = Color(0xFFFF9800) // Warna indikator saat digeser (Opsional)
 
 @Composable
 fun TabelDataSection(
@@ -43,17 +42,15 @@ fun TabelDataSection(
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
 
-    // --- STATE LEBAR KOLOM ---
-    // Kita simpan lebar setiap kolom di sini.
-    // Key: Index Kolom, Value: Lebar dalam Dp
+    // State Lebar Kolom
     val columnWidths = remember { mutableStateMapOf<Int, Dp>() }
 
-    // Inisialisasi Lebar Awal (Hanya sekali saat pertama render)
-    LaunchedEffect(Unit) {
+    // Inisialisasi Lebar Awal (Update jika headers berubah)
+    LaunchedEffect(headers) {
         headers.forEachIndexed { index, _ ->
             if (!columnWidths.containsKey(index)) {
-                // Default: Kolom pertama 140dp, sisanya 65dp
-                columnWidths[index] = if (index == 0) 140.dp else 65.dp
+                // PERBAIKAN: Kolom pertama dikasih napas (140dp), jangan 70dp nanti bengek.
+                columnWidths[index] = if (index == 0) 140.dp else 70.dp
             }
         }
     }
@@ -66,21 +63,24 @@ fun TabelDataSection(
         colors = CardDefaults.cardColors(containerColor = BpsSurface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        // --- PERBAIKAN LOGIKA SCROLL ---
+        // Scroll ditaruh di Parent Column, bukan di tiap baris.
+        // Jadi tabelnya geser barengan sebadan-badan.
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(scrollState) // <--- Scroll Handler Pindah Sini
+        ) {
 
             // 1. HEADER ROW
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(BpsHeaderBg)
-                    .horizontalScroll(scrollState),
+                modifier = Modifier.background(BpsHeaderBg),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 headers.forEachIndexed { index, header ->
-                    val cleanHeader = header.substringBefore(".")
-                    val currentWidth = columnWidths[index] ?: 65.dp
+                    val currentWidth = columnWidths[index] ?: 70.dp
+                    val cleanHeader = header.removeSuffix(".0")
 
-                    // Sel Header
                     TableCell(
                         text = cleanHeader.uppercase(),
                         isHeader = true,
@@ -88,15 +88,13 @@ fun TabelDataSection(
                         align = if (index == 0) TextAlign.Start else TextAlign.Center
                     )
 
-                    // Pembatas yang bisa digeser (Resizer)
+                    // Resizer (Pembatas Drag)
                     if (index < headers.size - 1) {
                         DraggableDivider(
                             onResize = { dragAmountPx ->
-                                // Konversi pixel geseran ke Dp
                                 val deltaDp = with(density) { dragAmountPx.toDp() }
-                                val oldWidth = columnWidths[index] ?: 65.dp
-                                // Update lebar kolom, batasi minimal 40.dp agar tidak hilang
-                                columnWidths[index] = (oldWidth + deltaDp).coerceAtLeast(40.dp)
+                                val oldWidth = columnWidths[index] ?: 70.dp
+                                columnWidths[index] = (oldWidth + deltaDp).coerceAtLeast(50.dp)
                             }
                         )
                     }
@@ -109,17 +107,14 @@ fun TabelDataSection(
                     val bgColor = if (rowIndex % 2 == 0) BpsSurface else BpsRowAlt
 
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(bgColor)
-                            .horizontalScroll(scrollState), // Sinkron scroll dengan header
+                        modifier = Modifier.background(bgColor),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         headers.forEachIndexed { colIndex, headerKey ->
-                            val cellValue = rowMap[headerKey]?.toString() ?: "-"
-                            val currentWidth = columnWidths[colIndex] ?: 65.dp
+                            val currentWidth = columnWidths[colIndex] ?: 70.dp
+                            val rawValue = rowMap[headerKey]?.toString() ?: "-"
+                            val cellValue = rawValue.removeSuffix(".0")
 
-                            // Sel Data
                             TableCell(
                                 text = cellValue,
                                 isHeader = false,
@@ -127,20 +122,15 @@ fun TabelDataSection(
                                 align = if (colIndex == 0) TextAlign.Start else TextAlign.End
                             )
 
-                            // Pembatas (Hanya visual di baris data, agar lurus dengan header)
+                            // Pembatas Visual (Agar lurus sama header)
                             if (colIndex < headers.size - 1) {
-                                // Kita gunakan Box transparan selebar area drag header (10.dp)
-                                // agar garisnya lurus vertikal
                                 Box(
                                     modifier = Modifier
-                                        .width(10.dp) // Samakan dengan lebar area sentuh DraggableDivider
+                                        .width(10.dp) // Lebar dummy harus sama dengan DraggableDivider
                                         .height(40.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    VerticalDivider(
-                                        color = BpsBorderLine,
-                                        thickness = 1.dp
-                                    )
+                                    VerticalDivider(color = BpsBorderLine, thickness = 1.dp)
                                 }
                             }
                         }
@@ -155,31 +145,24 @@ fun TabelDataSection(
     }
 }
 
-/**
- * Komponen Pembatas yang Bisa Digeser
- */
 @Composable
-fun DraggableDivider(
-    onResize: (Float) -> Unit
-) {
-    // Box pembungkus untuk area sentuh yang lebih luas (Hitbox)
+fun DraggableDivider(onResize: (Float) -> Unit) {
     Box(
         modifier = Modifier
-            .width(10.dp) // Lebar area sentuh jari (bukan lebar garis visual)
+            .width(10.dp) // Area sentuh jari
             .fillMaxHeight()
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { change, dragAmount ->
-                    change.consume() // Konsumsi event agar tidak dianggap scroll
+                    change.consume()
                     onResize(dragAmount)
                 }
             },
         contentAlignment = Alignment.Center
     ) {
-        // Garis Visual (Tipis)
         VerticalDivider(
             modifier = Modifier.height(24.dp),
-            color = Color.White.copy(alpha = 0.5f), // Warna garis header
-            thickness = 2.dp // Sedikit dipertebal agar terlihat bisa digeser
+            color = Color.White.copy(alpha = 0.5f),
+            thickness = 2.dp
         )
     }
 }
