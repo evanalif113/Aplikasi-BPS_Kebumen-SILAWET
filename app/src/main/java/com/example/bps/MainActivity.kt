@@ -28,6 +28,7 @@ import com.example.bps.components.BottomNavWithMoreMenu
 import com.example.bps.components.BpsDrawerContent
 import com.example.bps.theme.*
 import com.example.bps.ui.beranda.BerandaScreen
+import com.example.bps.ui.beranda.IndicatorViewModel // Import ViewModel baru
 import com.example.bps.ui.general.ContentType
 import com.example.bps.ui.general.GeneralListScreen
 import com.example.bps.ui.infografik.InfografikScreen
@@ -35,7 +36,6 @@ import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.statistik.DatasetListScreen
 import com.example.bps.ui.statistik.StatistikScreen
 import com.example.bps.ui.about.AboutScreen
-import com.example.bps.ui.beranda.IndicatorViewModel
 import com.example.bps.ui.statistik.SubjectList.SubjectListScreen
 import com.example.bps.ui.statistik.datasetdetail.DatasetDetailScreen
 import com.example.bps.ui.statistik.statistikGraph
@@ -64,7 +64,7 @@ fun MainScreen() {
     // --- State untuk Drawer & Helper ---
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
+    val context = LocalContext.current // Context untuk Intent
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -72,8 +72,9 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    // ViewModel Inisialisasi
     val newsViewModel: NewsViewModel = viewModel()
-    val indicatorViewModel: IndicatorViewModel = viewModel()
+    val indicatorViewModel: IndicatorViewModel = viewModel() // ViewModel untuk Carousel Indikator
 
     // --- LOGIKA JUDUL DINAMIS ---
     val title = when {
@@ -164,15 +165,15 @@ fun MainScreen() {
                 // 1. BERANDA
                 composable("beranda") {
                     BerandaScreen(
-                        newsViewModel = newsViewModel, // Sesuaikan nama
-                        indicatorViewModel = indicatorViewModel, // Masukkan ini
+                        newsViewModel = newsViewModel, // Sesuaikan nama parameter
+                        indicatorViewModel = indicatorViewModel, // Masukkan ViewModel Indikator
                         onSeeAllNews = { navController.navigate("all_news") },
                         onNavigateToDetail = { id, type -> navController.navigate("detail_content/$id/$type") },
                         onMenuClick = { slug ->
                             if (slug == "others" || slug == "lainnya") {
                                 // Redirect WhatsApp
                                 try {
-                                    val phoneNumber = "62895422891969" 
+                                    val phoneNumber = "62895422891969"
                                     val message = "Halo BPS Kebumen..."
                                     val url = "https://wa.me/$phoneNumber?text=${Uri.encode(message)}"
                                     val intent = Intent(Intent.ACTION_VIEW).apply {
