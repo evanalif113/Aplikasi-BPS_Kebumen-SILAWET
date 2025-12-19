@@ -9,12 +9,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +30,7 @@ import com.example.bps.components.BottomNavWithMoreMenu
 import com.example.bps.components.BpsDrawerContent
 import com.example.bps.theme.*
 import com.example.bps.ui.beranda.BerandaScreen
-import com.example.bps.ui.beranda.IndicatorViewModel // Import ViewModel baru
+import com.example.bps.ui.beranda.IndicatorViewModel
 import com.example.bps.ui.general.ContentType
 import com.example.bps.ui.general.GeneralListScreen
 import com.example.bps.ui.infografik.InfografikScreen
@@ -64,17 +66,16 @@ fun MainScreen() {
     // --- State untuk Drawer & Helper ---
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current // Context untuk Intent
+    val context = LocalContext.current
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-    // Memantau rute saat ini untuk logika Judul
+    // Memantau rute saat ini
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // ViewModel Inisialisasi
     val newsViewModel: NewsViewModel = viewModel()
-    val indicatorViewModel: IndicatorViewModel = viewModel() // ViewModel untuk Carousel Indikator
+    val indicatorViewModel: IndicatorViewModel = viewModel()
 
     // --- LOGIKA JUDUL DINAMIS ---
     val title = when {
@@ -91,7 +92,7 @@ fun MainScreen() {
         else -> "SILAWET"
     }
 
-    // Cek apakah kita di halaman utama (Beranda/Statistik/Infografik)
+    // Definisi Halaman Utama (Root)
     val isRootScreen = currentRoute in listOf("beranda", "statistik", "infografik")
 
     // --- STRUKTUR UTAMA ---
@@ -108,8 +109,7 @@ fun MainScreen() {
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
 
-            // 1. TOP BAR: Hanya tampil jika di Halaman Utama (Root)
-            // Halaman detail sudah punya Top Bar sendiri (tombol back), jadi yang ini disembunyikan.
+            // 1. TOP BAR (Hanya di Root)
             topBar = {
                 if (isRootScreen) {
                     TopAppBar(
@@ -149,29 +149,29 @@ fun MainScreen() {
                 }
             },
 
-            // 2. BOTTOM BAR: SELALU TAMPIL (Navigasi Tetap Ada)
-            // Logika 'if (isRootScreen)' DIHAPUS agar menu bawah muncul di semua halaman.
+            // 2. BOTTOM BAR (Hanya di Root - PERBAIKAN DISINI)
+            // Navigasi bawah akan HILANG saat masuk ke menu dalam (detail, list, dll)
             bottomBar = {
-                BottomNavWithMoreMenu(navController = navController, currentRoute = currentRoute)
+                if (isRootScreen) {
+                    BottomNavWithMoreMenu(navController = navController, currentRoute = currentRoute)
+                }
             }
 
         ) { innerPadding ->
             NavHost(
                 navController = navController,
                 startDestination = "beranda",
-                // PENTING: Gunakan innerPadding agar konten tidak tertutup Bottom Bar yang sekarang selalu muncul.
                 modifier = Modifier.padding(innerPadding)
             ) {
                 // 1. BERANDA
                 composable("beranda") {
                     BerandaScreen(
-                        newsViewModel = newsViewModel, // Sesuaikan nama parameter
-                        indicatorViewModel = indicatorViewModel, // Masukkan ViewModel Indikator
+                        newsViewModel = newsViewModel,
+                        indicatorViewModel = indicatorViewModel,
                         onSeeAllNews = { navController.navigate("all_news") },
                         onNavigateToDetail = { id, type -> navController.navigate("detail_content/$id/$type") },
                         onMenuClick = { slug ->
                             if (slug == "others" || slug == "lainnya") {
-                                // Redirect WhatsApp
                                 try {
                                     val phoneNumber = "62895422891969"
                                     val message = "Halo BPS Kebumen..."
