@@ -3,6 +3,7 @@ package com.example.bps.components
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bps.R
 import com.example.bps.theme.Black
+import com.example.bps.theme.Gray50
 import com.example.bps.theme.White
 import com.example.bps.theme.Gray500
 
@@ -24,7 +26,8 @@ fun BpsDrawerContent(
     onClose: () -> Unit
 ) {
     ModalDrawerSheet(
-        drawerContainerColor = White,
+        drawerContainerColor = Gray50,
+        modifier = Modifier.width(300.dp)
     ) {
         // --- HEADER DRAWER ---
         Spacer(modifier = Modifier.height(16.dp))
