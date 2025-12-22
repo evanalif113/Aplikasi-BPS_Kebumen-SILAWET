@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.example.bps.components.ChartSection
 import com.example.bps.components.TabelDataSection
 import com.example.bps.data.remote.responses.Insight
+import com.example.bps.theme.Orange300
 
 // Warna Biru BPS untuk Tab Aktif
 val BpsBlue = Color(0xFF0D47A1)
@@ -61,7 +62,7 @@ fun DatasetDetailScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Orange300)
             )
         }
     ) { innerPadding ->

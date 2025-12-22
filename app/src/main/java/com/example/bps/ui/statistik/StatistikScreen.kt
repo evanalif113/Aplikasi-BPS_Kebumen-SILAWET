@@ -28,7 +28,7 @@ import androidx.navigation.navArgument
 import com.example.bps.R
 import com.example.bps.components.SearchBar
 import com.example.bps.ui.statistik.datasetdetail.DatasetDetailScreen
-import com.example.bps.ui.statistik.SubjectList.SubjectListScreen
+import com.example.bps.ui.statistik.subjectlist.SubjectListScreen
 
 @Composable
 fun StatistikScreen(navController: NavController) {
