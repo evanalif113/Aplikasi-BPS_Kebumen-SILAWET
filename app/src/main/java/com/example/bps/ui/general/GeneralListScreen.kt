@@ -81,11 +81,9 @@ fun GeneralListScreen(
             // LOGIKA PEMILIHAN DATA
             when (contentType) {
                 ContentType.PUBLIKASI -> {
-                    // Kirim navController ke Helper
                     HandlePublikasiState(publicationState, navController)
                 }
                 ContentType.NEWS -> {
-                    // Kirim navController dan Tipe ke Helper
                     HandleNewsState(newsState, navController, ContentType.NEWS)
                 }
                 ContentType.BRS -> {

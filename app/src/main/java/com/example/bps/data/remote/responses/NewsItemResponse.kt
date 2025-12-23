@@ -3,7 +3,6 @@ package com.example.bps.data.remote.responses
 import com.google.gson.annotations.SerializedName
 
 data class NewsItemResponse(
-
     @SerializedName("id")
     val id: Int,
 
@@ -22,7 +21,6 @@ data class NewsItemResponse(
     @SerializedName("thumbnail_url")
     val thumbnailUrl: String? = null,
 
-    // API Infografis pakai ini (Inilah yang kurang di kode lama Anda)
     @SerializedName("image_url")
     val imageUrl: String? = null,
 
@@ -33,8 +31,6 @@ data class NewsItemResponse(
     @SerializedName("description")
     val description: String? = null,
 
-
-    // --- KHUSUS BRS (Berita Resmi Statistik) ---
     @SerializedName("pdf_url")
     val pdfUrl: String? = null,
 

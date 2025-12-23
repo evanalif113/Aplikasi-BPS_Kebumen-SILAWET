@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bps.R
@@ -35,7 +36,9 @@ fun CarouselInsight(
 
     val lazyListState = rememberLazyListState()
     val itemWidth = 280.dp
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+
     val contentPadding = (screenWidth - itemWidth) / 2
 
     LaunchedEffect(indicators) {
@@ -125,7 +128,6 @@ fun CarouselItem(
                             painter = painterResource(id = iconRes),
                             contentDescription = null,
                             modifier = Modifier.size(18.dp)
-                            // Hapus 'tint = Color.White'
                         )
                     }
 
@@ -133,11 +135,12 @@ fun CarouselItem(
 
                     Text(
                         text = item.getLabel().uppercase(),
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MaterialTheme.typography.labelMedium, // Ganti ke labelMedium (lebih kecil dari labelLarge)
                         fontWeight = FontWeight.Bold,
                         color = Color.White.copy(alpha = 0.9f),
-                        letterSpacing = 1.sp,
-                        maxLines = 1
+                        letterSpacing = 0.5.sp, // Kurangi letter spacing agar muat lebih banyak
+                        maxLines = 2, // Tetap 1 baris agar layout bawah tidak bergeser
+                        overflow = TextOverflow.Ellipsis // Potong cantik
                     )
                 }
 
