@@ -189,6 +189,8 @@ fun getStyleBySlug(slug: String): Pair<Color, Int> {
         "ekonomi" -> Pair(Color(0xFFFFC107), R.drawable.pertumbuhan_ekonomi)
         "pdrb" -> Pair(Color(0xFFFFC107), R.drawable.pdrb)
         "pendidikan" -> Pair(Color(0xFF009688), R.drawable.pendidikan)
+        "perumahan" -> Pair(Color(0xFF009688), R.drawable.perumahan)
+
         else -> Pair(Gray500, R.drawable.ic_info_24dp)
     }
 }

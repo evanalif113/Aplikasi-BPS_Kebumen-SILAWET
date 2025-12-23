@@ -2,61 +2,70 @@ package com.example.bps.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
 
-// 1. Wadah Utama (Sesuai struktur root JSON)
 data class BpsIndicatorResponse(
     val status: String,
     val message: String,
-    val data: List<IndicatorItem>, // Array data indikator
+    val data: List<IndicatorItem>,
     @SerializedName("total_indicators")
     val totalIndicators: Int,
     val timestamp: String
 )
 
-// 2. Wadah Item Indikator (Sesuai objek di dalam array "data")
 data class IndicatorItem(
     val slug: String,
     @SerializedName("category_title")
     val categoryTitle: String,
     @SerializedName("display_name")
-    val displayName: String?, // Bisa null
+    val displayName: String?,
     @SerializedName("dataset_id")
     val datasetId: Int,
     @SerializedName("dataset_code")
     val datasetCode: String,
     @SerializedName("dataset_name")
     val datasetName: String,
-    val value: Any, // Gunakan Any karena bisa berupa Integer (1414754) atau Double (5.07)
-    val year: Int,
-    val unit: String
+
+    // --- PERUBAHAN DI SINI: SEMUA JADI NULLABLE (?) ---
+    val value: Any?,   // Bisa null
+    val year: Int?,    // Bisa null
+    val unit: String?  // Bisa null
 ) {
-    // --- Helper Function: Untuk Mengambil Label Judul ---
-    // Mengutamakan display_name, jika kosong pakai category_title
     fun getLabel(): String {
         return if (!displayName.isNullOrBlank()) displayName else categoryTitle
     }
 
-    // --- Helper Function: Format Nilai Angka ---
-    // Mengubah 1414754 menjadi "1,41" (jika jutaan) atau membiarkan "5.07"
+    // Format Nilai (Handle Value Null)
     fun getFormattedValue(): String {
+        if (value == null) return "-" // Jika value kosong, tampilkan strip
+
         return try {
             val doubleVal = value.toString().toDouble()
             when {
-                doubleVal >= 1_000_000 -> String.format("%.2f", doubleVal / 1_000_000) // 1.41
-                else -> value.toString() // 5.07 atau 71.93
+                doubleVal >= 1_000_000 -> String.format("%.2f", doubleVal / 1_000_000)
+                else -> value.toString()
             }
         } catch (e: Exception) {
             value.toString()
         }
     }
 
-    // --- Helper Function: Format Satuan ---
-    // Menambahkan "Juta" jika angkanya jutaan
+    // Format Satuan (Handle Unit & Value Null)
     fun getFormattedUnit(): String {
+        // Ambil unit, jika null ganti jadi string kosong ""
+        val safeUnit = unit ?: ""
+
+        // Jika value null, kita tidak bisa memproses juta-jutaan, kembalikan unit saja
+        if (value == null) return safeUnit
+
         return try {
             val doubleVal = value.toString().toDouble()
-            if (doubleVal >= 1_000_000) "Juta $unit" else unit
+            if (doubleVal >= 1_000_000) "Juta $safeUnit" else safeUnit
         } catch (e: Exception) {
-            unit
+            safeUnit
         }
+    }
+
+    // Helper Baru: Ambil Tahun yang Aman
+    fun getSafeYear(): String {
+        return year?.toString() ?: "-" // Jika null, tampilkan "-"
     }
 }

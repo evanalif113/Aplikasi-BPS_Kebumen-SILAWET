@@ -214,8 +214,6 @@ fun DatasetDetailScreen(
     }
 }
 
-// --- KOMPONEN PENDUKUNG (TETAP SAMA) ---
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YearDropdown(
