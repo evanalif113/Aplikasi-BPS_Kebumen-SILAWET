@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +30,6 @@ import androidx.navigation.NavController
 import com.example.bps.R
 import com.example.bps.components.MedsosFooter // Import komponen MedsosFooter
 import com.example.bps.theme.Orange500 // Sesuaikan dengan warna tema Anda
-import com.example.bps.utils.launchInAppBrowser // Pastikan helper ini ada
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

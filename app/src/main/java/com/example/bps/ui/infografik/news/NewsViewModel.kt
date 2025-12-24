@@ -3,7 +3,6 @@ package com.example.bps.ui.infografik.news
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bps.data.remote.ApiClient
-import com.example.bps.data.remote.responses.GridMenuItem // Pastikan class ini sudah dibuat
 import com.example.bps.data.remote.responses.NewsItemResponse
 import com.example.bps.data.remote.responses.PublicationItemResponse
 import kotlinx.coroutines.async
@@ -27,13 +26,6 @@ sealed interface PublikasiUiState {
     data class Error(val message: String) : PublikasiUiState
 }
 
-// --- STATE BARU: Grid Menu (Ikon Menu) ---
-sealed interface GridMenuUiState {
-    object Loading : GridMenuUiState
-    data class Success(val data: List<GridMenuItem>) : GridMenuUiState
-    data class Error(val message: String) : GridMenuUiState
-}
-
 class NewsViewModel : ViewModel() {
 
     // 1. State untuk Berita Kegiatan
@@ -52,9 +44,7 @@ class NewsViewModel : ViewModel() {
     private val _infografikState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
     val infografikState: StateFlow<NewsUiState> = _infografikState.asStateFlow()
 
-    // 5. State untuk Grid Menu (Ikon Beranda) --> BARU
-    private val _gridMenuState = MutableStateFlow<GridMenuUiState>(GridMenuUiState.Loading)
-    val gridMenuState: StateFlow<GridMenuUiState> = _gridMenuState.asStateFlow()
+
 
     // 6. State untuk Refreshing (Pull-to-Refresh)
     private val _isRefreshing = MutableStateFlow(false)
@@ -71,7 +61,6 @@ class NewsViewModel : ViewModel() {
             fetchPublications()
             fetchBrs()
             fetchInfografik()
-            fetchGridMenu() // <-- Panggil fungsi baru ini
         }
     }
 
@@ -85,10 +74,9 @@ class NewsViewModel : ViewModel() {
                 val job2 = async { fetchPublications() }
                 val job3 = async { fetchBrs() }
                 val job4 = async { fetchInfografik() }
-                val job5 = async { fetchGridMenu() }
 
                 // Tunggu kelimanya selesai
-                awaitAll(job1, job2, job3, job4, job5)
+                awaitAll(job1, job2, job3, job4)
             } finally {
                 _isRefreshing.value = false
             }
@@ -142,23 +130,6 @@ class NewsViewModel : ViewModel() {
             else _infografikState.value = NewsUiState.Error(response.message)
         } catch (e: Exception) {
             _infografikState.value = NewsUiState.Error(e.message ?: "Error")
-        }
-    }
-
-    // 5. Fetch Grid Menu (BARU)
-    private suspend fun fetchGridMenu() {
-        try {
-            if (!_isRefreshing.value) _gridMenuState.value = GridMenuUiState.Loading
-
-            // Panggil API endpoint grid menu
-            val response = ApiClient.apiService.getGridMenu()
-
-            // Asumsi response sukses jika data tidak null/empty (sesuai JSON Anda)
-            // JSON: {"status":"success","data":[...]}
-            _gridMenuState.value = GridMenuUiState.Success(response.data)
-
-        } catch (e: Exception) {
-            _gridMenuState.value = GridMenuUiState.Error(e.message ?: "Gagal memuat menu")
         }
     }
 
