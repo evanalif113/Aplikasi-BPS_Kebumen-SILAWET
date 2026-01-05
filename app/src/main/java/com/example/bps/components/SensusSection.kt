@@ -96,8 +96,9 @@ fun InfoSensusSection() {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
             text = "Info Sensus",
-            style = MaterialTheme.typography.titleMedium,
+            //style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
             modifier = Modifier.padding(bottom = 12.dp, start = 8.dp)
         )
 

@@ -38,9 +38,9 @@ fun TabbedContentSection(
     onItemClick: (Int, ContentType) -> Unit
 ) {
     val tabs = listOf(
-        "Publikasi",
+        "PUBLIKASI",
         "BRS",
-        "Infografis"
+        "INFOGRAFIS"
     )
     val pagerState = rememberPagerState(
         pageCount = {
@@ -191,18 +191,7 @@ fun NewsRowItem(item: NewsItemResponse, onClick: () -> Unit) {
     }
 }
 
-@Composable
-fun DummyRowItem() {
-    Row(modifier = Modifier.fillMaxWidth().height(90.dp)) {
-        Box(modifier = Modifier.width(80.dp).fillMaxHeight().background(Color.LightGray, RoundedCornerShape(8.dp)))
-        Spacer(modifier = Modifier.width(12.dp))
-        Column(verticalArrangement = Arrangement.Center) {
-            Box(modifier = Modifier.height(12.dp).width(60.dp).background(Color.LightGray))
-            Spacer(modifier = Modifier.height(8.dp))
-            Box(modifier = Modifier.height(16.dp).fillMaxWidth().background(Color.LightGray))
-        }
-    }
-}
+
 
 @Preview(showBackground = true)
 @Composable
