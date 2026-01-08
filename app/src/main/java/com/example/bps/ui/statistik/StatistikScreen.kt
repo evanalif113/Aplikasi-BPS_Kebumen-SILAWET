@@ -139,7 +139,10 @@ fun NavGraphBuilder.statistikGraph(navController: NavController) {
         arguments = listOf(navArgument("categoryId") { type = NavType.StringType })
     ) { backStackEntry ->
         val categoryId = backStackEntry.arguments?.getString("categoryId") ?: "0"
-        SubjectListScreen(categoryId = categoryId, navController = navController)
+        SubjectListScreen(
+            categoryId = categoryId,
+            navController = navController
+        )
     }
 
     // 2. Dataset List (Daftar Tabel berdasarkan Subjek)
@@ -148,7 +151,10 @@ fun NavGraphBuilder.statistikGraph(navController: NavController) {
         arguments = listOf(navArgument("subjectName") { type = NavType.StringType })
     ) { backStackEntry ->
         val subjectName = backStackEntry.arguments?.getString("subjectName") ?: ""
-        DatasetListScreen(subjectName = subjectName, navController = navController)
+        DatasetListScreen(
+            subjectName = subjectName,
+            navController = navController
+        )
     }
 
     // 3. Dataset Detail (Detail Tabel)
@@ -157,7 +163,10 @@ fun NavGraphBuilder.statistikGraph(navController: NavController) {
         arguments = listOf(navArgument("datasetId") { type = NavType.StringType })
     ) { backStackEntry ->
         val datasetId = backStackEntry.arguments?.getString("datasetId") ?: ""
-        DatasetDetailScreen(datasetId = datasetId, navController = navController)
+        DatasetDetailScreen(
+            datasetId = datasetId,
+            navController = navController
+        )
     }
 }
 

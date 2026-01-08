@@ -83,7 +83,11 @@ fun MainScreen() {
         else -> "SILAWET"
     }
 
-    val isRootScreen = currentRoute in listOf("beranda", "statistik", "infografik")
+    val isRootScreen = currentRoute in listOf(
+        "beranda",
+        "statistik",
+        "infografik"
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -125,7 +129,10 @@ fun MainScreen() {
 
             bottomBar = {
                 if (isRootScreen) {
-                    BottomNavWithMoreMenu(navController = navController, currentRoute = currentRoute)
+                    BottomNavWithMoreMenu(
+                        navController = navController,
+                        currentRoute = currentRoute
+                    )
                 }
             }
 

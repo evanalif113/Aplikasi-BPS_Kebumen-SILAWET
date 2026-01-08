@@ -10,11 +10,10 @@ android {
 
     defaultConfig {
         applicationId = "com.example.silawet"
-        minSdk = 29
+        minSdk = 23
         targetSdk = 36
         versionCode = 1
         versionName = "1.5.4"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
