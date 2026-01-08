@@ -39,7 +39,7 @@ fun TabbedContentSection(
 ) {
     val tabs = listOf(
         "PUBLIKASI",
-        "BERITA STATISTIK",
+        "BRS",
         "INFOGRAFIS"
     )
     val pagerState = rememberPagerState(
