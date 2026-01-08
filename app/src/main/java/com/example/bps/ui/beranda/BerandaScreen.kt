@@ -81,9 +81,6 @@ fun BerandaScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            InfoSensusSection()
-            Spacer(modifier = Modifier.height(30.dp))
-
             TabbedContentSection(
                 publicationList = if (publicationState is PublikasiUiState.Success) (publicationState as PublikasiUiState.Success).data else emptyList(),
                 brsList = if (brsState is NewsUiState.Success) (brsState as NewsUiState.Success).news else emptyList(),
@@ -98,6 +95,9 @@ fun BerandaScreen(
                 onSeeAllClicked = onSeeAllNews,
                 onItemClicked = { id -> onNavigateToDetail(id, ContentType.NEWS) }
             )
+
+            InfoSensusSection()
+            Spacer(modifier = Modifier.height(30.dp))
         }
     }
 }

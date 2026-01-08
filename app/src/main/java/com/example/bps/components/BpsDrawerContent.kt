@@ -71,7 +71,7 @@ fun BpsDrawerContent(
         )
 
         NavigationDrawerItem(
-            label = { Text(text = "Galeri Infografis") },
+            label = { Text(text = "Infografik") },
             icon = { Icon(painterResource(id = R.drawable.ic_pie_chart_24dp), contentDescription = null) },
             selected = false,
             onClick = {

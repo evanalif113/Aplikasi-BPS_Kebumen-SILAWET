@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.* 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -26,16 +26,17 @@ import com.example.bps.ui.beranda.BerandaScreen
 import com.example.bps.ui.beranda.IndicatorViewModel
 import com.example.bps.ui.general.ContentType
 import com.example.bps.ui.general.GeneralListScreen
+import com.example.bps.ui.statistik.subjectlist.SubjectListScreen
+import com.example.bps.ui.statistik.datasetdetail.DatasetDetailScreen
+import com.example.bps.ui.statistik.statistikGraph
 import com.example.bps.ui.infografik.InfografikScreen
 import com.example.bps.ui.infografik.news.NewsViewModel
 import com.example.bps.ui.statistik.DatasetListScreen
 import com.example.bps.ui.statistik.StatistikScreen
 import com.example.bps.ui.about.AboutScreen
-import com.example.bps.ui.statistik.subjectlist.SubjectListScreen
-import com.example.bps.ui.statistik.datasetdetail.DatasetDetailScreen
-import com.example.bps.ui.statistik.statistikGraph
 import com.example.bps.utils.launchInAppBrowser
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,7 +149,7 @@ fun MainScreen() {
                                     val message = "Halo BPS Kebumen..."
                                     val url = "https://wa.me/$phoneNumber?text=${Uri.encode(message)}"
                                     val intent = Intent(Intent.ACTION_VIEW).apply {
-                                        data = Uri.parse(url)
+                                        data = url.toUri()
                                     }
                                     context.startActivity(intent)
                                 } catch (e: Exception) { e.printStackTrace() }
