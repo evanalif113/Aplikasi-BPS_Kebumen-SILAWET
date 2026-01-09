@@ -40,12 +40,12 @@ fun SubjectListScreen(
     }
 
     // 2. Tentukan Warna TopBar Berdasarkan Kategori
-    val topBarColor = when (categoryInt) {
+    /*val topBarColor = when (categoryInt) {
         1 -> Color(0xFF03A9F4) // Biru (Sosial)
         2 -> Color(0xFFFF9800) // Kuning/Gold (Ekonomi)
         3 -> Color(0xFF4CAF50) // Hijau (Lingkungan/Pertanian)
         else -> Color(0xFFFF9800) // Default Orange (Sama kayak Beranda)
-    }
+    }*/
 
     Scaffold(
         topBar = {
@@ -58,7 +58,7 @@ fun SubjectListScreen(
                 },
                 // 3. Terapkan Warna di sini
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = topBarColor,
+                    containerColor = Color(0xFFFF9800),
                     titleContentColor = Color.White,       // Judul Putih
                     navigationIconContentColor = Color.White // Ikon Back Putih
                 )

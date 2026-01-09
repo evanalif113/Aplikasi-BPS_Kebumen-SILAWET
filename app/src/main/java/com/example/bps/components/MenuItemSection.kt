@@ -31,7 +31,8 @@ data class MenuData(
     val iconRes: Int,
     val title: String,
     val colorCard: Color,
-    val slug: String // <-- Ganti apiSubject jadi slug
+    val slug: String,
+    val linkData: String? = null,
 )
 
 @Composable

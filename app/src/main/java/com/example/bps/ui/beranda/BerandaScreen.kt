@@ -93,7 +93,10 @@ fun BerandaScreen(
             NewsSection(
                 uiState = newsState,
                 onSeeAllClicked = onSeeAllNews,
-                onItemClicked = { id -> onNavigateToDetail(id, ContentType.NEWS) }
+                onItemClicked = { id -> onNavigateToDetail(
+                    id, ContentType.NEWS
+                )
+                }
             )
 
             InfoSensusSection()

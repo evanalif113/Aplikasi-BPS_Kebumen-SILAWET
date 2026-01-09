@@ -1,9 +1,12 @@
 package com.example.bps.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -32,6 +35,7 @@ val BpsSurface = Color.White
 val BpsRowAlt = Color(0xFFF5F7FA)
 val BpsBorderLine = Color(0xFFE0E0E0)
 
+@OptIn(ExperimentalFoundationApi::class) // Diperlukan untuk stickyHeader
 @Composable
 fun TabelDataSection(
     tableData: TableData,
@@ -39,43 +43,33 @@ fun TabelDataSection(
 ) {
     val headers = tableData.headers
     val rows = tableData.rows
-    val scrollState = rememberScrollState()
+
+    // Scroll state untuk Horizontal (Kanan-Kiri)
+    val horizontalScrollState = rememberScrollState()
     val density = LocalDensity.current
 
     // State Lebar Kolom
     val columnWidths = remember { mutableStateMapOf<Int, Dp>() }
 
-    // --- LOGIKA UTAMA: AUTO-FIT WIDTH ---
-    // Gunakan BoxWithConstraints untuk tahu lebar layar HP
+    // --- LOGIKA AUTO-FIT WIDTH ---
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
-        val availableWidth = maxWidth // Lebar layar yang tersedia
+        val availableWidth = maxWidth
 
-        // Efek ini jalan setiap kali headers berubah atau ukuran layar berubah
         LaunchedEffect(headers, availableWidth) {
-            // 1. Tentukan lebar minimal standar (Base Widths)
             val baseWidths = headers.mapIndexed { index, _ ->
-                if (index == 0) 140.dp else 60.dp
+                if (index == 0) 140.dp else 80.dp // Lebar base sedikit dibesarkan
             }
-
-            // 2. Hitung total lebar minimal
             val totalBaseWidth = baseWidths.sumOf { it.value.toDouble() }.dp
 
-            // 3. Cek apakah tabel kekecilan dibanding layar?
             if (totalBaseWidth < availableWidth) {
-                // KASUS: Kolom sedikit, penuhi layar!
-                // Hitung sisa ruang kosong
                 val extraSpace = availableWidth - totalBaseWidth
-                // Bagi sisa ruang ke setiap kolom
                 val extraPerCol = extraSpace / headers.size
-
                 headers.forEachIndexed { index, _ ->
-                    // Set lebar kolom = lebar standar + bonus tambahan
                     if (!columnWidths.containsKey(index)) {
                         columnWidths[index] = baseWidths[index] + extraPerCol
                     }
                 }
             } else {
-                // KASUS: Kolom banyak, biarkan scroll horizontal
                 headers.forEachIndexed { index, _ ->
                     if (!columnWidths.containsKey(index)) {
                         columnWidths[index] = baseWidths[index]
@@ -87,47 +81,59 @@ fun TabelDataSection(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
+                .heightIn(max = 500.dp) // PENTING: Batasi tinggi LazyColumn agar bisa di-scroll di dalam layar kecil
                 .padding(vertical = 8.dp),
             shape = RoundedCornerShape(8.dp),
             colors = CardDefaults.cardColors(containerColor = BpsSurface),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Column(
+            // Container utama yang bisa di-scroll secara HORIZONTAL
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .horizontalScroll(scrollState)
+                    .horizontalScroll(horizontalScrollState)
             ) {
-                // 1. HEADER ROW
-                Row(
-                    modifier = Modifier.background(BpsHeaderBg),
-                    verticalAlignment = Alignment.CenterVertically
+                // Gunakan LazyColumn untuk performa vertikal yang lebih baik (ribuan data aman)
+                LazyColumn(
+                    modifier = Modifier.width(
+                        // Hitung total lebar tabel agar LazyColumn tahu batas kanannya
+                        columnWidths.values.sumOf { it.value.toDouble() }.dp.coerceAtLeast(availableWidth)
+                    )
                 ) {
-                    headers.forEachIndexed { index, header ->
-                        val currentWidth = columnWidths[index] ?: 70.dp
-                        val cleanHeader = header.removeSuffix(".0")
+                    // 1. STICKY HEADER
+                    // Header akan menempel di atas saat di-scroll ke bawah
+                    stickyHeader {
+                        Row(
+                            modifier = Modifier.background(BpsHeaderBg),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            headers.forEachIndexed { index, header ->
+                                val currentWidth = columnWidths[index] ?: 80.dp
+                                val cleanHeader = header.removeSuffix(".0")
 
-                        TableCell(
-                            text = cleanHeader.uppercase(),
-                            isHeader = true,
-                            width = currentWidth,
-                            align = if (index == 0) TextAlign.Start else TextAlign.Center
-                        )
+                                TableCell(
+                                    text = cleanHeader.uppercase(),
+                                    isHeader = true,
+                                    width = currentWidth,
+                                    align = if (index == 0) TextAlign.Start else TextAlign.Center
+                                )
 
-                        if (index < headers.size - 1) {
-                            DraggableDivider(
-                                onResize = { dragAmountPx ->
-                                    val deltaDp = with(density) { dragAmountPx.toDp() }
-                                    val oldWidth = columnWidths[index] ?: 70.dp
-                                    columnWidths[index] = (oldWidth + deltaDp).coerceAtLeast(50.dp)
+                                // Resizer
+                                if (index < headers.size - 1) {
+                                    DraggableDivider(
+                                        onResize = { dragAmountPx ->
+                                            val deltaDp = with(density) { dragAmountPx.toDp() }
+                                            val oldWidth = columnWidths[index] ?: 80.dp
+                                            columnWidths[index] = (oldWidth + deltaDp).coerceAtLeast(60.dp)
+                                        }
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
-                }
 
-                // 2. DATA BODY ROWS
-                Column {
-                    rows.forEachIndexed { rowIndex, rowMap ->
+                    // 2. DATA ROWS (Lazy)
+                    itemsIndexed(rows) { rowIndex, rowMap ->
                         val bgColor = if (rowIndex % 2 == 0) BpsSurface else BpsRowAlt
 
                         Row(
@@ -135,7 +141,7 @@ fun TabelDataSection(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             headers.forEachIndexed { colIndex, headerKey ->
-                                val currentWidth = columnWidths[colIndex] ?: 70.dp
+                                val currentWidth = columnWidths[colIndex] ?: 80.dp
                                 val rawValue = rowMap[headerKey]?.toString() ?: "-"
                                 val cellValue = rawValue.removeSuffix(".0")
 
@@ -146,6 +152,7 @@ fun TabelDataSection(
                                     align = if (colIndex == 0) TextAlign.Start else TextAlign.End
                                 )
 
+                                // Divider visual antar kolom data
                                 if (colIndex < headers.size - 1) {
                                     Box(
                                         modifier = Modifier
@@ -159,9 +166,8 @@ fun TabelDataSection(
                             }
                         }
 
-                        if (rowIndex < rows.size - 1) {
-                            HorizontalDivider(color = BpsBorderLine, thickness = 0.5.dp)
-                        }
+                        // Garis pemisah antar baris
+                        HorizontalDivider(color = BpsBorderLine, thickness = 0.5.dp)
                     }
                 }
             }
@@ -201,7 +207,7 @@ fun TableCell(
     Box(
         modifier = Modifier
             .width(width)
-            .padding(horizontal = 4.dp, vertical = 8.dp),
+            .padding(horizontal = 8.dp, vertical = 12.dp), // Padding diperbesar agar lebih lega
         contentAlignment = when (align) {
             TextAlign.End -> Alignment.CenterEnd
             TextAlign.Center -> Alignment.Center
@@ -212,11 +218,10 @@ fun TableCell(
             text = text,
             color = if (isHeader) Color.White else Color(0xFF333333),
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Medium,
-            fontSize = if (isHeader) 10.sp else 12.sp,
+            fontSize = if (isHeader) 11.sp else 12.sp,
             textAlign = align,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            lineHeight = 16.sp
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -224,13 +229,16 @@ fun TableCell(
 // --- PREVIEW ---
 @Preview(showBackground = true)
 @Composable
-fun PreviewResizableTable() {
+fun PreviewBetterTable() {
     val dummyData = TableData(
-        headers = listOf("Wilayah", "2024"), // Contoh cuma 2 kolom
-        rows = listOf(
-            mapOf("Wilayah" to "Kec. Kebumen", "2024" to "12.500"),
-            mapOf("Wilayah" to "Kec. Gombong", "2024" to "8.500"),
-        )
+        headers = listOf("Wilayah", "2023", "2024"),
+        rows = (1..50).map { // Simulasi 50 data untuk tes scroll
+            mapOf(
+                "Wilayah" to "Kecamatan $it",
+                "2023" to "${1000 + it}",
+                "2024" to "${1200 + it}"
+            )
+        }
     )
 
     Box(Modifier.padding(16.dp)) {

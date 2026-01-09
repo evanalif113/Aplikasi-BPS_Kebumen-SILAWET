@@ -44,7 +44,7 @@ fun ChartSection(
         elevation = CardDefaults.cardElevation(2.dp),
         modifier = modifier
             .fillMaxWidth()
-            .height(350.dp) // Tinggi Total Kartu
+            .heightIn(min = 350.dp, max = 600.dp)
             .padding(bottom = 16.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -142,7 +142,7 @@ fun RenderLineChart(data: ChartData) {
                 val lineDataSet = LineDataSet(entries, "Data").apply {
                     color = AndroidColor.parseColor(BPS_BLUE_HEX)
                     setCircleColor(AndroidColor.parseColor(BPS_ORANGE_HEX))
-                    lineWidth = 2.5f
+                    lineWidth = 3f
                     circleRadius = 4f
                     setDrawValues(true) // Tampilkan angka di titik
                     valueTextSize = 10f

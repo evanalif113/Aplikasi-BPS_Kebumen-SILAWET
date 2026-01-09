@@ -16,7 +16,7 @@ data class PublicationItemResponse(
     val pdfUrl: String,
 
     @SerializedName("abstract") // Tambahkan anotasi ini agar konsisten
-    val abstract: String? = null
+    val abstract: String? = "Tidak ada Abstrak"
 ) {
     /**
      * Mengambil tanggal saja (YYYY-MM-DD) dari string waktu yang panjang.

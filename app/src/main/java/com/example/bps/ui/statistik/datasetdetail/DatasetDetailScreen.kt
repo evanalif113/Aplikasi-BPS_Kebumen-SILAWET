@@ -26,7 +26,7 @@ import androidx.navigation.NavController
 import com.example.bps.components.ChartSection
 import com.example.bps.components.TabelDataSection
 import com.example.bps.data.remote.responses.Insight
-import com.example.bps.theme.Orange300
+import com.example.bps.theme.*
 
 // Warna Biru BPS untuk Tab Aktif
 val BpsBlue = Color(0xFF0D47A1)
@@ -56,13 +56,14 @@ fun DatasetDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detail Dataset", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                title = {
+                    Text("Detail Dataset", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Orange300)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Orange400)
             )
         }
     ) { innerPadding ->
@@ -74,7 +75,7 @@ fun DatasetDetailScreen(
                         modifier = Modifier.align(Alignment.Center),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Error: ${uiState.error}", color = Color.Red)
+                        Text("Error Dataset Detail: ${uiState.error}", color = Color.Red)
                         Button(onClick = { viewModel.getDatasetDetail(datasetId) }) { Text("Coba Lagi") }
                     }
                 }
