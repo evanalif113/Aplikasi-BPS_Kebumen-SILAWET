@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.draw.clip
 import com.example.bps.R
 import com.example.bps.data.remote.responses.IndicatorItem
 import com.example.bps.theme.*
@@ -30,25 +31,25 @@ import kotlinx.coroutines.delay
 @Composable
 fun CarouselInsight(
     indicators: List<IndicatorItem>,
+    isLoading: Boolean, // <--- Tambahkan parameter ini
     onItemClick: (IndicatorItem) -> Unit = {}
 ) {
-    if (indicators.isEmpty()) return
-
     val lazyListState = rememberLazyListState()
     val itemWidth = 280.dp
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
-
     val contentPadding = (screenWidth - itemWidth) / 2
 
-    LaunchedEffect(indicators) {
-        if (indicators.isNotEmpty()) {
+    // Auto scroll hanya jalan jika TIDAK loading dan data TIDAK kosong
+    LaunchedEffect(indicators, isLoading) {
+        if (!isLoading && indicators.isNotEmpty()) {
             val startIndex = Int.MAX_VALUE / 2
             val startOffset = startIndex - (startIndex % indicators.size)
             lazyListState.scrollToItem(startOffset)
 
             while (true) {
                 delay(4000)
+                // Cek ulang untuk menghindari crash saat recomposition
                 if (indicators.isNotEmpty()) {
                     val nextIndex = lazyListState.firstVisibleItemIndex + 1
                     lazyListState.animateScrollToItem(index = nextIndex)
@@ -63,15 +64,92 @@ fun CarouselInsight(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.padding(vertical = 8.dp)
     ) {
-        items(
-            count = Int.MAX_VALUE,
-            key = { index -> index }
-        ) { index ->
-            if (indicators.isNotEmpty()) {
+        // --- LOGIKA UTAMA DISINI ---
+        if (isLoading) {
+            // Tampilkan 3 Skeleton Dummy jika sedang loading
+            items(3) {
+                SkeletonCarouselItem()
+            }
+        } else if (indicators.isNotEmpty()) {
+            // Tampilkan Data Asli (Looping Infinite)
+            items(
+                count = Int.MAX_VALUE,
+                key = { index -> index }
+            ) { index ->
                 val itemIndex = index % indicators.size
                 val item = indicators[itemIndex]
                 CarouselItem(item = item, onClick = { onItemClick(item) })
             }
+        }
+    }
+}
+
+@Composable
+fun SkeletonCarouselItem() {
+    Card(
+        modifier = Modifier
+            .width(280.dp)
+            .height(140.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White), // Warna dasar putih
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            // 1. Header Skeleton (Icon + Title)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Kotak Icon
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .shimmerEffect()
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                // Garis Judul
+                Box(
+                    modifier = Modifier
+                        .height(16.dp)
+                        .width(120.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .shimmerEffect()
+                )
+            }
+
+            // 2. Value Skeleton (Angka Besar)
+            Row(verticalAlignment = Alignment.Bottom) {
+                // Angka Besar
+                Box(
+                    modifier = Modifier
+                        .height(32.dp)
+                        .width(100.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .shimmerEffect()
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                // Satuan Kecil
+                Box(
+                    modifier = Modifier
+                        .height(16.dp)
+                        .width(40.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .shimmerEffect()
+                )
+            }
+
+            // 3. Footer Skeleton (Tahun)
+            Box(
+                modifier = Modifier
+                    .height(20.dp)
+                    .width(80.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .shimmerEffect()
+            )
         }
     }
 }

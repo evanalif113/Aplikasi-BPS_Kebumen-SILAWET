@@ -69,7 +69,8 @@ fun BerandaScreen(
             // Pasang Data Indikator ke Carousel
             CarouselInsight(
                 indicators = indicatorList,
-                onItemClick = { /* Handle klik */ }
+                isLoading = isIndicatorLoading, // Kirim status loading ke sini
+                onItemClick = { /* ... */ }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
