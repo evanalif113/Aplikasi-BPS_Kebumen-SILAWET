@@ -46,49 +46,49 @@ android {
 }
 
 dependencies {
-    implementation("androidx.browser:browser:1.9.0")
+    implementation(libs.androidx.browser)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+    //implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    //implementation(libs.androidx.lifecycle.livedata.ktx)
+    //implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.kotlinx.serialization.json)
-    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
+    //androidTestImplementation(libs.androidx.junit)
+    //androidTestImplementation(libs.androidx.espresso.core)
+    //implementation(libs.kotlinx.serialization.json)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
     val composeBom = platform("androidx.compose:compose-bom:2025.08.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
-    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation(libs.retrofit)
 
     // Untuk Konverter Gson (JSON ke Kotlin Data Class)
-    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation(libs.com.squareup.retrofit2.converter.gson)
 
     // Untuk menghubungkan ViewModel dengan Compose (menyediakan fungsi viewModel())
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+    implementation(libs.lifecycle.viewmodel.compose)
 
     // Choose one of the following:
     // Material Design 3
-    implementation("androidx.compose.material3:material3")
+    implementation(libs.androidx.material3)
     // or Material Design 2
     //implementation("androidx.compose.material:material")
     // or skip Material Design and build directly on top of foundational components
     //implementation("androidx.compose.foundation:foundation")
     // or only import the main APIs for the underlying toolkit systems,
     // such as input and measurement/layout
-    implementation("androidx.compose.ui:ui")
+    implementation(libs.androidx.ui)
 
     // Android Studio Preview support
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
 
     // UI Tests
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     // Optional - Included automatically by material, only add when you need
     // the icons but not the material library (e.g. when using Material3 or a
@@ -100,20 +100,20 @@ dependencies {
     //implementation("androidx.compose.material3.adaptive:adaptive")
 
     // Optional - Integration with activities
-    implementation("androidx.activity:activity-compose:1.12.2")
+    //implementation(libs.androidx.activity.compose)
     // Optional - Integration with LiveData
-    implementation("androidx.compose.runtime:runtime-livedata")
+    //implementation(libs.androidx.runtime.livedata)
     // Optional - Integration with RxJava
     //implementation("androidx.compose.runtime:runtime-rxjava2")
 
     // Optional - librarys for pager tab
-    implementation("androidx.compose.foundation:foundation:1.6.0")
+    implementation(libs.androidx.foundation)
 
     // Optional - Library Coil
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.coil.kt.coil.compose)
 
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation(libs.androidx.material.icons.extended)
 
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.mpandroidchart)
 
 }
