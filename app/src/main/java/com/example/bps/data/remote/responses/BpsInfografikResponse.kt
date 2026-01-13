@@ -2,7 +2,7 @@ package com.example.bps.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class BpsInfografisResponse(
+data class BpsInfografikResponse(
     @SerializedName("success")
     val success: Boolean,
 

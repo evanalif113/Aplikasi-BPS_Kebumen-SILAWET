@@ -79,7 +79,6 @@ fun BerandaScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             MenuItemSection(onItemClick = onMenuClick)
-
             Spacer(modifier = Modifier.height(20.dp))
 
             TabbedContentSection(
@@ -96,7 +95,7 @@ fun BerandaScreen(
                 onSeeAllClicked = onSeeAllNews,
                 onItemClicked = { id -> onNavigateToDetail(
                     id, ContentType.NEWS
-                )
+                    )
                 }
             )
 

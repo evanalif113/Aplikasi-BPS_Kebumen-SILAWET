@@ -6,9 +6,6 @@ data class BpsIndicatorResponse(
     val status: String,
     val message: String,
     val data: List<IndicatorItem>,
-    //@SerializedName("total_indicators")
-    //val totalIndicators: Int,
-    //val timestamp: String
 )
 
 data class IndicatorItem(

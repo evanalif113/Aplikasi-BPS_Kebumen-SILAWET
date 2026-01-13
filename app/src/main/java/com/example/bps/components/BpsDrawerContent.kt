@@ -32,7 +32,7 @@ fun BpsDrawerContent(
         // --- HEADER DRAWER ---
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Menu Lengkap",
+            text = "SILAWET",
             modifier = Modifier.padding(16.dp),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,

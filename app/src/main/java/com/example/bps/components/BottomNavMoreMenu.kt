@@ -19,6 +19,7 @@ import com.example.bps.theme.Gray800
 import com.example.bps.theme.Sky500
 import com.example.bps.theme.White
 import androidx.core.net.toUri
+import com.example.bps.theme.Green500
 
 @Composable
 fun BottomNavWithMoreMenu(

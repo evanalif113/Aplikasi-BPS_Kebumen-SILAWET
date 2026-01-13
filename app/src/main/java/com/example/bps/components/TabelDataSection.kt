@@ -218,7 +218,7 @@ fun TableCell(
             text = text,
             color = if (isHeader) Color.White else Color(0xFF333333),
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Medium,
-            fontSize = if (isHeader) 11.sp else 12.sp,
+            fontSize = if (isHeader) 12.sp else 13.sp,
             textAlign = align,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis

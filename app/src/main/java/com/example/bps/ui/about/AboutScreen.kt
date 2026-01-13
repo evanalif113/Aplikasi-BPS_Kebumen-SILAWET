@@ -25,11 +25,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.bps.R
 import com.example.bps.components.MedsosFooter // Import komponen MedsosFooter
 import com.example.bps.theme.Orange500 // Sesuaikan dengan warna tema Anda
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,7 +95,7 @@ fun AboutScreen(
                 color = Color.Gray
             )
             Text(
-                text = "Versi 1.5.4",
+                text = "Versi ${com.example.bps.BuildConfig.VERSION_NAME}",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.LightGray,
                 modifier = Modifier.padding(top = 4.dp)
@@ -109,19 +110,30 @@ fun AboutScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Tentang SILAWET",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    Text(
-                        text = "Aplikasi SILAWET dikembangkan oleh BPS Kabupaten Kebumen untuk mempermudah masyarakat dalam mengakses data statistik strategis, publikasi terbaru, dan berita kegiatan statistik secara cepat dan mudah melalui perangkat mobile.",
+                        text = "SILAWET adalah aplikasi resmi dari BPS Kabupaten Kebumen yang dirancang untuk memudahkan Anda dalam mengakses dan memahami data statistik terkini. Dapatkan wawasan mendalam melalui visualisasi data yang interaktif dan informatif.",
                         style = MaterialTheme.typography.bodyMedium,
-                        lineHeight = 20.sp,
                         textAlign = TextAlign.Justify
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // --- KERJA SAMA ---
+            Text(
+                text = "Kerja Sama",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.Start)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Aplikasi ini dikembangkan atas kerja sama antara BPS Kabupaten Kebumen dengan Program Studi S1 Sains Data Universitas Putra Bangsa.",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Justify,
+                modifier = Modifier.align(Alignment.Start)
+            )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -222,4 +234,16 @@ fun ContactRow(
         )
     }
     HorizontalDivider(color = Color.LightGray.copy(alpha = 0.3f))
+}
+
+// --- PREVIEW UNTUK LAYAR FULL (ABOUT SCREEN) ---
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun AboutScreenPreview() {
+    // Di dalam Preview, kita harus membuat NavController palsu
+    val navController = rememberNavController()
+
+    MaterialTheme {
+        AboutScreen(navController = navController)
+    }
 }

@@ -1,6 +1,9 @@
 package com.example.bps.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 data class PublicationItemResponse(
     val id: Int,
@@ -23,12 +26,25 @@ data class PublicationItemResponse(
      * Contoh input: "2023-12-01 15:30:00" -> Output: "2023-12-01"
      */
     fun getSimpleDate(): String {
-        val safeDate = releaseDate ?: return "-" // Handle jika null
+        // 1. Ambil 10 karakter pertama (format yyyy-MM-dd)
+        val rawDate = if (releaseDate.length >= 10) releaseDate.take(10) else releaseDate
 
-        return if (safeDate.length >= 10) {
-            safeDate.substring(0, 10)
-        } else {
-            safeDate
+        return try {
+            // 2. Parsing: Ubah String menjadi Objek Tanggal
+            val parsedDate = LocalDate.parse(rawDate)
+
+            // 3. Buat Formatter dengan Locale Indonesia
+            // 'dd'   = Tanggal 2 digit (01, 15, 30)
+            // 'MMMM' = Nama Bulan Lengkap (Januari, Februari)
+            // 'yyyy' = Tahun (2026)
+            val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale("id", "ID"))
+
+            // 4. Format tanggalnya
+            parsedDate.format(formatter) // Output: "01 Januari 2026"
+
+        } catch (e: Exception) {
+            // Jika gagal parsing, kembalikan teks aslinya
+            rawDate
         }
     }
 }

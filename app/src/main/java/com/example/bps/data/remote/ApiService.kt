@@ -10,7 +10,7 @@ import com.example.bps.data.remote.responses.BpsPublicationResponse
 import com.example.bps.data.remote.responses.SimpleDatasetListResponse
 import com.example.bps.data.remote.responses.CategorySubjectResponse
 import com.example.bps.data.remote.responses.BpsNewsResponse
-import com.example.bps.data.remote.responses.BpsInfografisResponse
+import com.example.bps.data.remote.responses.BpsInfografikResponse
 import com.example.bps.data.remote.responses.GridCategoryResponse
 import com.example.bps.data.remote.responses.GridMenuResponse
 import com.example.bps.data.remote.responses.BpsIndicatorResponse
@@ -47,7 +47,7 @@ interface ApiService {
 
     // 3. Infografis
     @GET("content/infographics")
-    suspend fun getInfographics(): BpsInfografisResponse
+    suspend fun getInfographics(): BpsInfografikResponse
 
     // 4. Publikasi
     @GET("content/publications")
