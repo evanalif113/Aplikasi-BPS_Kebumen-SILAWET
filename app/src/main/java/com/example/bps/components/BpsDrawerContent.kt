@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.sp
 import com.example.bps.R
 import com.example.bps.theme.Black
 import com.example.bps.theme.Gray50
-import com.example.bps.theme.White
 import com.example.bps.theme.Gray500
 
 @Composable

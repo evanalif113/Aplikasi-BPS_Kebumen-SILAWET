@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -31,8 +32,11 @@ android {
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            // 2. Gunakan .set() dan Enum JvmTarget
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         compose = true
@@ -42,7 +46,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.browser:browser:1.8.0")
+    implementation("androidx.browser:browser:1.9.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -59,13 +63,13 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
 
     // Untuk Konverter Gson (JSON ke Kotlin Data Class)
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
 
     // Untuk menghubungkan ViewModel dengan Compose (menyediakan fungsi viewModel())
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
 
     // Choose one of the following:
     // Material Design 3
@@ -96,7 +100,7 @@ dependencies {
     //implementation("androidx.compose.material3.adaptive:adaptive")
 
     // Optional - Integration with activities
-    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.activity:activity-compose:1.12.2")
     // Optional - Integration with LiveData
     implementation("androidx.compose.runtime:runtime-livedata")
     // Optional - Integration with RxJava
@@ -106,9 +110,9 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.6.0")
 
     // Optional - Library Coil
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
-    implementation("androidx.compose.material:material-icons-extended:1.7.0")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
