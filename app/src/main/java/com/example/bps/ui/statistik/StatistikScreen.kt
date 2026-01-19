@@ -4,8 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -52,7 +50,6 @@ fun StatistikScreen(navController: NavController) {
             backgroundColor = Color(0xFF03A9F4), // Light Blue
             iconRes = R.drawable.ic_demografi, // Ganti dengan icon yang sesuai (misal ic_demografi)
             title = "Statistik Demografi dan Sosial",
-            showArrow = true,
             onClick = { navController.navigate("subject_list/1") }
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -62,7 +59,6 @@ fun StatistikScreen(navController: NavController) {
             backgroundColor = Color(0xFFFF9800), // Orange
             iconRes = R.drawable.ic_ekonomi, // Ganti dengan icon yang sesuai (misal ic_ekonomi)
             title = "Statistik Ekonomi",
-            showArrow = true,
             onClick = { navController.navigate("subject_list/2") }
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -72,7 +68,6 @@ fun StatistikScreen(navController: NavController) {
             backgroundColor = Color(0xFF4CAF50), // Green
             iconRes = R.drawable.ic_lingkungan, // Ganti dengan icon yang sesuai (misal ic_lingkungan)
             title = "Statistik Lingkungan Hidup dan Multi Domain",
-            showArrow = true,
             onClick = { navController.navigate("subject_list/3") }
         )
     }
@@ -83,7 +78,6 @@ private fun StatCategoryCard(
     backgroundColor: Color,
     iconRes: Int,
     title: String,
-    showArrow: Boolean,
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -116,14 +110,6 @@ private fun StatCategoryCard(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.weight(1f)
             )
-            if (showArrow) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Lihat detail",
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
         }
     }
 }

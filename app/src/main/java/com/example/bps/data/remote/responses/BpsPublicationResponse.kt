@@ -10,5 +10,5 @@ data class BpsPublicationResponse(
     val message: String,
 
     @SerializedName("data")
-    val data: List<PublicationItemResponse> //
+    val data: List<PublicationItemResponse>
 )

@@ -70,7 +70,9 @@ fun MenuGridScreen(
 }
 
 @Composable
-fun GridItemCard(item: GridDatasetItem, onClick: () -> Unit) {
+fun GridItemCard(
+    item: GridDatasetItem,
+    onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth().clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)

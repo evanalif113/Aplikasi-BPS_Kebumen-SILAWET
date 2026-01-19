@@ -2,7 +2,7 @@ package com.example.bps.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class SimpleDatasetListResponse(
+data class DatasetListResponse(
     @SerializedName("status")
     val status: String,
 
@@ -10,5 +10,5 @@ data class SimpleDatasetListResponse(
     val count: Int,
 
     @SerializedName("data")
-    val data: List<SimpleDatasetResponse> // Ini list data yang sebenarnya
+    val data: List<DatasetResponse> // Ini list data yang sebenarnya
 )

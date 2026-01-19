@@ -46,17 +46,18 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.core.ktx)
-    //implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    //implementation(libs.androidx.lifecycle.livedata.ktx)
-    //implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
-    //androidTestImplementation(libs.androidx.junit)
-    //androidTestImplementation(libs.androidx.espresso.core)
-    //implementation(libs.kotlinx.serialization.json)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     val composeBom = platform("androidx.compose:compose-bom:2025.08.00")
@@ -100,9 +101,9 @@ dependencies {
     //implementation("androidx.compose.material3.adaptive:adaptive")
 
     // Optional - Integration with activities
-    //implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.activity.compose)
     // Optional - Integration with LiveData
-    //implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.runtime.livedata)
     // Optional - Integration with RxJava
     //implementation("androidx.compose.runtime:runtime-rxjava2")
 

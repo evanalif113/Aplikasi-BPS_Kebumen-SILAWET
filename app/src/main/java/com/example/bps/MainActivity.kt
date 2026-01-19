@@ -25,6 +25,7 @@ import com.example.bps.theme.*
 import com.example.bps.ui.beranda.BerandaScreen
 import com.example.bps.ui.beranda.IndicatorViewModel
 import com.example.bps.ui.general.ContentType
+import com.example.bps.ui.general.GeneralDetailScreen
 import com.example.bps.ui.general.GeneralListScreen
 import com.example.bps.ui.statistik.subjectlist.SubjectListScreen
 import com.example.bps.ui.statistik.datasetdetail.DatasetDetailScreen
@@ -37,11 +38,30 @@ import com.example.bps.ui.about.AboutScreen
 import com.example.bps.utils.launchInAppBrowser
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 1. PASANG SPLASH SCREEN (Wajib dipanggil SEBELUM super.onCreate)
+        val splashScreen = installSplashScreen()
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // (Opsional) Persiapan ViewModel untuk cek data loading
+        // Misalnya kita ingin splash screen diam sampai NewsViewModel selesai loading
+        // val viewModel: NewsViewModel by viewModels()
+
+        // 2. LOGIKA MENAHAN SPLASH SCREEN
+        // Splash screen akan tetap muncul selama kondisi ini bernilai TRUE
+        splashScreen.setKeepOnScreenCondition {
+            // Contoh: Tahan jika ViewModel masih loading
+            // viewModel.isLoading.value == true
+
+            // Atau kalau mau simpel (hardcode delay palsu buat testing):
+            false // Ganti 'false' dengan logika loading Anda
+        }
+
         setContent {
             BpsTheme {
                 MainScreen()
@@ -102,7 +122,10 @@ fun MainScreen() {
             topBar = {
                 if (isRootScreen) {
                     TopAppBar(
-                        title = { Text(text = title, maxLines = 1) },
+                        title = {
+                            Text(
+                                text = title,
+                                maxLines = 1)},
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Gray800)
@@ -210,11 +233,17 @@ fun MainScreen() {
                 composable("all_infografis") { GeneralListScreen(navController, newsViewModel, ContentType.INFOGRAFIS, "Galeri Infografis") }
                 composable("all_news") { GeneralListScreen(navController, newsViewModel, ContentType.NEWS, "Berita Kegiatan") }
 
-                composable("detail_content/{itemId}/{type}", arguments = listOf(navArgument("itemId") { type = NavType.IntType }, navArgument("type") { type = NavType.StringType })) { backStackEntry ->
+                composable("detail_content/{itemId}/{type}", arguments = listOf(
+                    navArgument(
+                        "itemId") {
+                        type = NavType.IntType },
+                        navArgument("type") {
+                            type = NavType.StringType })) {
+                    backStackEntry ->
                     val itemId = backStackEntry.arguments?.getInt("itemId") ?: 0
                     val typeString = backStackEntry.arguments?.getString("type") ?: "NEWS"
                     val typeEnum = ContentType.entries.find { it.name == typeString } ?: ContentType.NEWS
-                    com.example.bps.ui.general.GeneralDetailScreen(navController, newsViewModel, itemId, typeEnum)
+                    GeneralDetailScreen(navController, newsViewModel, itemId, typeEnum)
                 }
             }
         }

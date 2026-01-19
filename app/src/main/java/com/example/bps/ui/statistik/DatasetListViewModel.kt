@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bps.data.remote.ApiClient
-import com.example.bps.data.remote.responses.SimpleDatasetResponse
+import com.example.bps.data.remote.responses.DatasetResponse
 import java.lang.Exception
 import kotlinx.coroutines.launch
 
@@ -14,9 +14,9 @@ import kotlinx.coroutines.launch
  * diganti 'datasets' (List)
  */
 data class DatasetListUiState(
-        val isLoading: Boolean = false,
-        val datasets: List<SimpleDatasetResponse> = emptyList(), // Ini List, default-nya kosong
-        val error: String? = null
+    val isLoading: Boolean = false,
+    val datasets: List<DatasetResponse> = emptyList(), // Ini List, default-nya kosong
+    val error: String? = null
 )
 
 /** ViewModel ini bertugas mengambil DAFTAR dataset berdasarkan filter (subject/kategori). */

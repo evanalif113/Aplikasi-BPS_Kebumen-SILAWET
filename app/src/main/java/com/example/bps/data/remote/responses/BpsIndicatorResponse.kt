@@ -60,9 +60,4 @@ data class IndicatorItem(
             safeUnit
         }
     }
-
-    // Helper Baru: Ambil Tahun yang Aman
-    fun getSafeYear(): String {
-        return year?.toString() ?: "-" // Jika null, tampilkan "-"
-    }
 }

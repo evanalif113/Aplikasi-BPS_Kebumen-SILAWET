@@ -7,7 +7,7 @@ import retrofit2.http.Query
 import retrofit2.Response
 import com.example.bps.data.remote.responses.DatasetClass
 import com.example.bps.data.remote.responses.BpsPublicationResponse
-import com.example.bps.data.remote.responses.SimpleDatasetListResponse
+import com.example.bps.data.remote.responses.DatasetListResponse
 import com.example.bps.data.remote.responses.CategorySubjectResponse
 import com.example.bps.data.remote.responses.BpsNewsResponse
 import com.example.bps.data.remote.responses.BpsInfografikResponse
@@ -30,7 +30,7 @@ interface ApiService {
     suspend fun getDatasetList(
         @Query("subject") subject: String? = null,
         @Query("q") searchQuery: String? = null
-    ): SimpleDatasetListResponse
+    ): DatasetListResponse
 
     @GET("datasets/categories")
     suspend fun getCategories(): Map<String, CategorySubjectResponse>
