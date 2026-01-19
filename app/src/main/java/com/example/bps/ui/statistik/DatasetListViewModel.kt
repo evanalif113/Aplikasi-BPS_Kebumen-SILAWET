@@ -25,24 +25,19 @@ class DatasetListViewModel : ViewModel() {
     private val _uiState = mutableStateOf(DatasetListUiState())
     val uiState: State<DatasetListUiState> = _uiState
 
-    /** @param subject Filter berdasarkan subject (misal: "Ekonomi") */
     fun getDatasetList(subject: String) {
         viewModelScope.launch {
-            _uiState.value = DatasetListUiState(isLoading = true)
-            try {
-                // Panggil API (sekarang return Wrapper Object)
-                val response = ApiClient.apiService.getDatasetList(subject = subject)
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-                // Ambil list dari properti '.data'
-                _uiState.value = DatasetListUiState(
-                    isLoading = false,
-                    datasets = response.data // <-- Ambil .data di sini
-                )
+            try {
+                val response = ApiClient.apiService.getDatasetList(subject)
+
+                _uiState.value = DatasetListUiState(isLoading = false, datasets = response.data)
             } catch (e: Exception) {
                 _uiState.value =
                         DatasetListUiState(
-                            isLoading = false,
-                            error = e.message ?: "Terjadi kesalahan"
+                                isLoading = false,
+                                error = e.message ?: "Terjadi kesalahan"
                         )
             }
         }
