@@ -32,14 +32,31 @@ class DatasetListViewModel : ViewModel() {
             try {
                 val response = ApiClient.apiService.getDatasetList(subject)
 
-                _uiState.value = DatasetListUiState(isLoading = false, datasets = response.data)
+                _uiState.value =
+                        DatasetListUiState(isLoading = false, datasets = response.pagination.datasets)
             } catch (e: Exception) {
                 _uiState.value =
-                        DatasetListUiState(
-                                isLoading = false,
-                                error = e.message ?: "Terjadi kesalahan"
-                        )
+                        DatasetListUiState(isLoading = false, error = e.message ?: "Terjadi kesalahan")
             }
         }
     }
+
+
+    // fun getDatasetList(subject: String) {
+    //     viewModelScope.launch {
+    //         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
+    //         try {
+    //             val response = ApiClient.apiService.getDatasetList(subject)
+
+    //             _uiState.value = DatasetListUiState(isLoading = false, datasets = response.data)
+    //         } catch (e: Exception) {
+    //             _uiState.value =
+    //                     DatasetListUiState(
+    //                             isLoading = false,
+    //                             error = e.message ?: "Terjadi kesalahan"
+    //                     )
+    //         }
+    //     }
+    // }
 }

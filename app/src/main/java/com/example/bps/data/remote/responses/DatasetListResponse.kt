@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName
 
 data class DatasetListResponse(
         @SerializedName("success") val success: Boolean,
-        @SerializedName("message") val message: String,
-        @SerializedName("data") val data: List<DatasetResponse>,
-        @SerializedName("pagination") val pagination: PaginationResponse
+        @SerializedName("data") val pagination: DatasetPaginationResponse
 )
 
-data class PaginationResponse(
+data class DatasetPaginationResponse(
         @SerializedName("current_page") val currentPage: Int,
+        @SerializedName("data") val datasets: List<DatasetResponse>,
         @SerializedName("last_page") val lastPage: Int,
         @SerializedName("per_page") val perPage: Int,
         @SerializedName("total") val total: Int
 )
+
