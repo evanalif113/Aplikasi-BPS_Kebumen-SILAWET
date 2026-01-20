@@ -134,6 +134,36 @@ fun AboutScreen(
                 modifier = Modifier.align(Alignment.Start)
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // --- LOGO KERJA SAMA ---
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Logo BPS
+                Image(
+                    painter = painterResource(id = R.drawable.logobps), // Pastikan file logo_bps ada di drawable
+                    contentDescription = "Logo BPS",
+                    modifier = Modifier
+                        .height(60.dp)
+                        .weight(1f),
+                    contentScale = ContentScale.Fit
+                )
+                // Logo Universitas
+                Image(
+                    painter = painterResource(id = R.drawable.logoupb), // Pastikan file logo_upb ada di drawable
+                    contentDescription = "Logo Universitas Putra Bangsa",
+                    modifier = Modifier
+                        .height(60.dp)
+                        .weight(1f),
+                    contentScale = ContentScale.Fit
+                )
+            }
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
