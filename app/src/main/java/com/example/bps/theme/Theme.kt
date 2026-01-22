@@ -1,13 +1,19 @@
 package com.example.bps.theme
 
+import android.app.Activity
 import android.os.Build
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color // Import untuk Color compose
+import androidx.compose.ui.graphics.toArgb // Import untuk konversi ke ARGB
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.material3.MaterialTheme
+import androidx.core.view.WindowCompat
 
 // Skema warna untuk Tema Gelap (Dark Theme)
 private val DarkColorScheme = darkColorScheme(
@@ -77,6 +83,24 @@ fun BpsTheme(
         }
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+    }
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+
+            // 1. Set Warna Background Status Bar
+            // Mengambil warna primary dari colorScheme di atas (Oranye)
+            // Atau bisa hardcode: Color(0xFFFF9800).toArgb()
+            window.statusBarColor = colorScheme.primary.toArgb()
+
+            // 2. Set Warna Icon (Sinyal, Baterai, Jam)
+            // Jika darkTheme=true (Gelap), icon jadi Putih (LightStatusBars = false)
+            // Jika darkTheme=false (Terang/Oranye), kita tetap mau icon Putih -> set false
+            // KESIMPULAN: Karena header Oranye itu warna "berat/gelap", icon harus selalu Putih.
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+        }
     }
 
     MaterialTheme(

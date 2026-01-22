@@ -27,6 +27,7 @@ import com.example.bps.components.ChartSection
 import com.example.bps.components.TabelDataSection
 import com.example.bps.data.remote.responses.Insight
 import com.example.bps.theme.*
+import com.example.bps.components.BpsChildTopBar
 
 // Warna Biru BPS untuk Tab Aktif
 val BpsBlue = Color(0xFF0D47A1)
@@ -34,63 +35,85 @@ val BpsBlue = Color(0xFF0D47A1)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatasetDetailScreen(
-    datasetId: String,
+    datasetId: String, // String dari Navigasi
+//    subjectName: String,
     navController: NavController,
     viewModel: DetailDatasetViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState
 
-    // State untuk Tab yang dipilih
     // 0 = Tabel Data, 1 = Chart
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-
     val tabTitles = listOf("Tabel Data", "Chart")
 
+    // Konversi ID ke Int karena API butuh Int
+    val idAsInt = datasetId.toIntOrNull() ?: 0
+
     // Load data awal
-    LaunchedEffect(datasetId) {
-        if (uiState.dataset == null) {
-            viewModel.getDatasetDetail(datasetId)
+    LaunchedEffect(idAsInt) {
+        if (idAsInt != 0 && uiState.dataset == null) {
+            viewModel.getDatasetDetail(idAsInt)
         }
     }
 
     Scaffold(
+//        topBar = {
+//            TopAppBar(
+//                title = {
+//                    Text("Detail Dataset", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+//                },
+//                navigationIcon = {
+//                    IconButton(onClick = { navController.popBackStack() }) {
+//                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
+//                    }
+//                },
+//                colors = TopAppBarDefaults.topAppBarColors(containerColor = Orange400),
+//
+//                modifier = Modifier.height(56.dp)
+//            )
+//        }
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Detail Dataset", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Orange400)
+            // PANGGIL KOMPONEN YANG KITA BUAT TADI
+            BpsChildTopBar(
+                title = "Detail Dataset", // <--- Ganti variable error tadi dengan Teks ini
+                onBackClick = { navController.popBackStack() }
             )
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)) {
+
             when {
-                uiState.isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                uiState.isLoading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+
                 uiState.error != null -> {
                     Column(
                         modifier = Modifier.align(Alignment.Center),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Error Dataset Detail: ${uiState.error}", color = Color.Red)
-                        Button(onClick = { viewModel.getDatasetDetail(datasetId) }) { Text("Coba Lagi") }
+                        Text("Gagal memuat: ${uiState.error}", color = Color.Red)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(onClick = { viewModel.getDatasetDetail(idAsInt) }) {
+                            Text("Coba Lagi")
+                        }
                     }
                 }
+
                 uiState.dataset != null -> {
+                    // Ambil data (Tipe: DatasetDetailData)
                     val data = uiState.dataset!!
 
-                    // --- LOGIKA DEFAULT TAHUN TERBARU ---
-                    // 1. Urutkan tahun dari Besar ke Kecil (Descending) agar user melihat tahun terbaru di atas
-                    val sortedYears = remember(data.available_years) {
-                        data.available_years.sortedDescending()
+                    // --- LOGIKA TAHUN (CamelCase Updated) ---
+                    val sortedYears = remember(data.availableYears) {
+                        data.availableYears.sortedDescending()
                     }
 
-                    // 2. Tentukan tahun aktif.
-                    // Jika data.current_year null (belum dipilih), gunakan tahun terbesar (maxOrNull).
-                    val activeYear = data.current_year ?: data.available_years.maxOrNull() ?: 0
+                    // Tentukan tahun aktif (CamelCase Updated)
+                    // Logic: Jika currentYear 0 atau null, ambil tahun terbesar
+                    val activeYear = if (data.currentYear != 0) data.currentYear else (data.availableYears.maxOrNull() ?: 0)
 
                     Column(
                         modifier = Modifier
@@ -99,43 +122,72 @@ fun DatasetDetailScreen(
                     ) {
                         // --- HEADER & FILTER ---
                         Column(modifier = Modifier.padding(16.dp)) {
+                            // Property: datasetName (CamelCase)
                             Text(
-                                data.dataset.dataset_name,
+                                text = data.dataset.datasetName,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
-                            Text("Sumber: ${data.dataset.source}", fontSize = 12.sp, color = Color.Gray)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically // Pastikan rata tengah secara vertikal
+                            ) {
+                                // A. Sumber
+                                Text(
+                                    text = "Sumber: ${data.dataset.source}",
+                                    fontSize = 12.sp,
+                                    color = Color.Gray
+                                )
+
+                                // B. Logic Unit (Di dalam Row yang sama)
+                                if (!data.unit.isNullOrEmpty()) {
+                                    // Jarak Horizontal (Berfungsi karena di dalam Row)
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    // Titik pemisah
+                                    Text(text = "•", fontSize = 12.sp, color = Color.Gray)
+
+                                    // Jarak lagi
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    // Satuan
+                                    Text(
+                                        text = "Satuan: ${data.unit}",
+                                        fontSize = 12.sp,
+                                        color = Color(0xFF009688), // Hijau Teal
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+
                             Spacer(modifier = Modifier.height(16.dp))
 
-                            if (data.available_years.isNotEmpty()) {
+                            // Property: availableYears (CamelCase)
+                            if (data.availableYears.isNotEmpty()) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     // 1. DROPDOWN TAHUN
-                                    if (data.available_years.isNotEmpty()) {
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Text("Tahun: ", fontWeight = FontWeight.Medium, fontSize = 13.sp)
-                                            YearDropdown(
-                                                years = sortedYears, // Gunakan list yang sudah diurutkan
-                                                selectedYear = activeYear, // Gunakan logic tahun terbaru
-                                                onYearSelected = { newYear ->
-                                                    viewModel.getDatasetDetail(datasetId, newYear)
-                                                }
-                                            )
-                                        }
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text("Tahun: ", fontWeight = FontWeight.Medium, fontSize = 13.sp)
+                                        YearDropdown(
+                                            years = sortedYears,
+                                            selectedYear = activeYear,
+                                            onYearSelected = { newYear ->
+                                                viewModel.getDatasetDetail(idAsInt, newYear)
+                                            }
+                                        )
                                     }
 
-                                    // 2. DROPDOWN MODE
-                                    val isPopulationData = data.dataset.dataset_name.contains(
-                                        "Penduduk", ignoreCase = true) &&
-                                            data.dataset.dataset_name.contains(
-                                                "Kecamatan", ignoreCase = true
-                                            )
+                                    // 2. DROPDOWN MODE (Logic String Contains)
+                                    // Menggunakan CamelCase: datasetName
+                                    val isPopulationData = data.dataset.datasetName.contains("Penduduk", ignoreCase = true) &&
+                                            data.dataset.datasetName.contains("Kecamatan", ignoreCase = true)
+
                                     if (isPopulationData) {
                                         ModeDropdown(onModeSelected = { selectedMode ->
-                                            viewModel.getDatasetDetail(datasetId, activeYear, selectedMode)
+                                            viewModel.getDatasetDetail(idAsInt, activeYear, selectedMode)
                                         })
                                     }
                                 }
@@ -158,32 +210,39 @@ fun DatasetDetailScreen(
                                 Tab(
                                     selected = selectedTabIndex == index,
                                     onClick = { selectedTabIndex = index },
-                                    text = { Text(title, color = if (selectedTabIndex == index) BpsBlue else Color.Gray) }
+                                    text = {
+                                        Text(title, color = if (selectedTabIndex == index) BpsBlue else Color.Gray)
+                                    }
                                 )
                             }
                         }
 
                         // --- CONTENT ---
-                        Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)) {
                             when (selectedTabIndex) {
                                 0 -> { // TABEL DATA
                                     Column {
                                         Text("Rincian Data Tabel", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
 
-                                        // --- FILTER TABEL SESUAI TAHUN AKTIF ---
+                                        // --- FILTER TABEL ---
                                         val currentYearStr = activeYear.toString()
 
+                                        // Property: data.table.headers
                                         val filteredHeaders = data.table.headers.filterIndexed { index, header ->
-                                            // Ambil kolom pertama (Wilayah) ATAU kolom yang sesuai tahun aktif (hilangkan .0)
+                                            // Menjaga header pertama (Wilayah) ATAU header yang mengandung tahun aktif
+                                            // Handle case: "2024.0" (format excel number) vs "2024"
                                             index == 0 || header.substringBefore(".") == currentYearStr
                                         }
 
                                         val filteredTableData = data.table.copy(headers = filteredHeaders)
 
-                                        // Render Tabel
+                                        // Render Tabel (Pastikan parameter TabelDataSection sesuai DataClass TableData)
                                         if (filteredHeaders.size >= 2) {
                                             TabelDataSection(tableData = filteredTableData)
                                         } else {
+                                            // Fallback jika filter gagal (tampilkan semua atau kosong)
                                             TabelDataSection(tableData = data.table)
                                         }
 
@@ -193,13 +252,20 @@ fun DatasetDetailScreen(
                                 }
                                 1 -> { // CHART
                                     Column {
-                                        if (data.chart != null) {
+                                        // Pengecekan Chart (data.chart tidak null di DataClass, tapi isinya bisa null/empty)
+                                        // Kita cek apakah ada labels/data untuk ditampilkan
+                                        val isChartAvailable = data.chart.labels.isNotEmpty()
+
+                                        if (isChartAvailable) {
                                             Text("Visualisasi Data", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
                                             ChartSection(chartData = data.chart)
                                             Spacer(modifier = Modifier.height(24.dp))
                                         } else {
-                                            Text("Grafik tidak tersedia.", color = Color.Gray)
+                                            Text("Grafik tidak tersedia untuk dataset ini.", color = Color.Gray, fontStyle = FontStyle.Italic)
+                                            Spacer(modifier = Modifier.height(16.dp))
                                         }
+
+                                        // Property: insights (CamelCase)
                                         if (data.insights.isNotEmpty()) {
                                             Text("Analisis Data (Insight)", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
                                             data.insights.forEach { InsightCard(it) }

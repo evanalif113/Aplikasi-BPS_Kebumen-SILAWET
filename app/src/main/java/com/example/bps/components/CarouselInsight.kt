@@ -243,16 +243,16 @@ fun CarouselItem(
 
                 // 3. Footer: Tahun
                 Box(
-                    modifier = Modifier
-                        .background(Color.Black.copy(alpha = 0.15f), RoundedCornerShape(4.dp))
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                    modifier =
+                            Modifier.background(Color.Black.copy(alpha = 0.15f), RoundedCornerShape(4.dp))
+                                    .padding(horizontal = 8.dp, vertical = 2.dp)
                 ) {
-                    Text(
-                        text = "Tahun ${item.year}",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White
-                    )
+                    // Logic: Jika year null, tampilkan strip "-", jika ada tampilkan angkanya
+                    val yearText = item.year?.toString() ?: "-"
+
+                    Text(text = "Tahun $yearText", style = MaterialTheme.typography.labelSmall, color = Color.White)
                 }
+
             }
         }
     }

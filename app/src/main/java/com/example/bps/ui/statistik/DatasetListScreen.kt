@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.bps.components.BpsChildTopBar
+
 /**
  * Screen ini menampilkan DAFTAR dataset berdasarkan kategori/subject.
  *
@@ -37,17 +39,23 @@ fun DatasetListScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(subjectName) },
-                        navigationIcon = {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(
-                                        Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Kembali"
-                                )
-                            }
-                        }
+//        topBar = {
+////            TopAppBar(
+////                title = { Text(subjectName) },
+////                        navigationIcon = {
+////                            IconButton(onClick = { navController.popBackStack() }) {
+////                                Icon(
+////                                        Icons.AutoMirrored.Filled.ArrowBack,
+////                                        contentDescription = "Kembali"
+////                                )
+////                            }
+////                        }
+////                )
+////            }
+            topBar = {
+                BpsChildTopBar(
+                    title = subjectName,
+                    onBackClick = { navController.popBackStack() }
                 )
             }
     ) { innerPadding ->

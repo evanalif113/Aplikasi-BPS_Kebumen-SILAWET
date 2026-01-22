@@ -5,12 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bps.data.remote.ApiClient
-import com.example.bps.data.remote.responses.DatasetClass
+import com.example.bps.data.remote.responses.DatasetDetailData
 import kotlinx.coroutines.launch
 
 data class DetailUiState(
     val isLoading: Boolean = false,
-    val dataset: DatasetClass? = null,
+    val dataset: DatasetDetailData? = null,
     val error: String? = null
 )
 
@@ -18,27 +18,37 @@ class DetailDatasetViewModel : ViewModel() {
     private val _uiState = mutableStateOf(DetailUiState())
     val uiState: State<DetailUiState> = _uiState
 
-    fun getDatasetDetail(id: String, year: Int? = null, mode: String? = null) {
+    fun getDatasetDetail(id: Int, year: Int? = null, mode: String? = null) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true) // Jangan reset data lama biar smooth
+            // Set loading, tapi pertahankan data lama (jika ada) agar transisi smooth
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
             try {
-                // Kirim mode ke API
+                // Panggil API (sekarang return-nya langsung DatasetDetailResponse)
                 val response = ApiClient.apiService.getDatasetDetail(id, year, mode)
 
-                if (response.isSuccessful && response.body() != null) {
-                    val newData = response.body()!!
+                // 2. Cek Boolean 'success' dari JSON
+                if (response.success && response.data != null) {
 
-                    // PENTING: Jika user cuma ganti MODE, jangan reset available_years
-                    // Kita gabungkan data lama & baru
-                    _uiState.value = DetailUiState(
+                    _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        dataset = newData
+                        dataset = response.data,
+                        error = null
                     )
+
                 } else {
-                    _uiState.value = _uiState.value.copy(isLoading = false, error = "Gagal")
+                    // Jika success == false, ambil pesan error dari API
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = response.message ?: "Gagal memuat data"
+                    )
                 }
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(isLoading = false, error = e.message)
+                e.printStackTrace()
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Terjadi kesalahan jaringan"
+                )
             }
         }
     }

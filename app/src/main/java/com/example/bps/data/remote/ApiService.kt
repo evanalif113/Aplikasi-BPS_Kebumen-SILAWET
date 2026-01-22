@@ -5,10 +5,10 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.Response
-import com.example.bps.data.remote.responses.DatasetClass
+import com.example.bps.data.remote.responses.DatasetDetailResponse
 import com.example.bps.data.remote.responses.BpsPublicationResponse
 import com.example.bps.data.remote.responses.DatasetListResponse
-import com.example.bps.data.remote.responses.CategorySubjectResponse
+import com.example.bps.data.remote.responses.CategoryResponse
 import com.example.bps.data.remote.responses.BpsNewsResponse
 import com.example.bps.data.remote.responses.BpsInfografikResponse
 import com.example.bps.data.remote.responses.GridCategoryResponse
@@ -21,10 +21,10 @@ interface ApiService {
     // --- ENDPOINT DATASET (Tetap) ---
     @GET("datasets/{id}")
     suspend fun getDatasetDetail(
-        @Path("id") id: String,
+        @Path("id") id: Int,
         @Query("year") year: Int? = null,
         @Query("mode") mode: String? = null
-    ): Response<DatasetClass>
+    ): DatasetDetailResponse
 
     @GET("datasets")
     suspend fun getDatasetList(
@@ -33,7 +33,7 @@ interface ApiService {
     ): DatasetListResponse
 
     @GET("datasets/categories")
-    suspend fun getCategories(): Map<String, CategorySubjectResponse>
+    suspend fun getCategories(): CategoryResponse
 
     // --- ENDPOINT KONTEN BERANDA ---
 

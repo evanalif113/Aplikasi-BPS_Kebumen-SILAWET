@@ -1,68 +1,135 @@
 package com.example.bps.data.remote.responses
+
+import com.google.gson.annotations.SerializedName
+
 /**
- * Ini adalah data class utama yang membungkus seluruh respons JSON.
+ * 1. RESPONSE UTAMA (Root)
  */
-data class DatasetClass(
+data class DatasetDetailResponse(
+    @SerializedName("success")
+    val success: Boolean,
+
+    @SerializedName("message")
+    val message: String?,
+
+    @SerializedName("data")
+    val data: DatasetDetailData? // Bisa null jika request gagal
+)
+
+/**
+ * 2. DATA HOLDER (Dulu ini adalah "DatasetClass")
+ */
+data class DatasetDetailData(
+    @SerializedName("dataset")
     val dataset: DatasetMetadata,
-    val available_years: List<Int> = emptyList(),
-    val current_year: Int,
+
+    @SerializedName("unit")
+    val unit: String?,
+
+    @SerializedName("available_years")
+    val availableYears: List<Int> = emptyList(),
+
+    @SerializedName("current_year")
+    val currentYear: Int,
+
+    @SerializedName("table")
     val table: TableData,
+
+    @SerializedName("chart")
     val chart: ChartData,
+
+    @SerializedName("insights")
     val insights: List<Insight> = emptyList()
 )
 
 /**
- * Mewakili objek "dataset" di dalam JSON.
- * Berisi metadata tabel.
+ * Metadata Dataset
  */
 data class DatasetMetadata(
+    @SerializedName("id")
     val id: Int,
-    val dataset_code: String,
-    val dataset_name: String,
-    val insight_type: String,
+
+    @SerializedName("dataset_code")
+    val datasetCode: String,
+
+    @SerializedName("dataset_name")
+    val datasetName: String,
+
+    @SerializedName("insight_type")
+    val insightType: String,
+
+    @SerializedName("subject")
     val subject: String,
+
+    @SerializedName("category")
     val category: Int,
+
+    @SerializedName("source")
     val source: String,
-    val last_update: String,
-    val created_at: String,
-    val updated_at: String
+
+    @SerializedName("last_update")
+    val lastUpdate: String,
+
+    @SerializedName("created_at")
+    val createdAt: String,
+
+    @SerializedName("updated_at")
+    val updatedAt: String
 )
 
 /**
- * Mewakili objek "table" di dalam JSON.
+ * Data Tabel
  */
 data class TableData(
+    @SerializedName("headers")
     val headers: List<String>,
 
-    // jadi kita gunakan Map<String, Any> untuk menangkap key-value secara dinamis.
+    // Rows dinamis (Map key-value)
+    @SerializedName("rows")
     val rows: List<Map<String, Any>>
 )
 
 /**
- * Mewakili objek "chart" di dalam JSON.
+ * Data Chart
  */
 data class ChartData(
+    @SerializedName("type")
     val type: String,
+
+    @SerializedName("title")
     val title: String,
+
+    @SerializedName("labels")
     val labels: List<String>,
+
+    @SerializedName("data")
     val data: List<Number>? = null,
+
+    @SerializedName("datasets")
     val datasets: List<ChartDataset>? = null
 )
 
 /**
- * Bagian dari ChartData, khusus untuk tipe chart yang punya
- * beberapa set data (seperti 'pyramid').
+ * Dataset untuk Chart Multi-Series (cth: Pyramid)
  */
 data class ChartDataset(
+    @SerializedName("label")
     val label: String,
+
+    @SerializedName("data")
     val data: List<Number>
 )
 
 /**
- * Mewakili satu objek di dalam array "insights".
+ * Insight / Kesimpulan Otomatis
  */
 data class Insight(
+    @SerializedName("title")
     val title: String,
+
+    @SerializedName("value")
     val value: String,
+
+    @SerializedName("description")
     val description: String
 )

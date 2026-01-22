@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.bps.components.BpsChildTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,7 +28,7 @@ fun SubjectListScreen(
 ) {
     val uiState by viewModel.uiState
     val categoryInt = categoryId.toIntOrNull()
-    val subjects = uiState.categoriesMap
+    val subjects = uiState.categories
         .find { it.category == categoryInt }
         ?.subjects ?: emptyList()
 
@@ -48,22 +49,29 @@ fun SubjectListScreen(
     }*/
 
     Scaffold(
+//        topBar = {
+//            TopAppBar(
+//                title = { Text(title) },
+//                navigationIcon = {
+//                    IconButton(onClick = { navController.popBackStack() }) {
+//                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Kembali")
+//                    }
+//                },
+//                // 3. Terapkan Warna di sini
+//                colors = TopAppBarDefaults.topAppBarColors(
+//                    containerColor = Color(0xFFFF9800),
+//                    titleContentColor = Color.White,       // Judul Putih
+//                    navigationIconContentColor = Color.White // Ikon Back Putih
+//                )
+//            )
+//        }
         topBar = {
-            TopAppBar(
-                title = { Text(title) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Kembali")
-                    }
-                },
-                // 3. Terapkan Warna di sini
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFFF9800),
-                    titleContentColor = Color.White,       // Judul Putih
-                    navigationIconContentColor = Color.White // Ikon Back Putih
-                )
+            BpsChildTopBar(
+                title = title,
+                onBackClick = { navController.popBackStack() }
             )
         }
+
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             when {
@@ -88,8 +96,6 @@ fun SubjectListScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        // Navigasi ke Layar 3 (Daftar Tabel)
-                                        // Kirim NAMA subject-nya
                                         navController.navigate("dataset_list/${subjectName}")
                                     },
                                 // Opsional: Beri sedikit warna pada card agar tidak terlalu polos

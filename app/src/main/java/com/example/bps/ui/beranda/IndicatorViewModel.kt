@@ -10,16 +10,13 @@ import kotlinx.coroutines.launch
 
 class IndicatorViewModel : ViewModel() {
 
-    // State untuk menampung list indikator
     private val _indicatorState = MutableStateFlow<List<IndicatorItem>>(emptyList())
     val indicatorState: StateFlow<List<IndicatorItem>> = _indicatorState
 
-    // State loading (opsional, untuk menampilkan progress bar)
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
     init {
-        // Otomatis ambil data saat ViewModel dibuat
         getIndicators()
     }
 
@@ -27,15 +24,19 @@ class IndicatorViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                // Panggil API
                 val response = ApiClient.apiService.getStrategicIndicators()
 
-                // Jika sukses, simpan data ke state
-                if (response.status == "success") {
+                if (response.success) {
                     _indicatorState.value = response.data
+
+                    // Opsional: Jika butuh meta (total/timestamp), bisa diambil di sini:
+                    // val total = response.meta?.totalIndicators
+                    // val time = response.meta?.timestamp
+                } else {
+                    // Log.e("API", response.message ?: "Unknown Error")
                 }
             } catch (e: Exception) {
-                e.printStackTrace() // Log error jika gagal (misal tidak ada internet)
+                e.printStackTrace()
             } finally {
                 _isLoading.value = false
             }
