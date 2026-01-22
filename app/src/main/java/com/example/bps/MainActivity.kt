@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.* 
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.* import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,13 +39,16 @@ import kotlinx.coroutines.launch
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
+// IMPORT SCREEN PENCARIAN
+import com.example.bps.ui.search.SearchScreen
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         splashScreen.setKeepOnScreenCondition {
-            false // Ganti 'false' dengan logika loading
+            false
         }
         setContent {
             BpsTheme {
@@ -60,9 +62,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    // Variabel state untuk menu dropdown dihapus sementara karena tidak dipakai
-    // var showNotif by remember { mutableStateOf(false) }
-    // var showSettings by remember { mutableStateOf(false) }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -76,10 +75,12 @@ fun MainScreen() {
     val newsViewModel: NewsViewModel = viewModel()
     val indicatorViewModel: IndicatorViewModel = viewModel()
 
+    // 1. ATUR JUDUL HALAMAN
     val title = when {
         currentRoute == "beranda" -> "Beranda"
         currentRoute == "statistik" -> "Statistik"
         currentRoute == "infografik" -> "Infografik"
+        currentRoute == "search_screen" -> "Pencarian" // <--- Judul Halaman Cari
         currentRoute?.startsWith("dataset_list/") == true -> {
             navBackStackEntry?.arguments?.getString("subjectName") ?: "Daftar Statistik"
         }
@@ -90,7 +91,8 @@ fun MainScreen() {
         else -> "SILAWET"
     }
 
-    val isRootScreen = currentRoute in listOf("beranda", "statistik", "infografik")
+    // 2. ATUR NAVBAR (Top & Bottom) AGAR MUNCUL DI SEARCH
+    val isRootScreen = currentRoute in listOf("beranda", "statistik", "infografik", "search_screen")
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -109,9 +111,8 @@ fun MainScreen() {
                 if (isRootScreen) {
                     TopAppBar(
                         title = {
-                            Text(
-                                text = title,
-                                maxLines = 1)},
+                            Text(text = title, maxLines = 1)
+                        },
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(
@@ -121,10 +122,7 @@ fun MainScreen() {
                                 )
                             }
                         },
-                        // --- PERUBAHAN DI SINI: ACTIONS DIKOSONGKAN ---
-                        actions = {
-                            // Tombol notifikasi dan settings dihapus sementara
-                        },
+                        actions = {},
                         colors = TopAppBarDefaults.topAppBarColors(
                             containerColor = Orange400,
                             scrolledContainerColor = Orange400,
@@ -149,6 +147,7 @@ fun MainScreen() {
                 startDestination = "beranda",
                 modifier = Modifier.padding(innerPadding)
             ) {
+                // HALAMAN BERANDA
                 composable("beranda") {
                     BerandaScreen(
                         newsViewModel = newsViewModel,
@@ -169,8 +168,17 @@ fun MainScreen() {
                             } else {
                                 navController.navigate("menu_grid/$slug")
                             }
+                        },
+                        // 3. EVENT KLIK SEARCH BAR (Pindah ke Layar Search)
+                        onSearchClick = {
+                            navController.navigate("search_screen")
                         }
                     )
+                }
+
+                // HALAMAN PENCARIAN (BARU)
+                composable("search_screen") {
+                    SearchScreen(navController = navController)
                 }
 
                 composable(
@@ -182,7 +190,9 @@ fun MainScreen() {
                 }
 
                 composable("statistik") { StatistikScreen(navController) }
+
                 statistikGraph(navController)
+
                 composable("infografik") {
                     InfografikScreen(
                         viewModel = newsViewModel,
@@ -215,11 +225,8 @@ fun MainScreen() {
                 composable("about_screen") { AboutScreen(navController = navController) }
 
                 composable("subject_list/{categoryId}", arguments = listOf(
-                    navArgument(
-                        "categoryId") {
-                        type = NavType.StringType }
-                    )
-                ) {
+                    navArgument("categoryId") { type = NavType.StringType }
+                )) {
                     SubjectListScreen(it.arguments?.getString("categoryId") ?: "0", navController)
                 }
 
@@ -229,12 +236,9 @@ fun MainScreen() {
                 composable("all_news") { GeneralListScreen(navController, newsViewModel, ContentType.NEWS, "Berita Kegiatan") }
 
                 composable("detail_content/{itemId}/{type}", arguments = listOf(
-                    navArgument(
-                        "itemId") {
-                        type = NavType.IntType },
-                        navArgument("type") {
-                            type = NavType.StringType })) {
-                    backStackEntry ->
+                    navArgument("itemId") { type = NavType.IntType },
+                    navArgument("type") { type = NavType.StringType }
+                )) { backStackEntry ->
                     val itemId = backStackEntry.arguments?.getInt("itemId") ?: 0
                     val typeString = backStackEntry.arguments?.getString("type") ?: "NEWS"
                     val typeEnum = ContentType.entries.find { it.name == typeString } ?: ContentType.NEWS

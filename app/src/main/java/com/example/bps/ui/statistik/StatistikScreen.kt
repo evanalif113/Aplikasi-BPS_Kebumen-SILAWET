@@ -24,9 +24,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.bps.R
-import com.example.bps.components.SearchBar
+// GANTI IMPORT SEARCH BAR
+import com.example.bps.components.HomeSearchBar
 import com.example.bps.ui.statistik.datasetdetail.DatasetDetailScreen
 import com.example.bps.ui.statistik.subjectlist.SubjectListScreen
+// Pastikan import DatasetListScreen ada
+import com.example.bps.ui.statistik.DatasetListScreen
 
 @Composable
 fun StatistikScreen(navController: NavController) {
@@ -38,8 +41,13 @@ fun StatistikScreen(navController: NavController) {
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Search bar (Komponen Reuse)
-        SearchBar()
+        // --- PERBAIKAN DI SINI ---
+        // Gunakan HomeSearchBar agar konsisten dengan Beranda
+        HomeSearchBar(
+            onSearchClicked = {
+                navController.navigate("search_screen")
+            }
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -48,7 +56,7 @@ fun StatistikScreen(navController: NavController) {
         // 1. Statistik Demografi dan Sosial
         StatCategoryCard(
             backgroundColor = Color(0xFF03A9F4), // Light Blue
-            iconRes = R.drawable.ic_demografi, // Ganti dengan icon yang sesuai (misal ic_demografi)
+            iconRes = R.drawable.ic_demografi,
             title = "Statistik Demografi dan Sosial",
             onClick = { navController.navigate("subject_list/1") }
         )
@@ -57,7 +65,7 @@ fun StatistikScreen(navController: NavController) {
         // 2. Statistik Ekonomi
         StatCategoryCard(
             backgroundColor = Color(0xFFFF9800), // Orange
-            iconRes = R.drawable.ic_ekonomi, // Ganti dengan icon yang sesuai (misal ic_ekonomi)
+            iconRes = R.drawable.ic_ekonomi,
             title = "Statistik Ekonomi",
             onClick = { navController.navigate("subject_list/2") }
         )
@@ -66,7 +74,7 @@ fun StatistikScreen(navController: NavController) {
         // 3. Statistik Lingkungan Hidup
         StatCategoryCard(
             backgroundColor = Color(0xFF4CAF50), // Green
-            iconRes = R.drawable.ic_lingkungan, // Ganti dengan icon yang sesuai (misal ic_lingkungan)
+            iconRes = R.drawable.ic_lingkungan,
             title = "Statistik Lingkungan Hidup dan Multi Domain",
             onClick = { navController.navigate("subject_list/3") }
         )
@@ -115,7 +123,9 @@ private fun StatCategoryCard(
 }
 
 // --- NAVIGATION GRAPH EXTENSION ---
-// Fungsi ini menampung rute-rute turunan dari Statistik agar MainActivity lebih bersih
+// Fungsi ini berguna untuk merapikan NavHost di MainActivity.
+// Jika di MainActivity sudah ada composable() untuk rute-rute ini,
+// fungsi ini opsional (boleh dipanggil, boleh tidak, asal jangan duplikat).
 
 fun NavGraphBuilder.statistikGraph(navController: NavController) {
 

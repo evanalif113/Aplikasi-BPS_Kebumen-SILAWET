@@ -12,5 +12,6 @@ package com.example.bps.data.remote.responses
 data class DatasetResponse(
     val id: Int, // Pastikan tipe data 'id' sesuai (Int atau String)
     val dataset_name: String,
-    val subject: String
+    val subject: String,
+    val updated_at: String?
 )
