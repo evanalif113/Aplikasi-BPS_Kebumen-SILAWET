@@ -42,26 +42,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 1. PASANG SPLASH SCREEN (Wajib dipanggil SEBELUM super.onCreate)
         val splashScreen = installSplashScreen()
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        // (Opsional) Persiapan ViewModel untuk cek data loading
-        // Misalnya kita ingin splash screen diam sampai NewsViewModel selesai loading
-        // val viewModel: NewsViewModel by viewModels()
-
-        // 2. LOGIKA MENAHAN SPLASH SCREEN
-        // Splash screen akan tetap muncul selama kondisi ini bernilai TRUE
         splashScreen.setKeepOnScreenCondition {
-            // Contoh: Tahan jika ViewModel masih loading
-            // viewModel.isLoading.value == true
-
-            // Atau kalau mau simpel (hardcode delay palsu buat testing):
-            false // Ganti 'false' dengan logika loading Anda
+            false // Ganti 'false' dengan logika loading
         }
-
         setContent {
             BpsTheme {
                 MainScreen()
@@ -128,7 +114,11 @@ fun MainScreen() {
                                 maxLines = 1)},
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Gray800)
+                                Icon(
+                                    Icons.Default.Menu,
+                                    contentDescription = "Menu",
+                                    tint = Gray800
+                                )
                             }
                         },
                         // --- PERUBAHAN DI SINI: ACTIONS DIKOSONGKAN ---
@@ -224,7 +214,12 @@ fun MainScreen() {
 
                 composable("about_screen") { AboutScreen(navController = navController) }
 
-                composable("subject_list/{categoryId}", arguments = listOf(navArgument("categoryId") { type = NavType.StringType })) {
+                composable("subject_list/{categoryId}", arguments = listOf(
+                    navArgument(
+                        "categoryId") {
+                        type = NavType.StringType }
+                    )
+                ) {
                     SubjectListScreen(it.arguments?.getString("categoryId") ?: "0", navController)
                 }
 
