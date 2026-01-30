@@ -67,7 +67,11 @@ fun SearchScreen(
                                         Spacer(Modifier.height(4.dp))
                                         Text(item.dataset_name, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
                                         Spacer(Modifier.height(4.dp))
-                                        Text("Update: ${item.updated_at ?: "-"}", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                                        Text(
+                                            text = "Update: ${item.tanggalAngka}", // <--- Panggil getter baru tadi
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = Color.Gray
+                                        )
                                     }
                                 }
                             }

@@ -25,6 +25,7 @@ import androidx.core.text.HtmlCompat
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.bps.components.BpsChildTopBar
 import com.example.bps.data.remote.responses.NewsItemResponse
 import com.example.bps.data.remote.responses.PublicationItemResponse
 import com.example.bps.ui.infografik.news.NewsViewModel
@@ -106,21 +107,9 @@ fun GeneralDetailScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Detail Konten",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+            BpsChildTopBar(
+                title = "Tentang Aplikasi", // <--- Ganti variable error tadi dengan Teks ini
+                onBackClick = { navController.popBackStack() }
             )
         },
         bottomBar = {
